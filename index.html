@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MuxBite — Media API Infrastructure</title>
+  <link rel="icon" type="image/png" href="icon.png">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #ffffff;
+      --surface: #f5f5f5;
+      --surface2: #ebebeb;
+      --border: #e0e0e0;
+      --border-dark: #c0c0c0;
+      --text: #111111;
+      --muted: #767676;
+      --subtle: #aaaaaa;
+      --black: #111111;
+      --font: 'Google Sans', 'Product Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom cursor */
+    .cursor {
+      position: fixed; top: 0; left: 0;
+      width: 10px; height: 10px;
+      background: var(--black);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.08s ease;
+    }
+    .cursor-ring {
+      position: fixed; top: 0; left: 0;
+      width: 34px; height: 34px;
+      border: 1.5px solid rgba(0,0,0,0.25);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transition: width 0.2s, height 0.2s, border-color 0.2s;
+    }
+
+    /* Subtle dot grid */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: radial-gradient(circle, #d0d0d0 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 56px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--black);
+    }
+    .nav-logo span { color: var(--muted); font-weight: 400; }
+    .nav-links { display: flex; gap: 40px; list-style: none; }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.18s;
+      letter-spacing: 0.01em;
+    }
+    .nav-links a:hover { color: var(--black); }
+    .nav-cta {
+      font-size: 13px;
+      font-weight: 700;
+      padding: 10px 24px;
+      background: var(--black);
+      color: #fff;
+      cursor: none;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      transition: background 0.18s, transform 0.15s;
+    }
+    .nav-cta:hover { background: #333; transform: translateY(-1px); }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: center;
+      padding: 140px 56px 100px;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .hero-label {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.2s;
+    }
+
+    .hero-title {
+      font-size: clamp(56px, 8vw, 116px);
+      font-weight: 700;
+      line-height: 0.94;
+      letter-spacing: -0.04em;
+      max-width: 860px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.35s;
+    }
+    .hero-title .outline {
+      -webkit-text-stroke: 2px var(--black);
+      color: transparent;
+    }
+
+    .hero-sub {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.75;
+      color: var(--muted);
+      max-width: 460px;
+      margin-top: 40px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.5s;
+    }
+
+    .hero-actions {
+      display: flex; align-items: center; gap: 20px;
+      margin-top: 52px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.65s;
+    }
+
+    .btn-primary {
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 16px 40px;
+      background: var(--black);
+      color: #fff;
+      border: none;
+      cursor: none;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    }
+
+    .btn-ghost {
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      display: flex; align-items: center; gap: 8px;
+      transition: color 0.18s;
+      border-bottom: 1px solid transparent;
+    }
+    .btn-ghost:hover { color: var(--black); border-color: var(--black); }
+
+    /* Code block hero */
+    .hero-code {
+      position: absolute;
+      right: 56px; top: 50%;
+      transform: translateY(-50%);
+      width: 420px;
+      background: var(--black);
+      font-family: 'Courier New', monospace;
+      font-size: 12.5px;
+      line-height: 1.75;
+      padding: 28px 32px;
+      opacity: 0;
+      animation: fadeLeft 0.9s ease forwards 0.9s;
+      color: #e0e0e0;
+    }
+    .code-bar {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 22px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .code-dot { width: 9px; height: 9px; border-radius: 50%; background: #444; }
+    .code-file { font-size: 10px; color: #555; margin-left: auto; letter-spacing: 0.06em; font-family: var(--font); }
+
+    .tok-comment { color: #555; }
+    .tok-key { color: #aaa; }
+    .tok-str { color: #c8c8c8; }
+    .tok-fn { color: #fff; font-weight: bold; }
+    .tok-punct { color: #666; }
+    .tok-var { color: #e0e0e0; }
+    .tok-prop { color: #999; }
+
+    /* TICKER */
+    .ticker {
+      position: relative;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      padding: 13px 0;
+      z-index: 1;
+      background: var(--surface);
+    }
+    .ticker-track {
+      display: flex; gap: 56px;
+      white-space: nowrap;
+      animation: ticker 24s linear infinite;
+    }
+    .ticker-item {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex; align-items: center; gap: 14px;
+    }
+    .ticker-item::before { content: '—'; color: var(--subtle); }
+    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* STATS */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      position: relative; z-index: 1;
+    }
+    .stat {
+      padding: 56px 56px;
+      border-right: 1px solid var(--border);
+      position: relative;
+      transition: background 0.25s;
+    }
+    .stat:last-child { border-right: none; }
+    .stat:hover { background: var(--surface); }
+    .stat::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0;
+      height: 2px; width: 0;
+      background: var(--black);
+      transition: width 0.35s ease;
+    }
+    .stat:hover::after { width: 100%; }
+    .stat-num {
+      font-size: 60px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      color: var(--black);
+    }
+    .stat-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 10px;
+    }
+
+    /* FEATURES */
+    .features {
+      padding: 120px 56px;
+      position: relative; z-index: 1;
+    }
+    .section-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+    .section-title {
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      max-width: 540px;
+      margin-bottom: 80px;
+      color: var(--black);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border: 1px solid var(--border);
+    }
+    .feature-card {
+      padding: 44px 40px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+      position: relative;
+    }
+    .feature-card:nth-child(3n) { border-right: none; }
+    .feature-card:nth-child(4), .feature-card:nth-child(5), .feature-card:nth-child(6) { border-bottom: none; }
+    .feature-card:hover { background: var(--surface); }
+
+    .feature-num {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--subtle);
+      margin-bottom: 24px;
+    }
+    .feature-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+      color: var(--black);
+    }
+    .feature-desc {
+      font-size: 13px;
+      line-height: 1.75;
+      color: var(--muted);
+    }
+    .feature-tag {
+      display: inline-block;
+      margin-top: 22px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--black);
+      border: 1px solid var(--border-dark);
+      padding: 4px 12px;
+    }
+
+    /* ENDPOINTS */
+    .endpoints {
+      padding: 0 56px 120px;
+      position: relative; z-index: 1;
+    }
+    .endpoint-list {
+      border: 1px solid var(--border);
+      overflow: hidden;
+      margin-top: 56px;
+    }
+    .endpoint-row {
+      display: grid;
+      grid-template-columns: 72px 220px 1fr auto;
+      align-items: center;
+      gap: 28px;
+      padding: 22px 36px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.18s;
+    }
+    .endpoint-row:last-child { border-bottom: none; }
+    .endpoint-row:hover { background: var(--surface); }
+    .method {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 4px 10px;
+      text-align: center;
+      font-family: 'Courier New', monospace;
+    }
+    .method.get { background: #f0f0f0; color: #333; border: 1px solid #ddd; }
+    .method.post { background: #111; color: #fff; }
+    .method.del { background: #f5f5f5; color: #888; border: 1px solid #ddd; }
+    .endpoint-path { font-family: 'Courier New', monospace; font-size: 13px; color: var(--black); }
+    .endpoint-desc { font-size: 13px; color: var(--muted); }
+    .endpoint-badge {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--subtle);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* PRICING */
+    .pricing {
+      padding: 0 56px 120px;
+      position: relative; z-index: 1;
+    }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border: 1px solid var(--border);
+      margin-top: 64px;
+    }
+    .plan {
+      padding: 52px 44px;
+      border-right: 1px solid var(--border);
+      position: relative;
+      transition: background 0.2s;
+    }
+    .plan:last-child { border-right: none; }
+    .plan.featured {
+      background: var(--black);
+      color: #fff;
+    }
+    .plan.featured .plan-price,
+    .plan.featured .plan-name { color: #fff; }
+    .plan.featured .plan-desc,
+    .plan.featured .plan-features-list li { color: rgba(255,255,255,0.55); }
+    .plan.featured .plan-features-list li::before { color: #fff; }
+    .plan.featured .plan-features-list li { border-color: rgba(255,255,255,0.1); }
+
+    .plan-badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: rgba(255,255,255,0.2);
+      padding: 4px 12px;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+    .plan-name {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+      color: var(--black);
+    }
+    .plan-price {
+      font-size: 56px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin: 20px 0 4px;
+      color: var(--black);
+    }
+    .plan-price span { font-size: 18px; color: var(--muted); font-weight: 400; }
+    .plan.featured .plan-price span { color: rgba(255,255,255,0.45); }
+    .plan-desc {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 36px;
+      line-height: 1.7;
+    }
+    .plan-features-list { list-style: none; }
+    .plan-features-list li {
+      font-size: 13px;
+      color: var(--muted);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .plan-features-list li::before { content: '+'; color: var(--black); font-weight: 700; font-size: 13px; }
+    .plan-btn {
+      display: block;
+      margin-top: 36px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 15px;
+      text-align: center;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: all 0.18s;
+      cursor: none;
+    }
+    .plan-btn.outline {
+      border: 1.5px solid var(--border-dark);
+      color: var(--muted);
+    }
+    .plan-btn.outline:hover { border-color: var(--black); color: var(--black); }
+    .plan-btn.filled {
+      background: #fff;
+      color: var(--black);
+    }
+    .plan-btn.filled:hover { background: #e0e0e0; }
+    .plan-btn.outline-dark {
+      border: 1.5px solid rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.6);
+    }
+    .plan-btn.outline-dark:hover { border-color: #fff; color: #fff; }
+
+    /* CTA */
+    .cta-section {
+      margin: 0 56px 120px;
+      background: var(--black);
+      padding: 100px 80px;
+      position: relative; z-index: 1;
+      overflow: hidden;
+      text-align: center;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+    }
+    .cta-title {
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: #fff;
+      margin-bottom: 20px;
+      position: relative; z-index: 1;
+    }
+    .cta-sub {
+      font-size: 15px;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 48px;
+      position: relative; z-index: 1;
+    }
+    .cta-input-row {
+      display: flex; justify-content: center;
+      max-width: 440px; margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+    .cta-input {
+      flex: 1;
+      padding: 16px 20px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-right: none;
+      color: #fff;
+      font-family: var(--font);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .cta-input::placeholder { color: rgba(255,255,255,0.3); }
+    .cta-input:focus { border-color: rgba(255,255,255,0.45); }
+    .cta-submit {
+      padding: 16px 28px;
+      background: #fff;
+      border: none;
+      color: var(--black);
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: none;
+      transition: background 0.18s;
+    }
+    .cta-submit:hover { background: #e0e0e0; }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 44px 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: relative; z-index: 1;
+    }
+    .footer-logo { font-size: 17px; font-weight: 700; color: var(--black); letter-spacing: -0.02em; }
+    .footer-logo span { color: var(--muted); font-weight: 400; }
+    .footer-links { display: flex; gap: 32px; list-style: none; }
+    .footer-links a {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted); text-decoration: none;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      transition: color 0.18s;
+    }
+    .footer-links a:hover { color: var(--black); }
+    .footer-copy {
+      font-size: 12px;
+      color: var(--subtle);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeLeft {
+      from { opacity: 0; transform: translate(20px, -50%); }
+      to { opacity: 1; transform: translate(0, -50%); }
+    }
+
+    @media (max-width: 1100px) {
+      .hero-code { display: none; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .feature-card:nth-child(2n) { border-right: none; }
+      .feature-card:nth-child(3n) { border-right: 1px solid var(--border); }
+    }
+    @media (max-width: 760px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .hero { padding: 110px 24px 60px; }
+      .stats { grid-template-columns: 1fr; }
+      .stat { border-right: none; border-bottom: 1px solid var(--border); padding: 40px 24px; }
+      .features { padding: 80px 24px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .feature-card { border-right: none !important; }
+      .endpoints { padding: 0 24px 80px; }
+      .endpoint-row { grid-template-columns: 56px 1fr; gap: 12px; }
+      .endpoint-desc, .endpoint-badge { display: none; }
+      .pricing { padding: 0 24px 80px; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .plan { border-right: none; border-bottom: 1px solid var(--border); }
+      .cta-section { margin: 0 24px 80px; padding: 60px 24px; }
+      footer { flex-direction: column; gap: 24px; text-align: center; padding: 40px 24px; }
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Mux<span>Bite</span></div>
+  <ul class="nav-links">
+    <li><a href="#">Docs</a></li>
+    <li><a href="#">API</a></li>
+    <li><a href="#">Pricing</a></li>
+    <li><a href="#">Status</a></li>
+  </ul>
+  <a href="#" class="nav-cta">Get API Key</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-label">Media infrastructure API &nbsp;&middot;&nbsp; v2.4.0</p>
+  <h1 class="hero-title">
+    Stream.<br>
+    Process.<br>
+    <span class="outline">Deliver.</span>
+  </h1>
+  <p class="hero-sub">
+    MuxBite gives developers a single API to ingest, transcode, and deliver media at any scale — from prototype to production in minutes.
+  </p>
+  <div class="hero-actions">
+    <a href="#" class="btn-primary">Start Building Free</a>
+    <a href="#" class="btn-ghost">Read the Docs &rarr;</a>
+  </div>
+
+  <div class="hero-code">
+    <div class="code-bar">
+      <div class="code-dot"></div>
+      <div class="code-dot"></div>
+      <div class="code-dot"></div>
+      <span class="code-file">quickstart.js</span>
+    </div>
+    <pre><span class="tok-comment">// Initialize MuxBite client</span>
+<span class="tok-key">import</span> <span class="tok-var">MuxBite</span> <span class="tok-key">from</span> <span class="tok-str">'@muxbite/sdk'</span><span class="tok-punct">;</span>
+
+<span class="tok-key">const</span> <span class="tok-var">mb</span> <span class="tok-punct">=</span> <span class="tok-key">new</span> <span class="tok-fn">MuxBite</span><span class="tok-punct">({</span>
+  <span class="tok-prop">apiKey</span><span class="tok-punct">:</span> <span class="tok-var">process</span><span class="tok-punct">.</span><span class="tok-var">env</span><span class="tok-punct">.</span><span class="tok-var">MB_API_KEY</span>
+<span class="tok-punct">});</span>
+
+<span class="tok-comment">// Create a new live stream</span>
+<span class="tok-key">const</span> <span class="tok-var">stream</span> <span class="tok-punct">=</span> <span class="tok-key">await</span> <span class="tok-var">mb</span><span class="tok-punct">.</span><span class="tok-fn">streams</span><span class="tok-punct">.</span><span class="tok-fn">create</span><span class="tok-punct">({</span>
+  <span class="tok-prop">playback</span><span class="tok-punct">:</span> <span class="tok-str">'public'</span><span class="tok-punct">,</span>
+  <span class="tok-prop">latency</span><span class="tok-punct">:</span> <span class="tok-str">'low'</span><span class="tok-punct">,</span>
+  <span class="tok-prop">resolution</span><span class="tok-punct">:</span> <span class="tok-str">'1080p'</span>
+<span class="tok-punct">});</span>
+
+<span class="tok-comment">// Returns stream key instantly</span>
+<span class="tok-fn">console</span><span class="tok-punct">.</span><span class="tok-fn">log</span><span class="tok-punct">(</span><span class="tok-var">stream</span><span class="tok-punct">.</span><span class="tok-prop">key</span><span class="tok-punct">);</span>
+<span class="tok-comment">// → "mb_sk_7x9f2a..."</span></pre>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track" id="tickerTrack"></div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat">
+    <div class="stat-num">99.99<span style="font-size:32px">%</span></div>
+    <div class="stat-label">Uptime SLA</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">&lt;80<span style="font-size:32px">ms</span></div>
+    <div class="stat-label">Global Latency</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">140<span style="font-size:32px">+</span></div>
+    <div class="stat-label">Edge Nodes</div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features">
+  <p class="section-eyebrow">Capabilities</p>
+  <h2 class="section-title">Everything media.<br>One API.</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-num">01</div>
+      <div class="feature-title">Live Streaming</div>
+      <p class="feature-desc">RTMP, SRT, and WebRTC ingest with sub-second latency to global CDN. Adaptive bitrate out of the box.</p>
+      <span class="feature-tag">Real-time</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-num">02</div>
+      <div class="feature-title">Video on Demand</div>
+      <p class="feature-desc">Upload once, stream everywhere. Auto-transcoding to HLS/DASH with per-title encoding optimization.</p>
+      <span class="feature-tag">H.264 · AV1 · HEVC</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-num">03</div>
+      <div class="feature-title">Audio Processing</div>
+      <p class="feature-desc">Loudness normalization, format conversion, waveform generation, and podcast RSS management via API.</p>
+      <span class="feature-tag">AAC · OPUS · MP3</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-num">04</div>
+      <div class="feature-title">Playback Analytics</div>
+      <p class="feature-desc">Viewer sessions, rebuffer rates, quality metrics, and geographic breakdowns — streamed to your webhook.</p>
+      <span class="feature-tag">Webhook · Dashboard</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-num">05</div>
+      <div class="feature-title">Signed URLs</div>
+      <p class="feature-desc">Token-based playback control with expiry, IP binding, and geo-restrictions. DRM support via Widevine and FairPlay.</p>
+      <span class="feature-tag">DRM Ready</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-num">06</div>
+      <div class="feature-title">AI Enrichment</div>
+      <p class="feature-desc">Auto-generated captions, content moderation, thumbnail extraction, and chapter detection — serverless.</p>
+      <span class="feature-tag">Whisper · Vision</span>
+    </div>
+  </div>
+</section>
+
+<!-- ENDPOINTS -->
+<section class="endpoints">
+  <p class="section-eyebrow">REST API</p>
+  <h2 class="section-title">Clean endpoints.<br>Predictable responses.</h2>
+  <div class="endpoint-list">
+    <div class="endpoint-row">
+      <span class="method post">POST</span>
+      <span class="endpoint-path">/v1/streams</span>
+      <span class="endpoint-desc">Create a new live stream with custom config</span>
+      <span class="endpoint-badge">Core</span>
+    </div>
+    <div class="endpoint-row">
+      <span class="method get">GET</span>
+      <span class="endpoint-path">/v1/streams/:id</span>
+      <span class="endpoint-desc">Retrieve stream status and playback URL</span>
+      <span class="endpoint-badge">Core</span>
+    </div>
+    <div class="endpoint-row">
+      <span class="method post">POST</span>
+      <span class="endpoint-path">/v1/assets</span>
+      <span class="endpoint-desc">Upload or import video for on-demand delivery</span>
+      <span class="endpoint-badge">Core</span>
+    </div>
+    <div class="endpoint-row">
+      <span class="method get">GET</span>
+      <span class="endpoint-path">/v1/assets/:id/tracks</span>
+      <span class="endpoint-desc">Fetch audio, video, and text track metadata</span>
+      <span class="endpoint-badge">Media</span>
+    </div>
+    <div class="endpoint-row">
+      <span class="method post">POST</span>
+      <span class="endpoint-path">/v1/playback-ids</span>
+      <span class="endpoint-desc">Generate signed playback tokens with policy</span>
+      <span class="endpoint-badge">Security</span>
+    </div>
+    <div class="endpoint-row">
+      <span class="method del">DEL</span>
+      <span class="endpoint-path">/v1/assets/:id</span>
+      <span class="endpoint-desc">Permanently delete an asset and its storage</span>
+      <span class="endpoint-badge">Management</span>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing">
+  <p class="section-eyebrow">Pricing</p>
+  <h2 class="section-title">Pay for what<br>you stream.</h2>
+  <div class="pricing-grid">
+    <div class="plan">
+      <div class="plan-name">Sandbox</div>
+      <div class="plan-price">$0<span>/mo</span></div>
+      <p class="plan-desc">For prototyping and personal projects. No credit card required.</p>
+      <ul class="plan-features-list">
+        <li>10 hours stream / month</li>
+        <li>50 GB bandwidth</li>
+        <li>720p max resolution</li>
+        <li>Community support</li>
+      </ul>
+      <a href="#" class="plan-btn outline">Start Free</a>
+    </div>
+    <div class="plan featured">
+      <span class="plan-badge">Most popular</span>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price">$79<span>/mo</span></div>
+      <p class="plan-desc">For production apps with real users. Includes SLA and priority support.</p>
+      <ul class="plan-features-list">
+        <li>500 hours stream / month</li>
+        <li>2 TB bandwidth</li>
+        <li>4K + multi-bitrate</li>
+        <li>Webhooks & analytics</li>
+        <li>Signed URL / DRM</li>
+        <li>Email support (24h)</li>
+      </ul>
+      <a href="#" class="plan-btn filled">Get Started</a>
+    </div>
+    <div class="plan">
+      <div class="plan-name">Enterprise</div>
+      <div class="plan-price" style="font-size:38px;margin-top:28px;">Custom</div>
+      <p class="plan-desc">Unlimited scale, dedicated infra, and a named solutions engineer.</p>
+      <ul class="plan-features-list">
+        <li>Unlimited hours</li>
+        <li>Custom CDN routing</li>
+        <li>99.99% uptime SLA</li>
+        <li>On-prem / private cloud</li>
+        <li>Slack-based support</li>
+      </ul>
+      <a href="#" class="plan-btn outline">Talk to Sales</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2 class="cta-title">Ship your first stream<br>in under 5 minutes.</h2>
+  <p class="cta-sub">Join thousands of developers building media products on MuxBite.</p>
+  <div class="cta-input-row">
+    <input class="cta-input" type="email" placeholder="you@company.com" />
+    <button class="cta-submit">Get Access &rarr;</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Mux<span>Bite</span></div>
+  <ul class="footer-links">
+    <li><a href="#">Docs</a></li>
+    <li><a href="#">Status</a></li>
+    <li><a href="#">Blog</a></li>
+    <li><a href="#">GitHub</a></li>
+    <li><a href="#">Privacy</a></li>
+    <li><a href="#">Terms</a></li>
+  </ul>
+  <span class="footer-copy">&copy; 2026 MuxBite Inc.</span>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.transform = `translate(${mx - 5}px, ${my - 5}px)`;
+  });
+
+  function animateRing() {
+    rx += (mx - rx - 17) * 0.12;
+    ry += (my - ry - 17) * 0.12;
+    ring.style.transform = `translate(${rx}px, ${ry}px)`;
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  document.querySelectorAll('a, button, input').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      ring.style.width = '52px';
+      ring.style.height = '52px';
+      ring.style.borderColor = 'rgba(0,0,0,0.5)';
+    });
+    el.addEventListener('mouseleave', () => {
+      ring.style.width = '34px';
+      ring.style.height = '34px';
+      ring.style.borderColor = 'rgba(0,0,0,0.25)';
+    });
+  });
+
+  // Ticker
+  const tickerItems = [
+    'Live Streaming API', 'Video on Demand', 'Sub-second Latency',
+    'Global CDN', 'Auto Transcoding', 'Signed Playback URLs',
+    'AI Captions', 'Adaptive Bitrate', '140+ Edge Nodes',
+    'Webhook Events', 'DRM Support', 'Developer First',
+    'Live Streaming API', 'Video on Demand', 'Sub-second Latency',
+    'Global CDN', 'Auto Transcoding', 'Signed Playback URLs',
+    'AI Captions', 'Adaptive Bitrate', '140+ Edge Nodes',
+    'Webhook Events', 'DRM Support', 'Developer First',
+  ];
+  const track = document.getElementById('tickerTrack');
+  tickerItems.forEach(item => {
+    const span = document.createElement('span');
+    span.className = 'ticker-item';
+    span.textContent = item;
+    track.appendChild(span);
+  });
+</script>
+</body>
+</html>
