@@ -1,846 +1,945 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MUXBITE</title>
-<link rel="icon" type="image/png" href="muxbite.png">
-<link href="https://fonts.googleapis.com/css2?family=Product+Sans:wght@400;700&display=swap" rel="stylesheet">
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Product+Sans:wght@400;700&display=swap');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MUXBITE — AI Company</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet" />
+  <style>
+    /* ── RESET & BASE ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --black: #000000;
-    --white: #ffffff;
-    --grey-100: #f5f5f5;
-    --grey-200: #e0e0e0;
-    --grey-400: #9e9e9e;
-    --grey-600: #555555;
-    --grey-800: #1a1a1a;
-    --grey-900: #111111;
-  }
+    :root {
+      --black: #000000;
+      --white: #ffffff;
+      --gray-900: #0a0a0a;
+      --gray-800: #111111;
+      --gray-600: #333333;
+      --gray-400: #666666;
+      --gray-200: #aaaaaa;
+      --gray-100: #dddddd;
+      --accent: #ffffff;
+      --border: rgba(255,255,255,0.08);
+      --font-brand: 'Orbitron', sans-serif;
+      --font-body: 'Product Sans', 'Google Sans', sans-serif;
+    }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
-  html { scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      cursor: none;
+    }
 
-  body {
-    font-family: 'Product Sans', 'Google Sans', sans-serif;
-    background: var(--black);
-    color: var(--white);
-    overflow-x: hidden;
-    cursor: none;
-  }
+    /* ── CUSTOM CURSOR ── */
+    .cursor {
+      position: fixed;
+      width: 10px; height: 10px;
+      background: white;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease;
+      mix-blend-mode: difference;
+    }
+    .cursor-ring {
+      position: fixed;
+      width: 36px; height: 36px;
+      border: 1px solid rgba(255,255,255,0.4);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: transform 0.15s ease, width 0.25s ease, height 0.25s ease;
+    }
 
-  /* Custom cursor */
-  .cursor {
-    width: 12px; height: 12px;
-    background: var(--white);
-    border-radius: 50%;
-    position: fixed; top: 0; left: 0;
-    pointer-events: none; z-index: 9999;
-    transform: translate(-50%,-50%);
-    transition: width .2s, height .2s, background .2s;
-  }
-  .cursor-ring {
-    width: 36px; height: 36px;
-    border: 1px solid rgba(255,255,255,0.4);
-    border-radius: 50%;
-    position: fixed; top: 0; left: 0;
-    pointer-events: none; z-index: 9998;
-    transform: translate(-50%,-50%);
-    transition: transform .12s ease-out, width .2s, height .2s, border-color .2s;
-  }
-  body:hover .cursor { opacity: 1; }
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 0;
+    }
 
-  /* Noise overlay */
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    opacity: 0.06; pointer-events: none; z-index: 1;
-  }
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 60px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(20px);
+    }
 
-  /* NAV */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0;
-    z-index: 100;
-    padding: 24px 48px;
-    display: flex; align-items: center; justify-content: space-between;
-    backdrop-filter: blur(12px);
-    background: rgba(0,0,0,0.7);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    animation: slideDown .8s cubic-bezier(0.16,1,0.3,1) both;
-  }
-  @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .nav-logo {
+      font-family: var(--font-brand);
+      font-size: 18px;
+      letter-spacing: 0.15em;
+      color: var(--white);
+      text-decoration: none;
+    }
 
-  .logo {
-    font-size: 22px; font-weight: 700; letter-spacing: 4px;
-    background: linear-gradient(135deg, #fff 30%, #888);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .nav-links { display: flex; gap: 36px; list-style: none; }
-  .nav-links a {
-    color: var(--grey-400); text-decoration: none; font-size: 13px;
-    letter-spacing: 2px; text-transform: uppercase;
-    transition: color .3s;
-    position: relative;
-  }
-  .nav-links a::after {
-    content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
-    height: 1px; background: var(--white);
-    transform: scaleX(0); transition: transform .3s;
-  }
-  .nav-links a:hover { color: var(--white); }
-  .nav-links a:hover::after { transform: scaleX(1); }
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
 
-  .nav-cta {
-    padding: 10px 24px;
-    border: 1px solid rgba(255,255,255,0.3);
-    color: var(--white); text-decoration: none;
-    font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
-    transition: background .3s, border-color .3s;
-    border-radius: 2px;
-  }
-  .nav-cta:hover { background: var(--white); color: var(--black); border-color: var(--white); }
+    .nav-links a {
+      font-family: var(--font-body);
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gray-200);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
 
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    text-align: center;
-    padding: 120px 24px 80px;
-    position: relative; overflow: hidden;
-  }
+    .nav-links a:hover { color: var(--white); }
 
-  /* Animated grid bg */
-  .grid-bg {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-    background-size: 80px 80px;
-    animation: gridDrift 20s linear infinite;
-  }
-  @keyframes gridDrift { from { background-position: 0 0; } to { background-position: 80px 80px; } }
+    .nav-cta {
+      font-family: var(--font-body);
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--white);
+      border: none;
+      padding: 10px 24px;
+      cursor: none;
+      transition: background 0.2s, color 0.2s;
+      text-decoration: none;
+    }
 
-  /* Orbs */
-  .orb {
-    position: absolute; border-radius: 50%;
-    filter: blur(80px); opacity: 0.12;
-    animation: orbFloat 8s ease-in-out infinite alternate;
-  }
-  .orb-1 { width: 500px; height: 500px; background: #fff; top: -100px; left: -100px; animation-delay: 0s; }
-  .orb-2 { width: 400px; height: 400px; background: #888; bottom: 0; right: -80px; animation-delay: -3s; }
-  .orb-3 { width: 300px; height: 300px; background: #ccc; top: 40%; left: 30%; animation-delay: -5s; }
-  @keyframes orbFloat {
-    from { transform: translate(0, 0) scale(1); }
-    to { transform: translate(30px, -40px) scale(1.1); }
-  }
+    .nav-cta:hover { background: var(--gray-100); }
 
-  .hero-eyebrow {
-    font-size: 11px; letter-spacing: 5px; text-transform: uppercase;
-    color: var(--grey-400);
-    margin-bottom: 28px;
-    opacity: 0; animation: fadeUp .8s .4s cubic-bezier(0.16,1,0.3,1) forwards;
-  }
-  .hero-title {
-    font-size: clamp(72px, 12vw, 160px);
-    font-weight: 700;
-    line-height: 0.9;
-    letter-spacing: -4px;
-    background: linear-gradient(160deg, #fff 0%, #fff 40%, #555 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-    opacity: 0; animation: fadeUp .9s .5s cubic-bezier(0.16,1,0.3,1) forwards;
-    position: relative; z-index: 2;
-  }
-  .hero-sub {
-    max-width: 500px;
-    margin: 36px auto 0;
-    font-size: 16px; line-height: 1.7;
-    color: var(--grey-400);
-    opacity: 0; animation: fadeUp .8s .7s cubic-bezier(0.16,1,0.3,1) forwards;
-  }
-  .hero-actions {
-    margin-top: 52px;
-    display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
-    opacity: 0; animation: fadeUp .8s .85s cubic-bezier(0.16,1,0.3,1) forwards;
-  }
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(32px); } to { opacity: 1; transform: translateY(0); } }
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 140px 60px 80px;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+    }
 
-  .btn-primary {
-    padding: 16px 40px;
-    background: var(--white); color: var(--black);
-    font-family: 'Product Sans', sans-serif;
-    font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
-    border: none; cursor: none;
-    position: relative; overflow: hidden;
-    transition: transform .3s;
-    border-radius: 2px;
-  }
-  .btn-primary::after {
-    content: ''; position: absolute; inset: 0;
-    background: var(--grey-200);
-    transform: translateX(-100%); transition: transform .4s cubic-bezier(0.16,1,0.3,1);
-  }
-  .btn-primary:hover::after { transform: translateX(0); }
-  .btn-primary:hover { transform: scale(1.02); }
-  .btn-primary span { position: relative; z-index: 1; }
+    .hero-grid-line {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 1px;
+      background: var(--border);
+    }
+    .hero-grid-line:nth-child(1) { left: 25%; }
+    .hero-grid-line:nth-child(2) { left: 50%; }
+    .hero-grid-line:nth-child(3) { left: 75%; }
 
-  .btn-outline {
-    padding: 16px 40px;
-    background: transparent; color: var(--white);
-    font-family: 'Product Sans', sans-serif;
-    font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
-    border: 1px solid rgba(255,255,255,0.25); cursor: none;
-    transition: border-color .3s, background .3s;
-    border-radius: 2px;
-  }
-  .btn-outline:hover { border-color: var(--white); background: rgba(255,255,255,0.05); }
+    .hero-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gray-400);
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.2s forwards;
+    }
 
-  /* Scrolling ticker */
-  .ticker {
-    margin-top: 80px; width: 100%;
-    border-top: 1px solid rgba(255,255,255,0.08);
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    overflow: hidden; padding: 16px 0;
-    opacity: 0; animation: fadeUp .8s 1s cubic-bezier(0.16,1,0.3,1) forwards;
-  }
-  .ticker-track {
-    display: flex; gap: 64px;
-    animation: tickerScroll 18s linear infinite;
-    white-space: nowrap;
-  }
-  .ticker-track:hover { animation-play-state: paused; }
-  .ticker-item {
-    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
-    color: var(--grey-600); flex-shrink: 0;
-    display: flex; align-items: center; gap: 16px;
-  }
-  .ticker-dot { width: 4px; height: 4px; background: var(--grey-600); border-radius: 50%; }
-  @keyframes tickerScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .hero-title {
+      font-family: var(--font-brand);
+      font-size: clamp(64px, 10vw, 140px);
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+      color: var(--white);
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.4s forwards;
+    }
 
-  /* SECTIONS */
-  section { padding: 120px 24px; position: relative; }
-  .container { max-width: 1200px; margin: 0 auto; }
+    .hero-title span {
+      display: block;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,255,255,0.25);
+    }
 
-  .section-label {
-    font-size: 10px; letter-spacing: 5px; text-transform: uppercase;
-    color: var(--grey-600); margin-bottom: 20px;
-    display: flex; align-items: center; gap: 12px;
-  }
-  .section-label::before {
-    content: ''; width: 32px; height: 1px; background: var(--grey-600);
-  }
-  .section-title {
-    font-size: clamp(36px, 5vw, 72px);
-    font-weight: 700; line-height: 1;
-    letter-spacing: -2px;
-    background: linear-gradient(135deg, #fff 0%, #666 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 24px;
-  }
-  .section-desc {
-    font-size: 16px; color: var(--grey-400); line-height: 1.7;
-    max-width: 500px;
-  }
+    .hero-sub {
+      max-width: 520px;
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--gray-200);
+      margin-top: 40px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.6s forwards;
+    }
 
-  /* FEATURE CARDS */
-  .features { background: var(--grey-900); }
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 2px; margin-top: 72px;
-    border: 2px solid rgba(255,255,255,0.06);
-  }
-  .feature-card {
-    background: var(--grey-900);
-    padding: 48px 40px;
-    position: relative; overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.05);
-    transition: background .4s;
-    opacity: 0; transform: translateY(40px);
-    transition: opacity .6s ease, transform .6s ease, background .4s;
-  }
-  .feature-card.visible { opacity: 1; transform: translateY(0); }
-  .feature-card::before {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.04), transparent);
-    opacity: 0; transition: opacity .4s;
-  }
-  .feature-card:hover { background: var(--grey-800); }
-  .feature-card:hover::before { opacity: 1; }
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      margin-top: 52px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.8s forwards;
+    }
 
-  .card-num {
-    font-size: 11px; letter-spacing: 3px; color: var(--grey-600);
-    margin-bottom: 32px;
-  }
-  .card-icon {
-    width: 48px; height: 48px; margin-bottom: 28px;
-    position: relative;
-  }
-  .card-icon-shape {
-    width: 100%; height: 100%;
-    border: 1px solid rgba(255,255,255,0.2);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
-    transition: border-color .3s, background .3s;
-  }
-  .feature-card:hover .card-icon-shape {
-    border-color: rgba(255,255,255,0.5);
-    background: rgba(255,255,255,0.05);
-  }
-  .card-title {
-    font-size: 22px; font-weight: 700; margin-bottom: 16px; color: var(--white);
-  }
-  .card-text { font-size: 14px; color: var(--grey-400); line-height: 1.7; }
+    .btn-primary {
+      font-family: var(--font-body);
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--white);
+      border: none;
+      padding: 16px 36px;
+      cursor: none;
+      text-decoration: none;
+      transition: background 0.2s;
+      display: inline-block;
+    }
+    .btn-primary:hover { background: var(--gray-100); }
 
-  /* STATS */
-  .stats { background: var(--black); }
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 0; margin-top: 80px;
-  }
-  .stat-item {
-    padding: 56px 40px;
-    border: 1px solid rgba(255,255,255,0.07);
-    position: relative; overflow: hidden;
-    opacity: 0; transform: scale(0.9);
-    transition: opacity .5s ease, transform .5s ease;
-  }
-  .stat-item.visible { opacity: 1; transform: scale(1); }
-  .stat-item::after {
-    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-    height: 2px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-    transform: scaleX(0); transition: transform .5s;
-  }
-  .stat-item:hover::after { transform: scaleX(1); }
-  .stat-num {
-    font-size: clamp(48px, 6vw, 80px);
-    font-weight: 700; line-height: 1;
-    background: linear-gradient(135deg, #fff, #666);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .stat-label { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--grey-600); margin-top: 12px; }
+    .btn-secondary {
+      font-family: var(--font-body);
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--white);
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 16px 36px;
+      cursor: none;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+      display: inline-block;
+    }
+    .btn-secondary:hover { border-color: var(--white); }
 
-  /* MARQUEE SHOWCASE */
-  .showcase { background: var(--grey-900); overflow: hidden; padding: 0; }
-  .showcase-inner { display: flex; gap: 24px; padding: 48px 0; animation: marqLeft 30s linear infinite; }
-  .showcase-inner:hover { animation-play-state: paused; }
-  @keyframes marqLeft { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-  .showcase-card {
-    flex-shrink: 0; width: 280px; height: 180px;
-    border: 1px solid rgba(255,255,255,0.08);
-    background: var(--grey-800);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--grey-600);
-    position: relative; overflow: hidden;
-    transition: border-color .3s;
-  }
-  .showcase-card::before {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.03), transparent);
-  }
-  .showcase-card:hover { border-color: rgba(255,255,255,0.25); }
-  .sc-label { position: relative; z-index: 1; }
+    .hero-scroll {
+      position: absolute;
+      bottom: 40px;
+      left: 60px;
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gray-400);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 1.2s forwards;
+    }
 
-  /* TESTIMONIALS */
-  .testimonials { background: var(--black); }
-  .testi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 24px; margin-top: 72px;
-  }
-  .testi-card {
-    padding: 40px;
-    border: 1px solid rgba(255,255,255,0.08);
-    position: relative; overflow: hidden;
-    transition: border-color .3s, transform .3s;
-    opacity: 0; transform: translateY(30px);
-    transition: opacity .6s, transform .6s, border-color .3s;
-  }
-  .testi-card.visible { opacity: 1; transform: translateY(0); }
-  .testi-card:hover { border-color: rgba(255,255,255,0.2); transform: translateY(-4px); }
-  .testi-quote { font-size: 40px; color: rgba(255,255,255,0.1); line-height: 1; margin-bottom: 20px; }
-  .testi-text { font-size: 15px; color: var(--grey-400); line-height: 1.7; margin-bottom: 28px; }
-  .testi-author { display: flex; align-items: center; gap: 14px; }
-  .testi-avatar {
-    width: 40px; height: 40px; border-radius: 50%;
-    background: linear-gradient(135deg, #555, #222);
-    border: 1px solid rgba(255,255,255,0.15);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; font-weight: 700;
-  }
-  .testi-name { font-size: 13px; font-weight: 700; }
-  .testi-role { font-size: 11px; color: var(--grey-600); letter-spacing: 1px; }
+    .hero-scroll::before {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: var(--gray-600);
+    }
 
-  /* CTA SECTION */
-  .cta-section {
-    background: var(--grey-900);
-    text-align: center;
-    padding: 160px 24px;
-    position: relative; overflow: hidden;
-  }
-  .cta-section::before {
-    content: 'MUXBITE';
-    position: absolute;
-    font-size: clamp(120px, 20vw, 300px); font-weight: 700;
-    color: rgba(255,255,255,0.02);
-    top: 50%; left: 50%; transform: translate(-50%,-50%);
-    white-space: nowrap; letter-spacing: -8px;
-    pointer-events: none;
-  }
-  .cta-title {
-    font-size: clamp(48px, 7vw, 100px);
-    font-weight: 700; line-height: 1;
-    letter-spacing: -3px; margin-bottom: 32px;
-    background: linear-gradient(135deg, #fff, #666);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-    position: relative; z-index: 2;
-  }
-  .cta-sub { font-size: 16px; color: var(--grey-400); margin-bottom: 52px; position: relative; z-index: 2; }
+    /* ── MARQUEE ── */
+    .marquee-section {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
 
-  /* FOOTER */
-  footer {
-    background: var(--black);
-    border-top: 1px solid rgba(255,255,255,0.06);
-    padding: 64px 48px 40px;
-  }
-  .footer-top {
-    display: flex; align-items: flex-start; justify-content: space-between;
-    flex-wrap: wrap; gap: 48px;
-    margin-bottom: 64px;
-  }
-  .footer-brand .logo { font-size: 28px; display: block; margin-bottom: 16px; }
-  .footer-tagline { font-size: 13px; color: var(--grey-600); max-width: 220px; line-height: 1.6; }
-  .footer-cols { display: flex; gap: 64px; flex-wrap: wrap; }
-  .footer-col h5 { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--grey-600); margin-bottom: 20px; }
-  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-  .footer-col a { color: var(--grey-400); text-decoration: none; font-size: 14px; transition: color .2s; }
-  .footer-col a:hover { color: var(--white); }
-  .footer-bottom {
-    display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 16px;
-    border-top: 1px solid rgba(255,255,255,0.06); padding-top: 32px;
-  }
-  .footer-bottom p { font-size: 12px; color: var(--grey-600); letter-spacing: 1px; }
+    .marquee-track {
+      display: flex;
+      gap: 60px;
+      white-space: nowrap;
+      animation: marquee 20s linear infinite;
+    }
 
-  /* Floating particles */
-  .particle {
-    position: fixed; pointer-events: none; z-index: 0;
-    width: 2px; height: 2px; background: rgba(255,255,255,0.3);
-    border-radius: 50%;
-    animation: particleFloat linear infinite;
-  }
-  @keyframes particleFloat {
-    0% { transform: translateY(100vh) translateX(0); opacity: 0; }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    100% { transform: translateY(-10vh) translateX(var(--drift)); opacity: 0; }
-  }
+    .marquee-item {
+      font-family: var(--font-brand);
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      color: var(--gray-600);
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
 
-  /* Hamburger */
-  .hamburger {
-    display: none; flex-direction: column; gap: 5px; cursor: none;
-    padding: 4px;
-  }
-  .hamburger span { width: 24px; height: 1px; background: var(--white); display: block; transition: transform .3s, opacity .3s; }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
 
-  @media (max-width: 768px) {
-    nav { padding: 20px 24px; }
-    .nav-links { display: none; }
-    .hamburger { display: flex; }
-    .nav-cta { display: none; }
-    .hero-title { letter-spacing: -2px; }
-    .stat-item { padding: 40px 24px; }
-    .footer-top { flex-direction: column; }
-    .footer-cols { gap: 32px; }
-  }
+    /* ── SECTION BASE ── */
+    section {
+      position: relative;
+      z-index: 1;
+    }
 
-  /* Animated line accents */
-  .line-accent {
-    position: absolute; background: rgba(255,255,255,0.06);
-  }
-  .line-h { height: 1px; left: 0; right: 0; }
-  .line-v { width: 1px; top: 0; bottom: 0; }
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gray-400);
+      margin-bottom: 20px;
+    }
 
-  /* Glitch text effect on hover */
-  .glitch {
-    position: relative; cursor: none;
-  }
-  .glitch:hover { animation: glitch .4s cubic-bezier(0.25,0.46,0.45,0.94) both; }
-  @keyframes glitch {
-    0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
-    20% { clip-path: inset(20% 0 60% 0); transform: translate(-2px, 1px); }
-    40% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -1px); }
-    60% { clip-path: inset(40% 0 30% 0); transform: translate(-1px, 2px); }
-    80% { clip-path: inset(80% 0 5% 0); transform: translate(1px, -2px); }
-  }
+    /* ── ABOUT ── */
+    .about {
+      padding: 120px 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      border-bottom: 1px solid var(--border);
+    }
 
-  /* Loading screen */
-  #loader {
-    position: fixed; inset: 0; background: var(--black);
-    z-index: 9000; display: flex; align-items: center; justify-content: center;
-    flex-direction: column; gap: 24px;
-    animation: loaderOut .6s 2s cubic-bezier(0.16,1,0.3,1) forwards;
-  }
-  @keyframes loaderOut { to { opacity: 0; pointer-events: none; } }
-  .loader-logo {
-    font-size: 36px; font-weight: 700; letter-spacing: 8px;
-    background: linear-gradient(135deg, #fff, #555);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: loaderPulse 1.5s ease-in-out infinite;
-  }
-  @keyframes loaderPulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
-  .loader-bar {
-    width: 200px; height: 1px; background: rgba(255,255,255,0.1);
-    position: relative; overflow: hidden;
-  }
-  .loader-bar::after {
-    content: ''; position: absolute; left: -100%; top: 0; bottom: 0;
-    width: 100%; background: var(--white);
-    animation: loaderBar 1.8s cubic-bezier(0.16,1,0.3,1) forwards;
-  }
-  @keyframes loaderBar { from { left: -100%; } to { left: 100%; } }
-</style>
+    .about-left {}
+
+    .about-title {
+      font-family: var(--font-brand);
+      font-size: clamp(28px, 3.5vw, 48px);
+      line-height: 1.1;
+      margin-bottom: 0;
+    }
+
+    .about-right {
+      padding-top: 60px;
+    }
+
+    .about-text {
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--gray-200);
+      margin-bottom: 24px;
+    }
+
+    .about-stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      margin-top: 48px;
+    }
+
+    .about-stat {
+      background: var(--black);
+      padding: 28px 24px;
+    }
+
+    .stat-number {
+      font-family: var(--font-brand);
+      font-size: 36px;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      color: var(--gray-400);
+      text-transform: uppercase;
+    }
+
+    /* ── PRODUCTS ── */
+    .products {
+      padding: 120px 60px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .products-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 64px;
+    }
+
+    .products-title {
+      font-family: var(--font-brand);
+      font-size: clamp(28px, 3.5vw, 48px);
+      line-height: 1.1;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+    }
+
+    .product-card {
+      background: var(--black);
+      padding: 48px 40px;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+
+    .product-card:hover { background: var(--gray-900); }
+
+    .product-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%; height: 1px;
+      background: var(--white);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+
+    .product-card:hover::after { transform: scaleX(1); }
+
+    .product-tag {
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gray-400);
+      margin-bottom: 24px;
+    }
+
+    .product-name {
+      font-family: var(--font-brand);
+      font-size: 22px;
+      margin-bottom: 16px;
+      letter-spacing: 0.05em;
+    }
+
+    .product-desc {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--gray-200);
+      margin-bottom: 32px;
+    }
+
+    .product-link {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--white);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: gap 0.2s;
+    }
+
+    .product-link:hover { gap: 16px; }
+    .product-link::after { content: '→'; }
+
+    .product-card.featured {
+      grid-column: span 2;
+      background: var(--gray-900);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .product-card.featured .product-name {
+      font-size: 32px;
+    }
+
+    .product-visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 200px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-visual-text {
+      font-family: var(--font-brand);
+      font-size: 48px;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,255,255,0.15);
+      letter-spacing: 0.05em;
+      animation: pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; -webkit-text-stroke-color: rgba(255,255,255,0.4); }
+    }
+
+    /* ── VISION ── */
+    .vision {
+      padding: 160px 60px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .vision::before {
+      content: 'MUXBITE';
+      position: absolute;
+      font-family: var(--font-brand);
+      font-size: 25vw;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,255,255,0.03);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .vision-label { margin-bottom: 24px; }
+
+    .vision-title {
+      font-family: var(--font-brand);
+      font-size: clamp(32px, 5vw, 72px);
+      line-height: 1.05;
+      max-width: 900px;
+      margin: 0 auto 40px;
+    }
+
+    .vision-body {
+      font-size: 18px;
+      line-height: 1.8;
+      color: var(--gray-200);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ── RESEARCH PILLARS ── */
+    .pillars {
+      padding: 120px 60px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pillars-header {
+      margin-bottom: 64px;
+    }
+
+    .pillars-title {
+      font-family: var(--font-brand);
+      font-size: clamp(28px, 3.5vw, 48px);
+      margin-top: 16px;
+    }
+
+    .pillars-list {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+    }
+
+    .pillar {
+      background: var(--black);
+      padding: 40px 32px;
+    }
+
+    .pillar-num {
+      font-family: var(--font-brand);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--gray-600);
+      margin-bottom: 32px;
+    }
+
+    .pillar-title {
+      font-family: var(--font-brand);
+      font-size: 16px;
+      margin-bottom: 16px;
+      letter-spacing: 0.05em;
+    }
+
+    .pillar-desc {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--gray-400);
+    }
+
+    /* ── CTA ── */
+    .cta-section {
+      padding: 160px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.04);
+      pointer-events: none;
+    }
+
+    .cta-section::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 900px; height: 900px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.03);
+      pointer-events: none;
+    }
+
+    .cta-title {
+      font-family: var(--font-brand);
+      font-size: clamp(36px, 5vw, 72px);
+      line-height: 1.05;
+      margin-bottom: 24px;
+    }
+
+    .cta-sub {
+      font-size: 16px;
+      color: var(--gray-200);
+      margin-bottom: 52px;
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-logo {
+      font-family: var(--font-brand);
+      font-size: 14px;
+      letter-spacing: 0.15em;
+    }
+
+    .footer-copy {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      color: var(--gray-400);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray-400);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--white); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 20px 24px; }
+      .nav-links { display: none; }
+      .hero { padding: 120px 24px 60px; }
+      .about { grid-template-columns: 1fr; padding: 80px 24px; }
+      .products { padding: 80px 24px; }
+      .products-grid { grid-template-columns: 1fr; }
+      .product-card.featured { grid-column: span 1; grid-template-columns: 1fr; }
+      .pillars-list { grid-template-columns: 1fr 1fr; }
+      .pillars { padding: 80px 24px; }
+      .vision { padding: 100px 24px; }
+      .cta-section { padding: 100px 24px; }
+      footer { flex-direction: column; gap: 24px; text-align: center; padding: 40px 24px; }
+      .hero-scroll { left: 24px; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- Loader -->
-<div id="loader">
-  <div class="loader-logo">MUXBITE</div>
-  <div class="loader-bar"></div>
-</div>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
 
-<!-- Custom cursor -->
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">MUXBITE</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="muxbiteX.html">MUXBITE X</a></li>
+    </ul>
+    <a href="muxbiteX.html" class="nav-cta">Try MUXBITE X</a>
+  </nav>
 
-<!-- NAV -->
-<nav>
-  <div class="logo glitch">MUXBITE</div>
-  <ul class="nav-links">
-    <li><a href="#features">Features</a></li>
-    <li><a href="#stats">Impact</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-  <a href="#" class="nav-cta">Get Started</a>
-  <div class="hamburger" id="hamburger">
-    <span></span><span></span><span></span>
-  </div>
-</nav>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid-line"></div>
+    <div class="hero-grid-line"></div>
+    <div class="hero-grid-line"></div>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="grid-bg"></div>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
+    <p class="hero-eyebrow">AI Company · Est. 2025 · Patna, India</p>
+    <h1 class="hero-title">
+      MUX
+      <span>BITE</span>
+    </h1>
+    <p class="hero-sub">
+      Building intelligent systems from the ground up. Own models. Own data. Own future.
+    </p>
+    <div class="hero-actions">
+      <a href="muxbiteX.html" class="btn-primary">Meet MUXBITE X</a>
+      <a href="#about" class="btn-secondary">Our Mission</a>
+    </div>
+    <p class="hero-scroll">Scroll</p>
+  </section>
 
-  <p class="hero-eyebrow">Welcome to the future of digital experience</p>
-  <h1 class="hero-title glitch">MUXBITE</h1>
-  <p class="hero-sub">Crafted at the intersection of precision engineering and boundless imagination. We don't follow the rules — we write them.</p>
-  <div class="hero-actions">
-    <button class="btn-primary"><span>Start Your Journey</span></button>
-    <button class="btn-outline">Watch Demo</button>
-  </div>
-
-  <div class="ticker">
-    <div class="ticker-track" id="ticker">
-      <div class="ticker-item"><span class="ticker-dot"></span>Innovation Redefined</div>
-      <div class="ticker-item"><span class="ticker-dot"></span>Precision Engineered</div>
-      <div class="ticker-item"><span class="ticker-dot"></span>Boundless Creativity</div>
-      <div class="ticker-item"><span class="ticker-dot"></span>Zero Compromises</div>
-      <div class="ticker-item"><span class="ticker-dot"></span>Built to Last</div>
-      <div class="ticker-item"><span class="ticker-dot"></span>Next-Gen Experience</div>
-      <div class="ticker-item"><span class="ticker-dot"></span>Innovation Redefined</div>
-      <div class="ticker-item"><span class="ticker-dot"></span>Precision Engineered</div>
-      <div class="ticker-item"><span class="ticker-dot"></span>Boundless Creativity</div>
-      <div class="ticker-item"><span class="ticker-dot"></span>Zero Compromises</div>
-      <div class="ticker-item"><span class="ticker-dot"></span>Built to Last</div>
-      <div class="ticker-item"><span class="ticker-dot"></span>Next-Gen Experience</div>
+  <!-- MARQUEE -->
+  <div class="marquee-section">
+    <div class="marquee-track" id="marqueeTrack">
+      <span class="marquee-item">AI Research</span>
+      <span class="marquee-item">●</span>
+      <span class="marquee-item">Proprietary Models</span>
+      <span class="marquee-item">●</span>
+      <span class="marquee-item">Own Data</span>
+      <span class="marquee-item">●</span>
+      <span class="marquee-item">MUXBITE X Agent</span>
+      <span class="marquee-item">●</span>
+      <span class="marquee-item">Indian Language AI</span>
+      <span class="marquee-item">●</span>
+      <span class="marquee-item">Next Generation</span>
+      <span class="marquee-item">●</span>
+      <span class="marquee-item">AI Research</span>
+      <span class="marquee-item">●</span>
+      <span class="marquee-item">Proprietary Models</span>
+      <span class="marquee-item">●</span>
+      <span class="marquee-item">Own Data</span>
+      <span class="marquee-item">●</span>
+      <span class="marquee-item">MUXBITE X Agent</span>
+      <span class="marquee-item">●</span>
+      <span class="marquee-item">Indian Language AI</span>
+      <span class="marquee-item">●</span>
+      <span class="marquee-item">Next Generation</span>
+      <span class="marquee-item">●</span>
     </div>
   </div>
-</section>
 
-<!-- FEATURES -->
-<section class="features" id="features">
-  <div class="container">
-    <div class="section-label">What We Offer</div>
-    <h2 class="section-title">Built Different.<br>Built Better.</h2>
-    <p class="section-desc">Every pixel, every frame, every interaction — engineered for those who refuse to settle for ordinary.</p>
-
-    <div class="features-grid">
-      <div class="feature-card observe">
-        <div class="card-num">01</div>
-        <div class="card-icon"><div class="card-icon-shape">◈</div></div>
-        <h3 class="card-title">Hyper Performance</h3>
-        <p class="card-text">Blazing fast, relentlessly optimized. Every millisecond counts and we've counted them all. Zero bottlenecks, infinite potential.</p>
-      </div>
-      <div class="feature-card observe">
-        <div class="card-num">02</div>
-        <div class="card-icon"><div class="card-icon-shape">⬡</div></div>
-        <h3 class="card-title">Adaptive Intelligence</h3>
-        <p class="card-text">Systems that learn, adapt, and evolve alongside your ambitions. Not reactive — proactive. Not smart — brilliant.</p>
-      </div>
-      <div class="feature-card observe">
-        <div class="card-num">03</div>
-        <div class="card-icon"><div class="card-icon-shape">⬟</div></div>
-        <h3 class="card-title">Obsessive Design</h3>
-        <p class="card-text">We don't do "good enough." Every curve, every weight, every shadow is deliberate. Aesthetics as a competitive advantage.</p>
-      </div>
-      <div class="feature-card observe">
-        <div class="card-num">04</div>
-        <div class="card-icon"><div class="card-icon-shape">◯</div></div>
-        <h3 class="card-title">Quantum Security</h3>
-        <p class="card-text">Fortified at every layer. Your data is a fortress. Our encryption doesn't just meet standards — it redefines them.</p>
-      </div>
-      <div class="feature-card observe">
-        <div class="card-num">05</div>
-        <div class="card-icon"><div class="card-icon-shape">△</div></div>
-        <h3 class="card-title">Scale Infinitely</h3>
-        <p class="card-text">From zero to global in milliseconds. Infrastructure that breathes with your growth and never breaks a sweat.</p>
-      </div>
-      <div class="feature-card observe">
-        <div class="card-num">06</div>
-        <div class="card-icon"><div class="card-icon-shape">▣</div></div>
-        <h3 class="card-title">Deep Analytics</h3>
-        <p class="card-text">See everything. Understand everything. Act on everything. Intelligence that turns data into decisions and decisions into dominance.</p>
-      </div>
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="about-left reveal">
+      <p class="section-label">Who We Are</p>
+      <h2 class="about-title">Intelligence,<br/>Built From<br/>Scratch.</h2>
     </div>
-  </div>
-</section>
-
-<!-- STATS -->
-<section class="stats" id="stats">
-  <div class="container">
-    <div class="section-label">By the Numbers</div>
-    <h2 class="section-title">Impact at Scale</h2>
-    <div class="stats-grid">
-      <div class="stat-item observe">
-        <div class="stat-num" data-target="250">0</div>
-        <div class="stat-label">Projects Shipped</div>
-      </div>
-      <div class="stat-item observe">
-        <div class="stat-num" data-target="98">0</div>
-        <div class="stat-label">Client Satisfaction %</div>
-      </div>
-      <div class="stat-item observe">
-        <div class="stat-num" data-target="40">0</div>
-        <div class="stat-label">Countries Reached</div>
-      </div>
-      <div class="stat-item observe">
-        <div class="stat-num" data-target="12">0</div>
-        <div class="stat-label">Years of Mastery</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SHOWCASE MARQUEE -->
-<div class="showcase">
-  <div class="showcase-inner">
-    <div class="showcase-card"><span class="sc-label">Interface Design</span></div>
-    <div class="showcase-card"><span class="sc-label">Brand Systems</span></div>
-    <div class="showcase-card"><span class="sc-label">Motion Design</span></div>
-    <div class="showcase-card"><span class="sc-label">Digital Products</span></div>
-    <div class="showcase-card"><span class="sc-label">UX Strategy</span></div>
-    <div class="showcase-card"><span class="sc-label">Visual Identity</span></div>
-    <div class="showcase-card"><span class="sc-label">Interface Design</span></div>
-    <div class="showcase-card"><span class="sc-label">Brand Systems</span></div>
-    <div class="showcase-card"><span class="sc-label">Motion Design</span></div>
-    <div class="showcase-card"><span class="sc-label">Digital Products</span></div>
-    <div class="showcase-card"><span class="sc-label">UX Strategy</span></div>
-    <div class="showcase-card"><span class="sc-label">Visual Identity</span></div>
-  </div>
-</div>
-
-<!-- TESTIMONIALS -->
-<section class="testimonials" id="about">
-  <div class="container">
-    <div class="section-label">Social Proof</div>
-    <h2 class="section-title">They Said It.<br>We Delivered.</h2>
-    <div class="testi-grid">
-      <div class="testi-card observe">
-        <div class="testi-quote">"</div>
-        <p class="testi-text">MUXBITE didn't just build a product — they built a weapon. Our conversion rate tripled. Our competitors haven't slept since.</p>
-        <div class="testi-author">
-          <div class="testi-avatar">SA</div>
-          <div>
-            <div class="testi-name">Shahnewaz Alam</div>
-            <div class="testi-role">CEO, Sanzu IDE</div>
-          </div>
+    <div class="about-right reveal">
+      <p class="about-text">
+        MUXBITE is an AI company building proprietary models, curating original datasets, and shipping products that change how people interact with intelligence.
+      </p>
+      <p class="about-text">
+        We don't wrap existing models and call it innovation. We go deeper — into the architecture, the data, the training — because that's where the real differentiation lives.
+      </p>
+      <div class="about-stat-grid">
+        <div class="about-stat">
+          <div class="stat-number">01</div>
+          <div class="stat-label">Flagship Agent Live</div>
         </div>
-      </div>
-      <div class="testi-card observe">
-        <div class="testi-quote">"</div>
-        <p class="testi-text">The attention to detail is obsessive — in the best way possible. Every frame, every interaction, every pixel screams intent. Absolutely unreal work.</p>
-        <div class="testi-author">
-          <div class="testi-avatar">SM</div>
-          <div>
-            <div class="testi-name">Sofia Marchetti</div>
-            <div class="testi-role">Creative Director, Luma</div>
-          </div>
+        <div class="about-stat">
+          <div class="stat-number">∞</div>
+          <div class="stat-label">Ambition</div>
         </div>
-      </div>
-      <div class="testi-card observe">
-        <div class="testi-quote">"</div>
-        <p class="testi-text">I've worked with the best studios globally. MUXBITE operates in a category entirely their own. They don't raise the bar — they replace it.</p>
-        <div class="testi-author">
-          <div class="testi-avatar">JR</div>
-          <div>
-            <div class="testi-name">James R. Okafor</div>
-            <div class="testi-role">Founder, Velocity Labs</div>
-          </div>
+        <div class="about-stat">
+          <div class="stat-number">IN</div>
+          <div class="stat-label">Built in India</div>
+        </div>
+        <div class="about-stat">
+          <div class="stat-number">1B</div>
+          <div class="stat-label">Target Reach</div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- CTA -->
-<section class="cta-section" id="contact">
-  <h2 class="cta-title">Ready to<br>Bite the Future?</h2>
-  <p class="cta-sub">One conversation. Infinite possibilities.</p>
-  <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;position:relative;z-index:2;">
-    <button class="btn-primary"><span>Let's Talk</span></button>
-    <button class="btn-outline">View Our Work</button>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-top">
-    <div class="footer-brand">
-      <span class="logo">MUXBITE</span>
-      <p class="footer-tagline">Where precision meets imagination. Built for those who demand more.</p>
+  <!-- PRODUCTS -->
+  <section class="products" id="products">
+    <div class="products-header reveal">
+      <div>
+        <p class="section-label">Products</p>
+        <h2 class="products-title">What We Ship</h2>
+      </div>
+      <a href="muxbiteX.html" class="btn-secondary">View All →</a>
     </div>
-    <div class="footer-cols">
-      <div class="footer-col">
-        <h5>Product</h5>
-        <ul>
-          <li><a href="#">Features</a></li>
-          <li><a href="#">Pricing</a></li>
-          <li><a href="#">Changelog</a></li>
-          <li><a href="#">Roadmap</a></li>
-        </ul>
+
+    <div class="products-grid">
+      <div class="product-card featured reveal">
+        <div>
+          <p class="product-tag">Flagship · Agent</p>
+          <h3 class="product-name">MUXBITE X</h3>
+          <p class="product-desc">
+            Our flagship AI agent. Searches the web, thinks deeply, and responds with precision. Built for people who demand more from their AI.
+          </p>
+          <a href="muxbiteX.html" class="product-link">Launch Agent</a>
+        </div>
+        <div class="product-visual">
+          <div class="product-visual-text">X</div>
+        </div>
       </div>
-      <div class="footer-col">
-        <h5>Company</h5>
-        <ul>
-          <li><a href="https://github.com/heysanzu">About</a></li>
-          <li><a href="https://github.com/heysanzu">Careers</a></li>
-          <li><a href="https://github.com/heysanzu">Blog</a></li>
-          <li><a href="https://github.com/heysanzu">Press</a></li>
-        </ul>
+
+      <div class="product-card reveal">
+        <p class="product-tag">Coming Soon · Data</p>
+        <h3 class="product-name">MUXBITE DATA</h3>
+        <p class="product-desc">
+          Proprietary dataset curation engine. Building the data foundation for our own models.
+        </p>
+        <span class="product-link" style="color: var(--gray-400); pointer-events: none;">In Development</span>
       </div>
-      <div class="footer-col">
-        <h5>Connect</h5>
-        <ul>
-          <li><a href="#">Twitter</a></li>
-          <li><a href="#">LinkedIn</a></li>
-          <li><a href="#">Instagram</a></li>
-          <li><a href="#">Dribbble</a></li>
-        </ul>
+
+      <div class="product-card reveal">
+        <p class="product-tag">Coming Soon · Research</p>
+        <h3 class="product-name">MUXBITE RESEARCH</h3>
+        <p class="product-desc">
+          Open research on model architecture, alignment, and Indian language NLP.
+        </p>
+        <span class="product-link" style="color: var(--gray-400); pointer-events: none;">In Development</span>
       </div>
     </div>
-  </div>
-  <div class="footer-bottom">
-    <p>© 2026 MUXBITE — All Rights Reserved</p>
-    <p>Privacy Policy · Terms of Service</p>
-  </div>
-</footer>
+  </section>
 
-<script>
-  // Custom cursor
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    cursor.style.left = mx + 'px';
-    cursor.style.top = my + 'px';
-  });
-  function animRing() {
-    rx += (mx - rx) * 0.12;
-    ry += (my - ry) * 0.12;
-    ring.style.left = rx + 'px';
-    ring.style.top = ry + 'px';
-    requestAnimationFrame(animRing);
-  }
-  animRing();
-  document.querySelectorAll('a,button,.feature-card,.testi-card').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      cursor.style.width = '6px'; cursor.style.height = '6px';
-      ring.style.width = '60px'; ring.style.height = '60px';
-      ring.style.borderColor = 'rgba(255,255,255,0.6)';
+  <!-- VISION -->
+  <section class="vision">
+    <p class="section-label vision-label">Vision</p>
+    <h2 class="vision-title reveal">
+      The Future of AI<br/>Should Be Built<br/>By Everyone.
+    </h2>
+    <p class="vision-body reveal">
+      Intelligence shouldn't belong to a handful of labs in San Francisco. MUXBITE is building from Patna, India — proving that the next frontier of AI can be built from anywhere, for everyone.
+    </p>
+  </section>
+
+  <!-- PILLARS -->
+  <section class="pillars" id="research">
+    <div class="pillars-header reveal">
+      <p class="section-label">Research Focus</p>
+      <h2 class="pillars-title">Four Pillars</h2>
+    </div>
+    <div class="pillars-list">
+      <div class="pillar reveal">
+        <p class="pillar-num">01</p>
+        <h3 class="pillar-title">Model Architecture</h3>
+        <p class="pillar-desc">Designing transformer variants optimized for efficiency and multilingual understanding.</p>
+      </div>
+      <div class="pillar reveal">
+        <p class="pillar-num">02</p>
+        <h3 class="pillar-title">Data Curation</h3>
+        <p class="pillar-desc">Building proprietary, high-quality datasets with a focus on Indian languages and domains.</p>
+      </div>
+      <div class="pillar reveal">
+        <p class="pillar-num">03</p>
+        <h3 class="pillar-title">Alignment</h3>
+        <p class="pillar-desc">Developing safe, steerable AI systems that behave predictably across diverse cultural contexts.</p>
+      </div>
+      <div class="pillar reveal">
+        <p class="pillar-num">04</p>
+        <h3 class="pillar-title">Inference</h3>
+        <p class="pillar-desc">Pushing the boundary of what's possible at low compute — making AI accessible, not just powerful.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2 class="cta-title reveal">Start With<br/>MUXBITE X.</h2>
+    <p class="cta-sub reveal">The agent is live. The future is being built.</p>
+    <div class="cta-actions reveal">
+      <a href="muxbiteX.html" class="btn-primary">Launch MUXBITE X</a>
+      <a href="mailto:hello@muxbite.ai" class="btn-secondary">Get In Touch</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">MUXBITE</div>
+    <p class="footer-copy">© 2025 MUXBITE. Built in India.</p>
+    <ul class="footer-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="muxbiteX.html">MUXBITE X</a></li>
+      <li><a href="mailto:hello@muxbite.ai">Contact</a></li>
+    </ul>
+  </footer>
+
+  <script>
+    // Cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX; mouseY = e.clientY;
+      cursor.style.left = mouseX + 'px';
+      cursor.style.top = mouseY + 'px';
     });
-    el.addEventListener('mouseleave', () => {
-      cursor.style.width = '12px'; cursor.style.height = '12px';
-      ring.style.width = '36px'; ring.style.height = '36px';
-      ring.style.borderColor = 'rgba(255,255,255,0.4)';
+
+    function animateRing() {
+      ringX += (mouseX - ringX) * 0.12;
+      ringY += (mouseY - ringY) * 0.12;
+      ring.style.left = ringX + 'px';
+      ring.style.top = ringY + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.width = '20px';
+        cursor.style.height = '20px';
+        ring.style.width = '56px';
+        ring.style.height = '56px';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.width = '10px';
+        cursor.style.height = '10px';
+        ring.style.width = '36px';
+        ring.style.height = '36px';
+      });
     });
-  });
 
-  // Floating particles
-  function createParticle() {
-    const p = document.createElement('div');
-    p.className = 'particle';
-    const x = Math.random() * 100;
-    const dur = 6 + Math.random() * 10;
-    const drift = (Math.random() - 0.5) * 200;
-    p.style.cssText = `left:${x}vw; animation-duration:${dur}s; animation-delay:${Math.random()*8}s; --drift:${drift}px;`;
-    document.body.appendChild(p);
-  }
-  for (let i = 0; i < 25; i++) createParticle();
-
-  // Intersection observer for scroll animations
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((e, i) => {
-      if (e.isIntersecting) {
-        setTimeout(() => e.target.classList.add('visible'), i * 80);
-        observer.unobserve(e.target);
-
-        // Counter animation for stats
-        const num = e.target.querySelector('[data-target]');
-        if (num) {
-          const target = +num.dataset.target;
-          let cur = 0;
-          const step = target / 60;
-          const timer = setInterval(() => {
-            cur = Math.min(cur + step, target);
-            num.textContent = Math.round(cur) + (num.closest('.stat-item') && num.closest('.stat-item').querySelector('.stat-label').textContent.includes('%') ? '' : '+');
-            if (cur >= target) clearInterval(timer);
-          }, 24);
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+          observer.unobserve(entry.target);
         }
-      }
-    });
-  }, { threshold: 0.15 });
-
-  document.querySelectorAll('.observe').forEach(el => observer.observe(el));
-
-  // Hamburger
-  document.getElementById('hamburger').addEventListener('click', function() {
-    this.classList.toggle('open');
-  });
-
-  // Parallax on hero orbs
-  document.addEventListener('mousemove', e => {
-    const x = (e.clientX / window.innerWidth - 0.5) * 30;
-    const y = (e.clientY / window.innerHeight - 0.5) * 30;
-    document.querySelector('.orb-1').style.transform = `translate(${x}px, ${y}px)`;
-    document.querySelector('.orb-2').style.transform = `translate(${-x}px, ${-y}px)`;
-    document.querySelector('.orb-3').style.transform = `translate(${x*0.5}px, ${y*0.5}px)`;
-  });
-</script>
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
 </body>
 </html>
