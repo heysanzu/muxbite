@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="background:#ffffff;">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,856 +12,589 @@
     :root {
       --black: #000000;
       --white: #ffffff;
-      --gray-900: #0a0a0a;
-      --gray-800: #111111;
-      --gray-700: #1a1a1a;
-      --gray-600: #333333;
-      --gray-400: #666666;
-      --gray-200: #aaaaaa;
-      --gray-100: #dddddd;
-      --border: rgba(255,255,255,0.07);
-      --border-bright: rgba(255,255,255,0.14);
+      --gray-50: #f7f7f7;
+      --gray-100: #f0f0f0;
+      --gray-150: #ebebeb;
+      --gray-200: #e2e2e2;
+      --gray-300: #cccccc;
+      --gray-400: #999999;
+      --gray-500: #666666;
+      --gray-600: #444444;
+      --gray-800: #1a1a1a;
+      --gray-900: #111111;
+      --border: #e8e8e8;
+      --border-dark: #d4d4d4;
       --font-brand: 'Orbitron', sans-serif;
-      --font-body: 'Product Sans', 'Google Sans', sans-serif;
+      --font-body: 'Product Sans', 'Google Sans', 'Segoe UI', sans-serif;
     }
 
-    html, body { height: 100%; }
+    html, body { height: 100%; background: #ffffff; }
 
     body {
-      background: var(--black);
-      color: var(--white);
+      background: #ffffff;
+      color: var(--gray-900);
       font-family: var(--font-body);
       overflow: hidden;
-      cursor: none;
     }
 
-    /* ── CURSOR ── */
-    .cursor {
-      position: fixed;
-      width: 8px; height: 8px;
-      background: white;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-      mix-blend-mode: difference;
-      transition: width 0.15s, height 0.15s;
-    }
-    .cursor-ring {
-      position: fixed;
-      width: 32px; height: 32px;
-      border: 1px solid rgba(255,255,255,0.3);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9998;
-      transform: translate(-50%, -50%);
-      transition: width 0.2s, height 0.2s;
-    }
-
-    /* ── NOISE ── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-      opacity: 0.4;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* ── LAYOUT ── */
+    /* ── APP SHELL ── */
     .app {
       display: grid;
       grid-template-columns: 260px 1fr;
-      grid-template-rows: 56px 1fr;
+      grid-template-rows: 60px 1fr;
       height: 100vh;
-      position: relative;
-      z-index: 1;
     }
 
     /* ── TOPBAR ── */
     .topbar {
       grid-column: 1 / -1;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      display: flex; align-items: center; justify-content: space-between;
       padding: 0 24px;
+      background: var(--white);
       border-bottom: 1px solid var(--border);
-      background: rgba(0,0,0,0.9);
-      backdrop-filter: blur(20px);
     }
-
-    .topbar-left {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .topbar-logo {
-      font-family: var(--font-brand);
-      font-size: 13px;
-      letter-spacing: 0.15em;
-      color: var(--white);
-      text-decoration: none;
-    }
-
-    .topbar-divider {
-      width: 1px; height: 16px;
-      background: var(--border-bright);
-    }
-
-    .topbar-agent {
-      font-family: var(--font-brand);
-      font-size: 11px;
-      letter-spacing: 0.2em;
-      color: var(--gray-400);
-    }
-
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .status-dot {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      color: var(--gray-400);
-    }
-
-    .status-dot::before {
-      content: '';
-      width: 6px; height: 6px;
-      background: white;
-      border-radius: 50%;
-      animation: blink 2s ease-in-out infinite;
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.2; }
-    }
-
-    .topbar-btn {
-      font-family: var(--font-body);
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--gray-400);
-      background: transparent;
-      border: 1px solid var(--border);
-      padding: 6px 14px;
-      cursor: none;
-      transition: color 0.2s, border-color 0.2s;
-      text-decoration: none;
-    }
-
-    .topbar-btn:hover { color: var(--white); border-color: var(--border-bright); }
+    .topbar-left { display: flex; align-items: center; gap: 16px; }
+    .topbar-logo { font-family: var(--font-brand); font-size: 13px; letter-spacing: 0.12em; color: var(--black); text-decoration: none; }
+    .topbar-divider { width: 1px; height: 16px; background: var(--border-dark); }
+    .topbar-agent { font-family: var(--font-brand); font-size: 10px; letter-spacing: 0.18em; color: var(--gray-400); }
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .status-badge { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--gray-400); letter-spacing: 0.06em; }
+    .status-badge::before { content: ''; width: 6px; height: 6px; background: var(--gray-400); border-radius: 50%; animation: blink 2.5s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+    .topbar-btn { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-500); background: transparent; border: 1px solid var(--border-dark); padding: 6px 14px; cursor: pointer; text-decoration: none; transition: color 0.2s, border-color 0.2s; }
+    .topbar-btn:hover { color: var(--black); border-color: var(--gray-400); }
 
     /* ── SIDEBAR ── */
     .sidebar {
+      background: var(--gray-50);
       border-right: 1px solid var(--border);
-      background: var(--gray-900);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
+      display: flex; flex-direction: column; overflow: hidden;
     }
-
-    .sidebar-section {
-      padding: 16px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .sidebar-label {
-      font-size: 9px;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--gray-600);
-      margin-bottom: 12px;
-      padding: 0 4px;
-    }
-
+    .sidebar-top { padding: 16px; border-bottom: 1px solid var(--border); }
     .new-chat-btn {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      background: transparent;
-      border: 1px solid var(--border-bright);
-      color: var(--white);
-      font-family: var(--font-body);
-      font-size: 12px;
-      letter-spacing: 0.06em;
-      cursor: none;
-      transition: background 0.2s;
-      text-align: left;
+      width: 100%; display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; background: var(--white); border: 1px solid var(--border-dark);
+      color: var(--gray-800); font-family: var(--font-body); font-size: 13px;
+      cursor: pointer; transition: background 0.15s; text-align: left;
     }
+    .new-chat-btn:hover { background: var(--gray-100); }
+    .new-chat-btn .icon { font-size: 16px; color: var(--gray-400); }
 
-    .new-chat-btn:hover { background: var(--gray-800); }
-
-    .new-chat-btn span { font-size: 16px; line-height: 1; }
-
-    .sidebar-history {
-      flex: 1;
-      overflow-y: auto;
-      padding: 8px;
-    }
-
+    .sidebar-section-label { font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gray-400); padding: 14px 16px 6px; }
+    .sidebar-history { flex: 1; overflow-y: auto; padding: 4px 8px 8px; }
     .sidebar-history::-webkit-scrollbar { width: 3px; }
-    .sidebar-history::-webkit-scrollbar-track { background: transparent; }
-    .sidebar-history::-webkit-scrollbar-thumb { background: var(--gray-600); border-radius: 2px; }
+    .sidebar-history::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 2px; }
 
     .history-item {
-      padding: 10px 12px;
-      border-radius: 0;
-      cursor: none;
-      transition: background 0.2s;
-      margin-bottom: 2px;
-      border-left: 2px solid transparent;
+      padding: 9px 10px; cursor: pointer; border-left: 2px solid transparent;
+      transition: background 0.15s; margin-bottom: 2px; border-radius: 0;
     }
+    .history-item:hover { background: var(--gray-150); }
+    .history-item.active { background: var(--gray-200); border-left-color: var(--black); }
+    .history-title { font-size: 12px; color: var(--gray-600); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
+    .history-time { font-size: 10px; color: var(--gray-400); }
 
-    .history-item:hover { background: var(--gray-800); }
-    .history-item.active { background: var(--gray-800); border-left-color: var(--white); }
-
-    .history-title {
-      font-size: 12px;
-      color: var(--gray-200);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-bottom: 3px;
-    }
-
-    .history-time {
-      font-size: 10px;
-      color: var(--gray-600);
-      letter-spacing: 0.05em;
-    }
-
-    .sidebar-footer {
-      padding: 16px;
-      border-top: 1px solid var(--border);
-    }
-
-    .sidebar-model {
-      font-size: 10px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--gray-600);
-      margin-bottom: 4px;
-    }
-
-    .sidebar-model-name {
-      font-family: var(--font-brand);
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      color: var(--gray-400);
-    }
+    .sidebar-footer { padding: 14px 16px; border-top: 1px solid var(--border); }
+    .sidebar-model-label { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 4px; }
+    .sidebar-model-name { font-family: var(--font-brand); font-size: 10px; letter-spacing: 0.1em; color: var(--gray-500); }
 
     /* ── MAIN ── */
-    .main {
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
+    .main { display: flex; flex-direction: column; overflow: hidden; background: var(--white); }
 
     /* ── WELCOME ── */
     .welcome {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 40px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 40px; text-align: center; position: relative; overflow: hidden;
     }
-
-    .welcome::before {
-      content: 'X';
-      position: absolute;
-      font-family: var(--font-brand);
-      font-size: 50vw;
-      color: transparent;
-      -webkit-text-stroke: 1px rgba(255,255,255,0.025);
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-      line-height: 1;
+    .welcome-bg {
+      position: absolute; font-family: var(--font-brand); font-size: 36vw;
+      color: transparent; -webkit-text-stroke: 1px rgba(0,0,0,0.025);
+      top: 50%; left: 50%; transform: translate(-50%,-50%);
+      pointer-events: none; user-select: none; line-height: 1;
     }
+    .welcome-x { font-family: var(--font-brand); font-size: 48px; letter-spacing: -0.02em; color: var(--black); margin-bottom: 20px; opacity: 0; animation: fadeUp 0.6s ease 0.1s forwards; }
+    .welcome-title { font-family: var(--font-brand); font-size: clamp(20px, 2.8vw, 32px); letter-spacing: 0.06em; color: var(--black); margin-bottom: 10px; opacity: 0; animation: fadeUp 0.6s ease 0.22s forwards; }
+    .welcome-sub { font-size: 14px; color: var(--gray-400); max-width: 400px; line-height: 1.7; margin-bottom: 44px; opacity: 0; animation: fadeUp 0.6s ease 0.34s forwards; }
 
-    .welcome-icon {
-      font-family: var(--font-brand);
-      font-size: 56px;
-      letter-spacing: -0.02em;
-      margin-bottom: 24px;
-      opacity: 0;
-      animation: fadeUp 0.7s ease 0.2s forwards;
-    }
-
-    .welcome-title {
-      font-family: var(--font-brand);
-      font-size: clamp(22px, 3vw, 36px);
-      letter-spacing: 0.05em;
-      margin-bottom: 12px;
-      opacity: 0;
-      animation: fadeUp 0.7s ease 0.35s forwards;
-    }
-
-    .welcome-sub {
-      font-size: 14px;
-      color: var(--gray-400);
-      max-width: 440px;
-      line-height: 1.7;
-      margin-bottom: 48px;
-      opacity: 0;
-      animation: fadeUp 0.7s ease 0.5s forwards;
-    }
-
-    .suggestions {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      max-width: 560px;
-      width: 100%;
-      opacity: 0;
-      animation: fadeUp 0.7s ease 0.65s forwards;
-    }
-
+    .suggestions { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; max-width: 540px; width: 100%; opacity: 0; animation: fadeUp 0.6s ease 0.46s forwards; }
     .suggestion-btn {
-      background: var(--gray-900);
-      border: 1px solid var(--border);
-      padding: 14px 18px;
-      text-align: left;
-      cursor: none;
-      transition: background 0.2s, border-color 0.2s;
+      background: var(--white); border: 1px solid var(--border-dark);
+      padding: 14px 16px; text-align: left; cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
     }
-
-    .suggestion-btn:hover {
-      background: var(--gray-800);
-      border-color: var(--border-bright);
-    }
-
-    .suggestion-label {
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--gray-600);
-      margin-bottom: 6px;
-    }
-
-    .suggestion-text {
-      font-size: 13px;
-      color: var(--gray-200);
-      line-height: 1.4;
-    }
+    .suggestion-btn:hover { background: var(--gray-50); border-color: var(--gray-400); }
+    .suggestion-label { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 6px; }
+    .suggestion-text { font-size: 12px; color: var(--gray-600); line-height: 1.45; }
 
     /* ── CHAT AREA ── */
     .chat-area {
-      flex: 1;
-      overflow-y: auto;
-      padding: 40px 60px;
-      display: none;
-      flex-direction: column;
-      gap: 32px;
-      scroll-behavior: smooth;
+      flex: 1; overflow-y: auto; padding: 32px 0;
+      display: none; flex-direction: column; gap: 0;
+      background: var(--gray-50);
     }
-
-    .chat-area::-webkit-scrollbar { width: 3px; }
-    .chat-area::-webkit-scrollbar-track { background: transparent; }
-    .chat-area::-webkit-scrollbar-thumb { background: var(--gray-600); border-radius: 2px; }
-
+    .chat-area::-webkit-scrollbar { width: 4px; }
+    .chat-area::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 2px; }
     .chat-area.active { display: flex; }
 
-    .message {
-      display: flex;
-      gap: 16px;
-      max-width: 800px;
-      animation: fadeUp 0.4s ease forwards;
+    /* ── MESSAGE ── */
+    .message-wrapper {
+      padding: 20px 48px;
+      position: relative;
+      animation: fadeUp 0.35s ease forwards;
     }
+    .message-wrapper:hover .message-actions { opacity: 1; }
+    .message-wrapper.user { background: var(--white); }
+    .message-wrapper.assistant { background: var(--gray-50); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
 
-    .message.user { align-self: flex-end; flex-direction: row-reverse; }
+    .message-inner { max-width: 720px; margin: 0 auto; display: flex; gap: 16px; }
 
     .message-avatar {
-      width: 32px; height: 32px;
-      border: 1px solid var(--border-bright);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-brand);
-      font-size: 9px;
-      letter-spacing: 0.05em;
-      flex-shrink: 0;
-      color: var(--gray-400);
+      width: 30px; height: 30px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-brand); font-size: 9px; letter-spacing: 0.06em;
+      border: 1px solid var(--border-dark); color: var(--gray-500);
+      background: var(--white); margin-top: 2px;
     }
+    .message-wrapper.user .message-avatar { background: var(--black); color: var(--white); border-color: var(--black); }
 
-    .message.user .message-avatar {
-      background: var(--white);
-      color: var(--black);
-      border-color: var(--white);
-      font-size: 10px;
+    .message-body { flex: 1; min-width: 0; }
+    .message-sender { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 8px; }
+    .message-text { font-size: 14px; line-height: 1.8; color: var(--gray-800); word-wrap: break-word; }
+    .message-text p + p { margin-top: 10px; }
+    .message-text strong { color: var(--black); font-weight: 600; }
+    .message-text code { background: var(--gray-100); padding: 2px 6px; font-family: monospace; font-size: 12px; border: 1px solid var(--border-dark); }
+
+    /* ── MESSAGE ACTIONS ── */
+    .message-actions {
+      position: absolute; right: 48px; top: 18px;
+      display: flex; gap: 4px; opacity: 0;
+      transition: opacity 0.2s;
     }
-
-    .message-body { flex: 1; }
-
-    .message-sender {
-      font-size: 10px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gray-600);
-      margin-bottom: 10px;
+    .action-btn {
+      display: flex; align-items: center; gap: 5px;
+      padding: 5px 10px; background: var(--white);
+      border: 1px solid var(--border-dark); cursor: pointer;
+      font-size: 11px; color: var(--gray-500);
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      font-family: var(--font-body);
     }
+    .action-btn:hover { background: var(--gray-100); color: var(--black); border-color: var(--gray-400); }
+    .action-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+    .action-btn.success { color: var(--gray-500); border-color: var(--gray-300); background: var(--gray-50); }
 
-    .message-text {
-      font-size: 14px;
-      line-height: 1.8;
-      color: var(--gray-100);
+    /* ── EDIT OVERLAY ── */
+    .edit-area {
+      display: none; width: 100%; font-family: var(--font-body);
+      font-size: 14px; line-height: 1.8; color: var(--gray-800);
+      background: var(--white); border: 1px solid var(--border-dark);
+      padding: 10px 12px; resize: none; outline: none;
+      min-height: 80px;
     }
+    .edit-area.active { display: block; }
+    .edit-controls { display: none; gap: 8px; margin-top: 10px; }
+    .edit-controls.active { display: flex; }
+    .edit-save { font-size: 12px; padding: 7px 18px; background: var(--black); color: var(--white); border: none; cursor: pointer; font-family: var(--font-body); }
+    .edit-save:hover { background: var(--gray-800); }
+    .edit-cancel { font-size: 12px; padding: 7px 18px; background: transparent; color: var(--gray-500); border: 1px solid var(--border-dark); cursor: pointer; font-family: var(--font-body); }
+    .edit-cancel:hover { color: var(--black); border-color: var(--gray-400); }
 
-    .message.user .message-text {
-      background: var(--gray-900);
-      border: 1px solid var(--border);
-      padding: 12px 18px;
-      text-align: right;
-    }
-
-    .message-text p + p { margin-top: 12px; }
-
-    .message-text strong { color: var(--white); font-weight: 600; }
-
-    .thinking {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 0;
-    }
-
-    .thinking-dot {
-      width: 6px; height: 6px;
-      background: var(--gray-400);
-      border-radius: 50%;
-      animation: thinkPulse 1.2s ease-in-out infinite;
-    }
-
-    .thinking-dot:nth-child(2) { animation-delay: 0.2s; }
-    .thinking-dot:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes thinkPulse {
-      0%, 60%, 100% { transform: scale(1); opacity: 0.4; }
-      30% { transform: scale(1.4); opacity: 1; }
-    }
+    /* ── THINKING ── */
+    .thinking { display: flex; align-items: center; gap: 5px; padding: 4px 0; }
+    .thinking-dot { width: 6px; height: 6px; background: var(--gray-300); border-radius: 50%; animation: tp 1.2s ease-in-out infinite; }
+    .thinking-dot:nth-child(2) { animation-delay: 0.18s; }
+    .thinking-dot:nth-child(3) { animation-delay: 0.36s; }
+    @keyframes tp { 0%,60%,100%{transform:scale(1);opacity:0.4} 30%{transform:scale(1.4);opacity:1} }
 
     /* ── INPUT AREA ── */
     .input-area {
-      padding: 20px 60px 28px;
+      padding: 16px 48px 20px;
       border-top: 1px solid var(--border);
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(20px);
+      background: var(--white);
     }
-
     .input-wrapper {
-      display: flex;
-      align-items: flex-end;
-      gap: 12px;
-      border: 1px solid var(--border-bright);
-      background: var(--gray-900);
-      padding: 14px 16px;
+      max-width: 720px; margin: 0 auto;
+      display: flex; align-items: flex-end; gap: 10px;
+      border: 1px solid var(--border-dark); background: var(--white); padding: 12px 14px;
       transition: border-color 0.2s;
     }
-
-    .input-wrapper:focus-within { border-color: rgba(255,255,255,0.3); }
-
+    .input-wrapper:focus-within { border-color: var(--gray-400); }
     .chat-input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: var(--white);
-      font-family: var(--font-body);
-      font-size: 14px;
-      line-height: 1.6;
-      resize: none;
-      max-height: 160px;
-      overflow-y: auto;
+      flex: 1; background: transparent; border: none; outline: none;
+      color: var(--gray-900); font-family: var(--font-body); font-size: 14px;
+      line-height: 1.6; resize: none; max-height: 160px; overflow-y: auto;
     }
-
-    .chat-input::placeholder { color: var(--gray-600); }
-
+    .chat-input::placeholder { color: var(--gray-400); }
     .chat-input::-webkit-scrollbar { width: 2px; }
-    .chat-input::-webkit-scrollbar-thumb { background: var(--gray-600); }
-
+    .chat-input::-webkit-scrollbar-thumb { background: var(--gray-300); }
     .send-btn {
-      background: var(--white);
-      border: none;
-      width: 36px; height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: none;
-      flex-shrink: 0;
-      transition: background 0.2s, opacity 0.2s;
-      opacity: 0.3;
+      background: var(--gray-200); border: none;
+      width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0; transition: background 0.15s; opacity: 0.4;
     }
-
-    .send-btn.active { opacity: 1; }
-    .send-btn:hover.active { background: var(--gray-100); }
-
-    .send-btn svg { width: 16px; height: 16px; }
-
-    .input-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 10px;
-      padding: 0 2px;
-    }
-
-    .input-hint {
-      font-size: 10px;
-      letter-spacing: 0.1em;
-      color: var(--gray-600);
-    }
-
-    .input-model {
-      font-family: var(--font-brand);
-      font-size: 9px;
-      letter-spacing: 0.15em;
-      color: var(--gray-600);
-    }
+    .send-btn.active { background: var(--black); opacity: 1; }
+    .send-btn.active svg { stroke: var(--white); }
+    .send-btn svg { width: 14px; height: 14px; stroke: var(--gray-500); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .input-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; max-width: 720px; margin-left: auto; margin-right: auto; padding: 0 2px; }
+    .input-hint { font-size: 10px; letter-spacing: 0.06em; color: var(--gray-400); }
+    .input-model { font-family: var(--font-brand); font-size: 9px; letter-spacing: 0.14em; color: var(--gray-400); }
 
     /* ── ANIMATIONS ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
 
-    /* ── MOBILE ── */
+    /* ── RESPONSIVE ── */
     @media (max-width: 720px) {
-      body { overflow: auto; cursor: auto; }
-      .cursor, .cursor-ring { display: none; }
-      .app { grid-template-columns: 1fr; grid-template-rows: 56px 1fr auto; height: auto; min-height: 100vh; overflow: hidden; }
+      body { overflow: auto; }
+      .app { grid-template-columns: 1fr; grid-template-rows: 56px 1fr auto; height: 100svh; }
       .sidebar { display: none; }
-      .main { height: calc(100vh - 56px); }
-      .chat-area { padding: 24px 16px; }
-      .input-area { padding: 12px 16px 20px; }
-      .welcome { padding: 24px 16px; }
-      .suggestions { grid-template-columns: 1fr; }
+      .chat-area { padding: 20px 0; }
+      .message-wrapper { padding: 16px 20px; }
+      .message-actions { right: 20px; }
+      .input-area { padding: 12px 16px 18px; }
     }
   </style>
 </head>
 <body>
+<div class="app">
 
-  <div class="cursor" id="cursor"></div>
-  <div class="cursor-ring" id="cursorRing"></div>
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <a href="index.html" class="topbar-logo">MUXBITE</a>
+      <div class="topbar-divider"></div>
+      <span class="topbar-agent">X · Agent</span>
+    </div>
+    <div class="topbar-right">
+      <span class="status-badge">Online</span>
+      <a href="index.html" class="topbar-btn">← Home</a>
+    </div>
+  </header>
 
-  <div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <button class="new-chat-btn" onclick="newChat()">
+        <span class="icon">+</span> New Conversation
+      </button>
+    </div>
+    <p class="sidebar-section-label">Recent</p>
+    <div class="sidebar-history" id="sidebarHistory"></div>
+    <div class="sidebar-footer">
+      <p class="sidebar-model-label">Active Model</p>
+      <p class="sidebar-model-name">MUXBITE X · v0.1</p>
+    </div>
+  </aside>
 
-    <!-- TOPBAR -->
-    <header class="topbar">
-      <div class="topbar-left">
-        <a href="index.html" class="topbar-logo">MUXBITE</a>
-        <div class="topbar-divider"></div>
-        <span class="topbar-agent">X · Agent</span>
-      </div>
-      <div class="topbar-right">
-        <span class="status-dot">Online</span>
-        <a href="index.html" class="topbar-btn">← Home</a>
-      </div>
-    </header>
+  <!-- MAIN -->
+  <main class="main">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-      <div class="sidebar-section">
-        <button class="new-chat-btn" onclick="newChat()">
-          <span>+</span> New Conversation
+    <!-- WELCOME -->
+    <div class="welcome" id="welcomeScreen">
+      <div class="welcome-bg">X</div>
+      <div class="welcome-x">X</div>
+      <h1 class="welcome-title">MUXBITE X</h1>
+      <p class="welcome-sub">An AI agent built for depth. Ask anything — research, analysis, ideas, or just a conversation.</p>
+      <div class="suggestions">
+        <button class="suggestion-btn" onclick="fillSuggestion('What is MUXBITE building and why does it matter?')">
+          <p class="suggestion-label">Company</p>
+          <p class="suggestion-text">What is MUXBITE building and why does it matter?</p>
+        </button>
+        <button class="suggestion-btn" onclick="fillSuggestion('Explain transformer architecture in simple terms')">
+          <p class="suggestion-label">Research</p>
+          <p class="suggestion-text">Explain transformer architecture in simple terms</p>
+        </button>
+        <button class="suggestion-btn" onclick="fillSuggestion('What is the state of multilingual AI models in 2025?')">
+          <p class="suggestion-label">Explore</p>
+          <p class="suggestion-text">State of multilingual AI models in 2025</p>
+        </button>
+        <button class="suggestion-btn" onclick="fillSuggestion('Help me think through building a startup from scratch')">
+          <p class="suggestion-label">Strategy</p>
+          <p class="suggestion-text">Help me build a startup from scratch</p>
         </button>
       </div>
-      <div class="sidebar-section">
-        <p class="sidebar-label">Recent</p>
+    </div>
+
+    <!-- CHAT -->
+    <div class="chat-area" id="chatArea"></div>
+
+    <!-- INPUT -->
+    <div class="input-area">
+      <div class="input-wrapper">
+        <textarea class="chat-input" id="chatInput" placeholder="Ask MUXBITE X anything..." rows="1"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+          <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
       </div>
-      <div class="sidebar-history" id="sidebarHistory">
-        <!-- populated by JS -->
+      <div class="input-meta">
+        <span class="input-hint">Enter to send · Shift+Enter for new line</span>
+        <span class="input-model">MUXBITE X</span>
       </div>
-      <div class="sidebar-footer">
-        <p class="sidebar-model">Active Model</p>
-        <p class="sidebar-model-name">MUXBITE X — v0.1</p>
-      </div>
-    </aside>
+    </div>
 
-    <!-- MAIN -->
-    <main class="main">
+  </main>
+</div>
 
-      <!-- WELCOME STATE -->
-      <div class="welcome" id="welcomeScreen">
-        <div class="welcome-icon">X</div>
-        <h1 class="welcome-title">MUXBITE X</h1>
-        <p class="welcome-sub">An AI agent built for depth. Ask anything — research, analysis, ideas, code, or just a conversation.</p>
-        <div class="suggestions">
-          <button class="suggestion-btn" onclick="fillSuggestion('What is MUXBITE building and why does it matter?')">
-            <p class="suggestion-label">Company</p>
-            <p class="suggestion-text">What is MUXBITE building and why does it matter?</p>
-          </button>
-          <button class="suggestion-btn" onclick="fillSuggestion('Explain transformer architecture in simple terms')">
-            <p class="suggestion-label">Research</p>
-            <p class="suggestion-text">Explain transformer architecture in simple terms</p>
-          </button>
-          <button class="suggestion-btn" onclick="fillSuggestion('What is the state of Indian language AI models in 2025?')">
-            <p class="suggestion-label">Explore</p>
-            <p class="suggestion-text">State of Indian language AI models in 2025</p>
-          </button>
-          <button class="suggestion-btn" onclick="fillSuggestion('Help me think through building a startup from scratch in India')">
-            <p class="suggestion-label">Strategy</p>
-            <p class="suggestion-text">Help me build a startup from scratch in India</p>
-          </button>
-        </div>
-      </div>
+<script>
+  const chatArea = document.getElementById('chatArea');
+  const welcomeScreen = document.getElementById('welcomeScreen');
+  const chatInput = document.getElementById('chatInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const sidebarHistory = document.getElementById('sidebarHistory');
 
-      <!-- CHAT STATE -->
-      <div class="chat-area" id="chatArea"></div>
+  let conversationHistory = [];
+  let isThinking = false;
+  let messageCounter = 0;
 
-      <!-- INPUT -->
-      <div class="input-area">
-        <div class="input-wrapper">
-          <textarea
-            class="chat-input"
-            id="chatInput"
-            placeholder="Ask MUXBITE X anything..."
-            rows="1"
-          ></textarea>
-          <button class="send-btn" id="sendBtn" onclick="sendMessage()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="22" y1="2" x2="11" y2="13"></line>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-            </svg>
-          </button>
-        </div>
-        <div class="input-meta">
-          <span class="input-hint">Enter to send · Shift+Enter for new line</span>
-          <span class="input-model">MUXBITE X</span>
-        </div>
-      </div>
+  // Auto-resize textarea
+  chatInput.addEventListener('input', () => {
+    chatInput.style.height = 'auto';
+    chatInput.style.height = Math.min(chatInput.scrollHeight, 160) + 'px';
+    sendBtn.classList.toggle('active', chatInput.value.trim().length > 0);
+  });
 
-    </main>
-  </div>
+  chatInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (chatInput.value.trim() && !isThinking) sendMessage();
+    }
+  });
 
-  <script>
-    // ── CURSOR ──
-    const cursor = document.getElementById('cursor');
-    const ring = document.getElementById('cursorRing');
-    let mx = 0, my = 0, rx = 0, ry = 0;
+  function fillSuggestion(text) {
+    chatInput.value = text;
+    chatInput.dispatchEvent(new Event('input'));
+    chatInput.focus();
+  }
 
-    document.addEventListener('mousemove', e => {
-      mx = e.clientX; my = e.clientY;
-      cursor.style.left = mx + 'px';
-      cursor.style.top = my + 'px';
+  function showChat() {
+    welcomeScreen.style.display = 'none';
+    chatArea.classList.add('active');
+  }
+
+  function newChat() {
+    conversationHistory = [];
+    chatArea.innerHTML = '';
+    chatArea.classList.remove('active');
+    welcomeScreen.style.display = '';
+    chatInput.value = '';
+    chatInput.style.height = 'auto';
+    sendBtn.classList.remove('active');
+    messageCounter = 0;
+    sidebarHistory.querySelectorAll('.history-item').forEach(el => el.classList.remove('active'));
+  }
+
+  function formatText(text) {
+    return text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/`(.*?)`/g, '<code>$1</code>')
+      .split('\n\n').map(p => p.trim() ? `<p>${p.replace(/\n/g,'<br/>')}</p>` : '').join('');
+  }
+
+  function copyToClipboard(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+      const orig = btn.innerHTML;
+      btn.innerHTML = `<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Copied`;
+      btn.classList.add('success');
+      setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('success'); }, 2000);
     });
+  }
 
-    (function animateRing() {
-      rx += (mx - rx) * 0.12;
-      ry += (my - ry) * 0.12;
-      ring.style.left = rx + 'px';
-      ring.style.top = ry + 'px';
-      requestAnimationFrame(animateRing);
-    })();
+  function shareMessage(text) {
+    if (navigator.share) {
+      navigator.share({ text });
+    } else {
+      navigator.clipboard.writeText(text);
+      alert('Link copied to clipboard');
+    }
+  }
 
-    document.querySelectorAll('a, button, textarea').forEach(el => {
-      el.addEventListener('mouseenter', () => {
-        cursor.style.width = '16px'; cursor.style.height = '16px';
-        ring.style.width = '48px'; ring.style.height = '48px';
+  function startEdit(msgId, currentText, isUser) {
+    const wrapper = document.getElementById(msgId);
+    const textEl = wrapper.querySelector('.message-text');
+    const editArea = wrapper.querySelector('.edit-area');
+    const editControls = wrapper.querySelector('.edit-controls');
+    textEl.style.display = 'none';
+    editArea.value = currentText;
+    editArea.classList.add('active');
+    editControls.classList.add('active');
+    editArea.focus();
+  }
+
+  function cancelEdit(msgId) {
+    const wrapper = document.getElementById(msgId);
+    const textEl = wrapper.querySelector('.message-text');
+    const editArea = wrapper.querySelector('.edit-area');
+    const editControls = wrapper.querySelector('.edit-controls');
+    textEl.style.display = '';
+    editArea.classList.remove('active');
+    editControls.classList.remove('active');
+  }
+
+  function saveEdit(msgId, role) {
+    const wrapper = document.getElementById(msgId);
+    const textEl = wrapper.querySelector('.message-text');
+    const editArea = wrapper.querySelector('.edit-area');
+    const editControls = wrapper.querySelector('.edit-controls');
+    const newText = editArea.value.trim();
+    if (!newText) return;
+    textEl.innerHTML = formatText(newText);
+    textEl.style.display = '';
+    editArea.classList.remove('active');
+    editControls.classList.remove('active');
+    // Update conversation history
+    const idx = parseInt(wrapper.dataset.historyIndex);
+    if (!isNaN(idx) && conversationHistory[idx]) {
+      conversationHistory[idx].content = newText;
+    }
+  }
+
+  function addMessage(role, content) {
+    showChat();
+    messageCounter++;
+    const msgId = `msg-${messageCounter}`;
+    const histIdx = conversationHistory.length - 1;
+
+    const wrapper = document.createElement('div');
+    wrapper.className = `message-wrapper ${role}`;
+    wrapper.id = msgId;
+    wrapper.dataset.historyIndex = histIdx;
+    wrapper.dataset.rawContent = content;
+
+    const inner = document.createElement('div');
+    inner.className = 'message-inner';
+
+    const avatar = document.createElement('div');
+    avatar.className = 'message-avatar';
+    avatar.textContent = role === 'user' ? 'YOU' : 'X';
+
+    const body = document.createElement('div');
+    body.className = 'message-body';
+
+    const sender = document.createElement('div');
+    sender.className = 'message-sender';
+    sender.textContent = role === 'user' ? 'You' : 'MUXBITE X';
+
+    const text = document.createElement('div');
+    text.className = 'message-text';
+    text.innerHTML = formatText(content);
+
+    const editArea = document.createElement('textarea');
+    editArea.className = 'edit-area';
+    editArea.value = content;
+
+    const editControls = document.createElement('div');
+    editControls.className = 'edit-controls';
+    editControls.innerHTML = `
+      <button class="edit-save" onclick="saveEdit('${msgId}','${role}')">Save</button>
+      <button class="edit-cancel" onclick="cancelEdit('${msgId}')">Cancel</button>
+    `;
+
+    body.appendChild(sender);
+    body.appendChild(text);
+    body.appendChild(editArea);
+    body.appendChild(editControls);
+    inner.appendChild(avatar);
+    inner.appendChild(body);
+
+    // Actions
+    const actions = document.createElement('div');
+    actions.className = 'message-actions';
+    actions.innerHTML = `
+      <button class="action-btn" title="Copy" onclick="copyToClipboard(document.getElementById('${msgId}').dataset.rawContent, this)">
+        <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy
+      </button>
+      <button class="action-btn" title="Edit" onclick="startEdit('${msgId}','${content}','${role === 'user'}')">
+        <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Edit
+      </button>
+      <button class="action-btn" title="Share" onclick="shareMessage(document.getElementById('${msgId}').dataset.rawContent)">
+        <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        Share
+      </button>
+    `;
+
+    wrapper.appendChild(inner);
+    wrapper.appendChild(actions);
+    chatArea.appendChild(wrapper);
+    chatArea.scrollTop = chatArea.scrollHeight;
+  }
+
+  function addThinking() {
+    showChat();
+    const wrapper = document.createElement('div');
+    wrapper.className = 'message-wrapper assistant';
+    wrapper.id = 'thinkingMsg';
+    wrapper.innerHTML = `
+      <div class="message-inner">
+        <div class="message-avatar">X</div>
+        <div class="message-body">
+          <div class="message-sender">MUXBITE X</div>
+          <div class="thinking">
+            <div class="thinking-dot"></div>
+            <div class="thinking-dot"></div>
+            <div class="thinking-dot"></div>
+          </div>
+        </div>
+      </div>`;
+    chatArea.appendChild(wrapper);
+    chatArea.scrollTop = chatArea.scrollHeight;
+  }
+
+  function removeThinking() {
+    const el = document.getElementById('thinkingMsg');
+    if (el) el.remove();
+  }
+
+  function addSidebarSession(firstMessage) {
+    const preview = firstMessage.length > 38 ? firstMessage.slice(0, 38) + '…' : firstMessage;
+    const item = document.createElement('div');
+    item.className = 'history-item active';
+    item.innerHTML = `<div class="history-title">${preview}</div><div class="history-time">Just now</div>`;
+    sidebarHistory.querySelectorAll('.history-item').forEach(el => el.classList.remove('active'));
+    sidebarHistory.prepend(item);
+  }
+
+  async function sendMessage() {
+    const text = chatInput.value.trim();
+    if (!text || isThinking) return;
+
+    isThinking = true;
+    sendBtn.classList.remove('active');
+
+    if (conversationHistory.length === 0) addSidebarSession(text);
+
+    conversationHistory.push({ role: 'user', content: text });
+    addMessage('user', text);
+
+    chatInput.value = '';
+    chatInput.style.height = 'auto';
+    addThinking();
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: `You are MUXBITE X, the flagship AI agent built by MUXBITE — an AI company building proprietary models and intelligent products. You are thoughtful, precise, and direct. Respond in clear prose. You represent MUXBITE's ambition to build AI from the ground up.`,
+          messages: conversationHistory
+        })
       });
-      el.addEventListener('mouseleave', () => {
-        cursor.style.width = '8px'; cursor.style.height = '8px';
-        ring.style.width = '32px'; ring.style.height = '32px';
-      });
-    });
 
-    // ── CHAT STATE ──
-    const chatArea = document.getElementById('chatArea');
-    const welcomeScreen = document.getElementById('welcomeScreen');
-    const chatInput = document.getElementById('chatInput');
-    const sendBtn = document.getElementById('sendBtn');
-    const sidebarHistory = document.getElementById('sidebarHistory');
-
-    let conversationHistory = [];
-    let sessions = [];
-    let currentSessionId = null;
-    let isThinking = false;
-
-    // Auto-resize textarea
-    chatInput.addEventListener('input', () => {
-      chatInput.style.height = 'auto';
-      chatInput.style.height = Math.min(chatInput.scrollHeight, 160) + 'px';
-      sendBtn.classList.toggle('active', chatInput.value.trim().length > 0);
-    });
-
-    chatInput.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        if (chatInput.value.trim()) sendMessage();
-      }
-    });
-
-    function fillSuggestion(text) {
-      chatInput.value = text;
-      chatInput.dispatchEvent(new Event('input'));
-      chatInput.focus();
+      const data = await res.json();
+      const reply = data.content?.[0]?.text || 'Something went wrong. Please try again.';
+      removeThinking();
+      conversationHistory.push({ role: 'assistant', content: reply });
+      addMessage('assistant', reply);
+    } catch (err) {
+      removeThinking();
+      conversationHistory.push({ role: 'assistant', content: 'Connection error. Please check your network and try again.' });
+      addMessage('assistant', 'Connection error. Please check your network and try again.');
     }
 
-    function showChat() {
-      welcomeScreen.style.display = 'none';
-      chatArea.classList.add('active');
-    }
-
-    function newChat() {
-      conversationHistory = [];
-      chatArea.innerHTML = '';
-      chatArea.classList.remove('active');
-      welcomeScreen.style.display = '';
-      chatInput.value = '';
-      chatInput.style.height = 'auto';
-      sendBtn.classList.remove('active');
-      currentSessionId = null;
-    }
-
-    function addMessage(role, content) {
-      showChat();
-      const msg = document.createElement('div');
-      msg.className = `message ${role}`;
-
-      const avatar = document.createElement('div');
-      avatar.className = 'message-avatar';
-      avatar.textContent = role === 'user' ? 'YOU' : 'X';
-
-      const body = document.createElement('div');
-      body.className = 'message-body';
-
-      const sender = document.createElement('div');
-      sender.className = 'message-sender';
-      sender.textContent = role === 'user' ? 'You' : 'MUXBITE X';
-
-      const text = document.createElement('div');
-      text.className = 'message-text';
-      text.innerHTML = formatText(content);
-
-      body.appendChild(sender);
-      body.appendChild(text);
-      msg.appendChild(avatar);
-      msg.appendChild(body);
-      chatArea.appendChild(msg);
-      chatArea.scrollTop = chatArea.scrollHeight;
-
-      return text;
-    }
-
-    function addThinking() {
-      showChat();
-      const msg = document.createElement('div');
-      msg.className = 'message assistant';
-      msg.id = 'thinkingMsg';
-
-      const avatar = document.createElement('div');
-      avatar.className = 'message-avatar';
-      avatar.textContent = 'X';
-
-      const body = document.createElement('div');
-      body.className = 'message-body';
-
-      const sender = document.createElement('div');
-      sender.className = 'message-sender';
-      sender.textContent = 'MUXBITE X';
-
-      const thinking = document.createElement('div');
-      thinking.className = 'thinking';
-      thinking.innerHTML = '<div class="thinking-dot"></div><div class="thinking-dot"></div><div class="thinking-dot"></div>';
-
-      body.appendChild(sender);
-      body.appendChild(thinking);
-      msg.appendChild(avatar);
-      msg.appendChild(body);
-      chatArea.appendChild(msg);
-      chatArea.scrollTop = chatArea.scrollHeight;
-    }
-
-    function removeThinking() {
-      const el = document.getElementById('thinkingMsg');
-      if (el) el.remove();
-    }
-
-    function formatText(text) {
-      return text
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.*?)\*/g, '<em>$1</em>')
-        .replace(/`(.*?)`/g, '<code style="background:rgba(255,255,255,0.06);padding:2px 6px;font-family:monospace;font-size:12px;">$1</code>')
-        .replace(/\n\n/g, '</p><p>')
-        .replace(/\n/g, '<br/>')
-        .replace(/^(.+)$/, '<p>$1</p>');
-    }
-
-    function addSidebarSession(firstMessage) {
-      const id = Date.now();
-      currentSessionId = id;
-      const preview = firstMessage.length > 36 ? firstMessage.slice(0, 36) + '…' : firstMessage;
-      const item = document.createElement('div');
-      item.className = 'history-item active';
-      item.id = `session-${id}`;
-      item.innerHTML = `
-        <div class="history-title">${preview}</div>
-        <div class="history-time">Just now</div>
-      `;
-      // Remove active from others
-      sidebarHistory.querySelectorAll('.history-item').forEach(el => el.classList.remove('active'));
-      sidebarHistory.prepend(item);
-    }
-
-    async function sendMessage() {
-      const text = chatInput.value.trim();
-      if (!text || isThinking) return;
-
-      isThinking = true;
-      sendBtn.classList.remove('active');
-
-      // First message → create session
-      if (conversationHistory.length === 0) addSidebarSession(text);
-
-      conversationHistory.push({ role: 'user', content: text });
-      addMessage('user', text);
-
-      chatInput.value = '';
-      chatInput.style.height = 'auto';
-      addThinking();
-
-      try {
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: 'claude-sonnet-4-20250514',
-            max_tokens: 1000,
-            system: `You are MUXBITE X, the flagship AI agent built by MUXBITE — an AI company founded by Shahnewaz, building proprietary models, datasets, and intelligent products. You are thoughtful, precise, and direct. You communicate in clean, clear prose without excessive formatting. You are proud of being built by MUXBITE and represent the company's ambition to build AI from the ground up in India.`,
-            messages: conversationHistory
-          })
-        });
-
-        const data = await response.json();
-        const reply = data.content?.[0]?.text || 'Something went wrong. Please try again.';
-
-        removeThinking();
-        conversationHistory.push({ role: 'assistant', content: reply });
-        addMessage('assistant', reply);
-
-      } catch (err) {
-        removeThinking();
-        addMessage('assistant', 'Connection error. Please check your network and try again.');
-      }
-
-      isThinking = false;
-      if (chatInput.value.trim()) sendBtn.classList.add('active');
-    }
-  </script>
+    isThinking = false;
+  }
+</script>
 </body>
 </html>
