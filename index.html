@@ -3,600 +3,333 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>MUXBITE — AI Research Lab</title>
+<title>MUXBITE</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&display=swap" rel="stylesheet"/>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#faf9f7;--white:#fff;--ink:#1a1a18;--ink-2:#3d3d3a;
+  --ink-3:#7a7a74;--ink-4:#b0b0a8;
+  --border:rgba(26,26,24,.1);--border-heavy:rgba(26,26,24,.2);
+  --accent:#c8f135;--accent-dark:#a8d015;
+  --sans:'Google Sans','Product Sans',ui-rounded,system-ui,sans-serif;
+  --orb:'Orbitron',monospace;
+  --max:1100px;--nav:64px;--px:clamp(20px,5vw,40px)
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--cream);color:var(--ink);
+  line-height:1.6;font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 
-  :root {
-    --cream: #faf9f7;
-    --white: #ffffff;
-    --ink: #1a1a18;
-    --ink-2: #3d3d3a;
-    --ink-3: #7a7a74;
-    --ink-4: #b0b0a8;
-    --border: rgba(26,26,24,0.1);
-    --border-heavy: rgba(26,26,24,0.2);
-    --accent: #c8f135;
-    --accent-dark: #a8d015;
-    --sans: 'Google Sans', 'Product Sans', system-ui, sans-serif;
-    --orbitron: 'Orbitron', monospace;
-    --max: 1100px;
-    --nav-h: 64px;
-  }
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 var(--px);background:rgba(250,249,247,.93);
+  backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{font-family:var(--orb);font-size:13px;font-weight:700;
+  letter-spacing:.08em;color:var(--ink);text-decoration:none}
+.nav-links{display:flex;align-items:center;gap:28px;list-style:none}
+.nav-links a{font-size:14px;color:var(--ink-3);text-decoration:none;
+  transition:color .2s;white-space:nowrap}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{font-size:13px;font-weight:500;padding:8px 18px;
+  border:1px solid var(--border-heavy);border-radius:6px;
+  color:var(--ink);text-decoration:none;transition:background .2s,border-color .2s}
+.nav-cta:hover{background:var(--ink);color:var(--white);border-color:var(--ink)}
+.burger{display:none;flex-direction:column;justify-content:center;
+  align-items:center;width:40px;height:40px;gap:5px;
+  background:none;border:none;cursor:pointer;padding:0}
+.burger span{display:block;width:22px;height:1.5px;background:var(--ink);
+  transition:transform .25s,opacity .25s}
+.burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.drawer{display:none;position:fixed;top:var(--nav);left:0;right:0;z-index:190;
+  background:rgba(250,249,247,.98);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);padding:16px var(--px) 24px;
+  flex-direction:column;gap:0}
+.drawer.open{display:flex}
+.drawer a{font-size:16px;color:var(--ink-2);text-decoration:none;
+  padding:13px 0;border-bottom:1px solid var(--border);transition:color .2s}
+.drawer a:last-child{border-bottom:none}
+.drawer a:hover{color:var(--ink)}
 
-  html { scroll-behavior: smooth; }
+/* HERO */
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;
+  padding:calc(var(--nav) + 60px) var(--px) 60px;max-width:var(--max);margin:0 auto;position:relative}
+.eyebrow{font-family:var(--orb);font-size:9px;letter-spacing:.2em;color:var(--ink-3);
+  text-transform:uppercase;margin-bottom:24px;opacity:0;animation:fup .6s ease forwards .1s}
+.hero h1{font-family:var(--orb);font-size:clamp(28px,5.5vw,72px);line-height:1.12;
+  font-weight:700;letter-spacing:-.01em;max-width:820px;
+  opacity:0;animation:fup .7s ease forwards .2s}
+.hero h1 em{font-style:normal;font-weight:400;color:var(--ink-2)}
+.hero-sub{margin-top:28px;font-size:clamp(15px,2vw,18px);font-weight:300;
+  color:var(--ink-2);max-width:560px;line-height:1.75;
+  opacity:0;animation:fup .7s ease forwards .35s}
+.hero-actions{margin-top:40px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  opacity:0;animation:fup .7s ease forwards .5s}
+.btn-p{font-family:var(--sans);font-size:14px;font-weight:500;padding:12px 24px;
+  background:var(--ink);color:var(--white);border-radius:6px;text-decoration:none;
+  transition:opacity .2s;white-space:nowrap}
+.btn-p:hover{opacity:.8}
+.btn-g{font-family:var(--sans);font-size:14px;color:var(--ink-2);text-decoration:none;
+  border-bottom:1px solid var(--border-heavy);padding-bottom:1px;
+  transition:color .2s;white-space:nowrap}
+.btn-g:hover{color:var(--ink)}
+.hero-rule{position:absolute;bottom:0;left:var(--px);right:var(--px);
+  height:1px;background:var(--border)}
 
-  body {
-    font-family: var(--sans);
-    background: var(--cream);
-    color: var(--ink);
-    line-height: 1.6;
-    font-weight: 300;
-    -webkit-font-smoothing: antialiased;
-  }
+/* SECTION SHARED */
+.wrap{max-width:var(--max);margin:0 auto;padding:72px var(--px);border-bottom:1px solid var(--border)}
+.sec-label{font-family:var(--orb);font-size:9px;letter-spacing:.2em;
+  color:var(--ink-4);text-transform:uppercase;padding-top:6px}
+.sec-title{font-family:var(--orb);font-size:clamp(20px,3vw,28px);font-weight:700;letter-spacing:-.01em}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:40px}
+.sec-link{font-size:13px;color:var(--ink-3);text-decoration:none;
+  border-bottom:1px solid var(--border-heavy);padding-bottom:1px;white-space:nowrap}
+.sec-link:hover{color:var(--ink)}
 
-  /* ── NAV ── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    height: var(--nav-h);
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 40px;
-    background: rgba(250,249,247,0.88);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-logo {
-    font-family: var(--orbitron);
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: var(--ink);
-    text-decoration: none;
-  }
-  .nav-links {
-    display: flex; align-items: center; gap: 32px;
-    list-style: none;
-  }
-  .nav-links a {
-    font-size: 14px;
-    color: var(--ink-3);
-    text-decoration: none;
-    transition: color .2s;
-  }
-  .nav-links a:hover { color: var(--ink); }
-  .nav-cta {
-    font-size: 13px;
-    font-weight: 500;
-    padding: 8px 18px;
-    border: 1px solid var(--border-heavy);
-    border-radius: 6px;
-    color: var(--ink);
-    text-decoration: none;
-    transition: background .2s, border-color .2s;
-  }
-  .nav-cta:hover { background: var(--ink); color: var(--white); border-color: var(--ink); }
+/* MISSION */
+.mission-wrap{display:grid;grid-template-columns:160px 1fr;gap:48px}
+.mission-text{font-size:clamp(18px,2.2vw,26px);line-height:1.65;font-weight:300;color:var(--ink)}
+.mission-text em{font-style:italic;font-weight:400;color:var(--ink-2)}
 
-  /* ── HERO ── */
-  .hero {
-    min-height: 100vh;
-    display: flex; flex-direction: column; justify-content: center;
-    padding: calc(var(--nav-h) + 80px) 40px 80px;
-    max-width: var(--max);
-    margin: 0 auto;
-    position: relative;
-  }
-  .hero-eyebrow {
-    font-family: var(--orbitron);
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    color: var(--ink-3);
-    text-transform: uppercase;
-    margin-bottom: 28px;
-    opacity: 0;
-    animation: fadeUp .6s ease forwards .1s;
-  }
-  .hero-title {
-    font-family: var(--orbitron);
-    font-size: clamp(36px, 5.5vw, 72px);
-    line-height: 1.1;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    max-width: 820px;
-    opacity: 0;
-    animation: fadeUp .7s ease forwards .2s;
-  }
-  .hero-title em {
-    font-style: normal;
-    font-weight: 400;
-    color: var(--ink-2);
-  }
-  .hero-sub {
-    margin-top: 32px;
-    font-size: 18px;
-    font-weight: 300;
-    color: var(--ink-2);
-    max-width: 560px;
-    line-height: 1.7;
-    opacity: 0;
-    animation: fadeUp .7s ease forwards .35s;
-  }
-  .hero-actions {
-    margin-top: 48px;
-    display: flex; align-items: center; gap: 20px;
-    flex-wrap: wrap;
-    opacity: 0;
-    animation: fadeUp .7s ease forwards .5s;
-  }
-  .btn-primary {
-    font-size: 14px;
-    font-weight: 500;
-    padding: 12px 26px;
-    background: var(--ink);
-    color: var(--white);
-    border-radius: 6px;
-    text-decoration: none;
-    transition: opacity .2s;
-  }
-  .btn-primary:hover { opacity: .8; }
-  .btn-ghost {
-    font-size: 14px;
-    font-weight: 400;
-    color: var(--ink-2);
-    text-decoration: none;
-    border-bottom: 1px solid var(--border-heavy);
-    padding-bottom: 1px;
-    transition: color .2s;
-  }
-  .btn-ghost:hover { color: var(--ink); }
+/* MODELS GRID */
+.models-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.mcard{background:var(--cream);padding:32px 28px;transition:background .2s}
+.mcard:hover{background:var(--white)}
+.mtag{font-family:var(--orb);font-size:8px;font-weight:600;letter-spacing:.14em;
+  color:var(--ink-3);text-transform:uppercase;margin-bottom:18px}
+.mname{font-family:var(--orb);font-size:clamp(26px,4vw,40px);font-weight:900;
+  color:var(--ink);margin-bottom:10px}
+.mdesc{font-size:13px;color:var(--ink-3);line-height:1.65;margin-bottom:20px}
+.mparams{font-family:var(--orb);font-size:8px;letter-spacing:.1em;color:var(--ink-4)}
+.mstatus{display:inline-flex;align-items:center;gap:6px;margin-top:18px;font-size:12px;color:var(--ink-3)}
+.dot{width:6px;height:6px;border-radius:50%}
+.dot-b{background:var(--accent-dark)}.dot-p{background:var(--ink-4)}
 
-  .hero-line {
-    position: absolute;
-    bottom: 0; left: 40px; right: 40px;
-    height: 1px;
-    background: var(--border);
-  }
+/* PRINCIPLES */
+.pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:36px 56px;margin-top:40px}
+.prin{border-top:1px solid var(--border);padding-top:20px}
+.pnum{font-family:var(--orb);font-size:9px;color:var(--ink-4);margin-bottom:10px;letter-spacing:.1em}
+.ptitle{font-family:var(--orb);font-size:clamp(11px,1.4vw,14px);font-weight:700;
+  letter-spacing:.01em;margin-bottom:10px}
+.pbody{font-size:14px;color:var(--ink-3);line-height:1.7}
 
-  /* ── MISSION STRIP ── */
-  .mission-strip {
-    max-width: var(--max);
-    margin: 0 auto;
-    padding: 80px 40px;
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 60px;
-    border-bottom: 1px solid var(--border);
-  }
-  .section-label {
-    font-family: var(--orbitron);
-    font-size: 9px;
-    letter-spacing: 0.18em;
-    color: var(--ink-4);
-    text-transform: uppercase;
-    padding-top: 6px;
-  }
-  .mission-text {
-    font-family: var(--sans);
-    font-size: clamp(20px, 2.5vw, 26px);
-    line-height: 1.6;
-    font-weight: 300;
-    color: var(--ink);
-  }
-  .mission-text em { font-style: italic; font-weight: 400; color: var(--ink-2); }
+/* FOUNDER NOTE */
+.note-wrap{display:grid;grid-template-columns:160px 1fr;gap:48px}
+.nbody{font-size:clamp(15px,1.8vw,19px);line-height:1.8;font-weight:300;color:var(--ink-2)}
+.nbody strong{font-weight:500;color:var(--ink)}
+.nbody em{font-style:italic}
+.nsig{margin-top:28px;font-family:var(--orb);font-size:9px;letter-spacing:.1em;color:var(--ink-4)}
 
-  /* ── MODELS ── */
-  .models-section {
-    max-width: var(--max);
-    margin: 0 auto;
-    padding: 80px 40px;
-    border-bottom: 1px solid var(--border);
-  }
-  .section-header {
-    display: flex; align-items: baseline; justify-content: space-between;
-    margin-bottom: 48px;
-  }
-  .section-title {
-    font-family: var(--orbitron);
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-  }
-  .models-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  .model-card {
-    background: var(--cream);
-    padding: 36px 32px;
-    transition: background .2s;
-    cursor: default;
-  }
-  .model-card:hover { background: var(--white); }
-  .model-tag {
-    font-family: var(--orbitron);
-    font-size: 9px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    color: var(--ink-3);
-    text-transform: uppercase;
-    margin-bottom: 20px;
-  }
-  .model-name {
-    font-family: var(--orbitron);
-    font-size: 36px;
-    font-weight: 900;
-    color: var(--ink);
-    margin-bottom: 12px;
-    letter-spacing: -0.01em;
-  }
-  .model-desc {
-    font-size: 14px;
-    color: var(--ink-3);
-    line-height: 1.6;
-    margin-bottom: 24px;
-  }
-  .model-params {
-    font-family: var(--orbitron);
-    font-size: 9px;
-    letter-spacing: 0.08em;
-    color: var(--ink-4);
-  }
-  .model-status {
-    display: inline-flex; align-items: center; gap: 6px;
-    margin-top: 20px;
-    font-size: 12px;
-    color: var(--ink-3);
-  }
-  .status-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-  }
-  .dot-active { background: #4caf50; }
-  .dot-building { background: var(--accent-dark); }
-  .dot-planned { background: var(--ink-4); }
+/* CTA */
+.cta-wrap{max-width:var(--max);margin:0 auto;padding:96px var(--px);text-align:center}
+.cta-title{font-family:var(--orb);font-size:clamp(24px,4.5vw,56px);font-weight:700;
+  letter-spacing:-.01em;margin-bottom:16px;line-height:1.1}
+.cta-title em{font-style:normal;font-weight:400;color:var(--ink-2)}
+.cta-sub{font-size:15px;color:var(--ink-3);margin-bottom:36px;
+  max-width:420px;margin-left:auto;margin-right:auto;line-height:1.7}
+.eform{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.einput{font-family:var(--sans);font-size:14px;padding:11px 18px;
+  border:1px solid var(--border-heavy);border-radius:6px;background:var(--white);
+  color:var(--ink);outline:none;width:min(280px,100%);transition:border-color .2s}
+.einput:focus{border-color:var(--ink)}
+.einput::placeholder{color:var(--ink-4)}
+.ebtn{font-family:var(--sans);font-size:14px;font-weight:500;padding:11px 22px;
+  background:var(--ink);color:var(--white);border:none;border-radius:6px;
+  cursor:pointer;transition:opacity .2s;white-space:nowrap}
+.ebtn:hover{opacity:.8}
 
-  /* ── PRINCIPLES ── */
-  .principles-section {
-    max-width: var(--max);
-    margin: 0 auto;
-    padding: 80px 40px;
-    border-bottom: 1px solid var(--border);
-  }
-  .principles-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 48px 60px;
-    margin-top: 48px;
-  }
-  .principle {
-    border-top: 1px solid var(--border);
-    padding-top: 24px;
-  }
-  .principle-num {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--ink-4);
-    margin-bottom: 12px;
-  }
-  .principle-title {
-    font-family: var(--orbitron);
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 0.01em;
-    margin-bottom: 10px;
-  }
-  .principle-body {
-    font-size: 14px;
-    color: var(--ink-3);
-    line-height: 1.7;
-  }
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:28px var(--px);
+  max-width:var(--max);margin:0 auto;display:flex;align-items:center;
+  justify-content:space-between;flex-wrap:wrap;gap:16px}
+.flogo{font-family:var(--orb);font-size:11px;font-weight:700;color:var(--ink-3);letter-spacing:.08em}
+.flinks{display:flex;gap:20px;list-style:none;flex-wrap:wrap}
+.flinks a{font-size:13px;color:var(--ink-4);text-decoration:none;transition:color .2s}
+.flinks a:hover{color:var(--ink-2)}
 
-  /* ── FOUNDERS NOTE ── */
-  .note-section {
-    max-width: var(--max);
-    margin: 0 auto;
-    padding: 80px 40px;
-    border-bottom: 1px solid var(--border);
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 60px;
-  }
-  .note-body {
-    font-family: var(--sans);
-    font-size: 18px;
-    line-height: 1.75;
-    font-weight: 300;
-    color: var(--ink-2);
-  }
-  .note-body strong {
-    font-weight: 500;
-    color: var(--ink);
-  }
-  .note-sig {
-    margin-top: 32px;
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--ink-4);
-  }
+/* ANIMATION */
+@keyframes fup{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .65s ease,transform .65s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
 
-  /* ── CTA ── */
-  .cta-section {
-    max-width: var(--max);
-    margin: 0 auto;
-    padding: 100px 40px;
-    text-align: center;
-  }
-  .cta-title {
-    font-family: var(--orbitron);
-    font-size: clamp(28px, 4vw, 52px);
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    margin-bottom: 20px;
-  }
-  .cta-title em { font-style: normal; font-weight: 400; color: var(--ink-2); }
-  .cta-sub {
-    font-size: 16px;
-    color: var(--ink-3);
-    margin-bottom: 40px;
-    max-width: 440px;
-    margin-left: auto; margin-right: auto;
-  }
-  .email-form {
-    display: flex; gap: 8px; justify-content: center;
-    flex-wrap: wrap;
-  }
-  .email-input {
-    font-family: var(--sans);
-    font-size: 14px;
-    padding: 11px 18px;
-    border: 1px solid var(--border-heavy);
-    border-radius: 6px;
-    background: var(--white);
-    color: var(--ink);
-    outline: none;
-    width: 280px;
-    transition: border-color .2s;
-  }
-  .email-input:focus { border-color: var(--ink); }
-  .email-input::placeholder { color: var(--ink-4); }
-  .email-btn {
-    font-family: var(--sans);
-    font-size: 14px;
-    font-weight: 500;
-    padding: 11px 22px;
-    background: var(--ink);
-    color: var(--white);
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: opacity .2s;
-  }
-  .email-btn:hover { opacity: .8; }
-
-  /* ── FOOTER ── */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 32px 40px;
-    max-width: var(--max);
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-  .footer-logo {
-    font-family: var(--orbitron);
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--ink-3);
-    letter-spacing: 0.08em;
-  }
-  .footer-links {
-    display: flex; gap: 24px; list-style: none;
-  }
-  .footer-links a {
-    font-size: 13px;
-    color: var(--ink-4);
-    text-decoration: none;
-    transition: color .2s;
-  }
-  .footer-links a:hover { color: var(--ink-2); }
-
-  /* ── ANIMATIONS ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .reveal {
-    opacity: 0;
-    transform: translateY(16px);
-    transition: opacity .6s ease, transform .6s ease;
-  }
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* ── MOBILE ── */
-  @media (max-width: 768px) {
-    nav { padding: 0 20px; }
-    .nav-links { display: none; }
-    .hero, .mission-strip, .models-section, .principles-section, .note-section, .cta-section { padding-left: 20px; padding-right: 20px; }
-    .mission-strip, .note-section { grid-template-columns: 1fr; gap: 24px; }
-    .models-grid { grid-template-columns: 1fr; }
-    .principles-grid { grid-template-columns: 1fr; gap: 32px; }
-    footer { padding: 24px 20px; }
-  }
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .models-grid{grid-template-columns:repeat(2,1fr)}
+  .models-grid .mcard:last-child{grid-column:span 2}
+}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .burger{display:flex}
+  .mission-wrap,.note-wrap{grid-template-columns:1fr;gap:12px}
+  .models-grid{grid-template-columns:1fr}
+  .models-grid .mcard:last-child{grid-column:span 1}
+  .pgrid{grid-template-columns:1fr;gap:24px}
+  footer{flex-direction:column;align-items:flex-start}
+}
+@media(max-width:480px){
+  :root{--nav:56px}
+  .hero-actions{flex-direction:column;align-items:flex-start}
+  .eform{flex-direction:column;align-items:stretch}
+  .einput,.ebtn{width:100%}
+  .cta-wrap{text-align:left}
+  .cta-sub{margin-left:0;margin-right:0}
+}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">MUXBITE</a>
+  <a href="muxbite-landing.html" class="logo">MUXBITE</a>
   <ul class="nav-links">
-    <li><a href="#models">Models</a></li>
+    <li><a href="MB.html">Models</a></li>
     <li><a href="#principles">Research</a></li>
     <li><a href="#about">About</a></li>
     <li><a href="#contact" class="nav-cta">Stay updated</a></li>
   </ul>
+  <button class="burger" id="burger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
-<!-- HERO -->
+<div class="drawer" id="drawer">
+  <a href="MB.html" onclick="closeNav()">Models</a>
+  <a href="#principles" onclick="closeNav()">Research</a>
+  <a href="#about" onclick="closeNav()">About</a>
+  <a href="#contact" onclick="closeNav()">Stay updated</a>
+</div>
+
 <section class="hero">
-  <p class="hero-eyebrow">AI Research Lab — Global</p>
-  <h1 class="hero-title">Building AI that is<br/><em>safe, capable,</em><br/>and built for the world.</h1>
+  <p class="eyebrow">AI Research Lab — Global</p>
+  <h1>Building AI that is<br/><em>safe, capable,</em><br/>and built for the world.</h1>
   <p class="hero-sub">MUXBITE is an independent AI research company developing generative models that are genuinely helpful, honest, and accessible to every person on the planet — regardless of language, location, or background.</p>
   <div class="hero-actions">
-    <a href="#models" class="btn-primary">Our models</a>
-    <a href="#about" class="btn-ghost">Read our mission</a>
+    <a href="MB.html" class="btn-p">Explore our models</a>
+    <a href="#about" class="btn-g">Read our mission</a>
   </div>
-  <div class="hero-line"></div>
+  <div class="hero-rule"></div>
 </section>
 
-<!-- MISSION -->
-<section class="mission-strip" id="about">
-  <p class="section-label reveal">Mission</p>
-  <p class="mission-text reveal">"We believe AI will be one of the most transformative technologies in human history. Our goal is to ensure that transformation is <em>safe, equitable, and built for everyone</em> — every language, every culture, every corner of the world."</p>
-</section>
+<div class="wrap" id="about">
+  <div class="mission-wrap">
+    <p class="sec-label reveal">Mission</p>
+    <p class="mission-text reveal">"We believe AI will be one of the most transformative technologies in human history. Our goal is to ensure that transformation is <em>safe, equitable, and built for everyone</em> — every language, every culture, every corner of the world."</p>
+  </div>
+</div>
 
-<!-- MODELS -->
-<section class="models-section" id="models">
-  <div class="section-header reveal">
-    <h2 class="section-title">The MB series</h2>
+<div class="wrap" id="models">
+  <div class="sec-head reveal">
+    <h2 class="sec-title">The MB series</h2>
+    <a href="MB.html" class="sec-link">See all models →</a>
   </div>
   <div class="models-grid reveal">
-    <div class="model-card">
-      <p class="model-tag">Prototype · In training</p>
-      <h3 class="model-name">MB1</h3>
-      <p class="model-desc">Our first language model. A small transformer trained from scratch to validate our architecture and training pipeline.</p>
-      <p class="model-params">~10–50M parameters · Multilingual</p>
-      <div class="model-status">
-        <span class="status-dot dot-building"></span>
-        In development
-      </div>
+    <div class="mcard">
+      <p class="mtag">Prototype · In training</p>
+      <h3 class="mname">MB1</h3>
+      <p class="mdesc">Our first language model. A small transformer trained from scratch to validate our architecture and training pipeline.</p>
+      <p class="mparams">~10–50M parameters · Multilingual</p>
+      <div class="mstatus"><span class="dot dot-b"></span>In development</div>
     </div>
-    <div class="model-card">
-      <p class="model-tag">Planned · 2026</p>
-      <h3 class="model-name">MB2</h3>
-      <p class="model-desc">A larger model focused on underserved global languages — Hindi, Swahili, Arabic, Bengali and beyond. Intelligence without borders.</p>
-      <p class="model-params">~200M–1B parameters · 20+ languages</p>
-      <div class="model-status">
-        <span class="status-dot dot-planned"></span>
-        Planned
-      </div>
+    <div class="mcard">
+      <p class="mtag">Planned · 2026</p>
+      <h3 class="mname">MB2</h3>
+      <p class="mdesc">A larger model focused on underserved global languages — Hindi, Swahili, Arabic, Bengali and beyond. Intelligence without borders.</p>
+      <p class="mparams">~200M–1B parameters · 20+ languages</p>
+      <div class="mstatus"><span class="dot dot-p"></span>Planned</div>
     </div>
-    <div class="model-card">
-      <p class="model-tag">Roadmap · 2027+</p>
-      <h3 class="model-name">MB3</h3>
-      <p class="model-desc">A frontier-class multimodal model. Text, voice, and vision — built to serve the next four billion people the internet left behind.</p>
-      <p class="model-params">~7B+ parameters · Global frontier</p>
-      <div class="model-status">
-        <span class="status-dot dot-planned"></span>
-        On roadmap
-      </div>
+    <div class="mcard">
+      <p class="mtag">Roadmap · 2027+</p>
+      <h3 class="mname">MB3</h3>
+      <p class="mdesc">A frontier-class multimodal model. Text, voice, and vision — built to serve the next four billion people the internet left behind.</p>
+      <p class="mparams">~7B+ parameters · Global frontier</p>
+      <div class="mstatus"><span class="dot dot-p"></span>On roadmap</div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- PRINCIPLES -->
-<section class="principles-section" id="principles">
-  <div class="section-header reveal">
-    <h2 class="section-title">How we work</h2>
+<div class="wrap" id="principles">
+  <div class="sec-head reveal">
+    <h2 class="sec-title">How we work</h2>
   </div>
-  <div class="principles-grid">
-    <div class="principle reveal">
-      <p class="principle-num">01</p>
-      <h3 class="principle-title">Safety first</h3>
-      <p class="principle-body">We study alignment and responsible scaling before we need to. Safety is not a feature we add later — it is the foundation of every model we train.</p>
+  <div class="pgrid">
+    <div class="prin reveal">
+      <p class="pnum">01</p>
+      <h3 class="ptitle">Safety first</h3>
+      <p class="pbody">We study alignment and responsible scaling before we need to. Safety is not a feature we add later — it is the foundation of every model we train.</p>
     </div>
-    <div class="principle reveal">
-      <p class="principle-num">02</p>
-      <h3 class="principle-title">Build in public</h3>
-      <p class="principle-body">Our training code, experiments, and findings are published openly. We believe the AI research community grows faster when knowledge is shared, not hoarded.</p>
+    <div class="prin reveal">
+      <p class="pnum">02</p>
+      <h3 class="ptitle">Build in public</h3>
+      <p class="pbody">Our training code, experiments, and findings are published openly. We believe the AI research community grows faster when knowledge is shared, not hoarded.</p>
     </div>
-    <div class="principle reveal">
-      <p class="principle-num">03</p>
-      <h3 class="principle-title">Global by design</h3>
-      <p class="principle-body">The world speaks thousands of languages. Frontier AI speaks fewer than a hundred well. We are closing that gap — building models that work for every person, not just the most represented ones.</p>
+    <div class="prin reveal">
+      <p class="pnum">03</p>
+      <h3 class="ptitle">Global by design</h3>
+      <p class="pbody">The world speaks thousands of languages. Frontier AI speaks fewer than a hundred well. We are closing that gap — building models that work for every person, not just the most represented ones.</p>
     </div>
-    <div class="principle reveal">
-      <p class="principle-num">04</p>
-      <h3 class="principle-title">Own the stack</h3>
-      <p class="principle-body">We are not an API wrapper. Our long-term goal is to train proprietary models from scratch — owning the architecture, the data, and the training pipeline.</p>
+    <div class="prin reveal">
+      <p class="pnum">04</p>
+      <h3 class="ptitle">Own the stack</h3>
+      <p class="pbody">We are not an API wrapper. Our long-term goal is to train proprietary models from scratch — owning the architecture, the data, and the training pipeline.</p>
     </div>
   </div>
-</section>
+</div>
 
-<!-- FOUNDER'S NOTE -->
-<section class="note-section">
-  <p class="section-label reveal">From the founder</p>
-  <div class="reveal">
-    <p class="note-body">
-      <strong>I started MUXBITE as a final-year BCA student</strong> with no team, no funding, and no GPU cluster. What I do have is a clear conviction: that the most important AI models of the next decade will not be built in San Francisco.<br/><br/>
-      They will be built by people who believe intelligence should have no borders — no language barrier, no geography, no prerequisite of privilege. <em>That</em> is what MUXBITE is for.
-    </p>
-    <p class="note-sig">Shahnewaz · Founder, MUXBITE · @heysanzu</p>
+<div class="wrap" style="border-bottom:1px solid var(--border)">
+  <div class="note-wrap">
+    <p class="sec-label reveal">From the founder</p>
+    <div class="reveal">
+      <p class="nbody">
+        <strong>I started MUXBITE as a final-year BCA student</strong> with no team, no funding, and no GPU cluster. What I do have is a clear conviction: that the most important AI models of the next decade will not be built in San Francisco.<br/><br/>
+        They will be built by people who believe intelligence should have no borders — no language barrier, no geography, no prerequisite of privilege. <em>That</em> is what MUXBITE is for.
+      </p>
+      <p class="nsig">Shahnewaz · Founder, MUXBITE · @heysanzu</p>
+    </div>
   </div>
-</section>
+</div>
 
-<!-- CTA -->
-<section class="cta-section" id="contact">
+<div class="cta-wrap" id="contact">
   <h2 class="cta-title reveal">Follow the<br/><em>journey</em></h2>
   <p class="cta-sub reveal">We are building in public. Get early access to our models, research notes, and updates.</p>
-  <div class="email-form reveal">
-    <input type="email" class="email-input" placeholder="your@email.com"/>
-    <button class="email-btn" onclick="handleSubscribe()">Stay updated</button>
+  <div class="eform reveal">
+    <input type="email" class="einput" placeholder="your@email.com"/>
+    <button class="ebtn" onclick="subscribe()">Stay updated</button>
   </div>
-</section>
+</div>
 
-<!-- FOOTER -->
 <footer>
-  <span class="footer-logo">MUXBITE</span>
-  <ul class="footer-links">
+  <span class="flogo">MUXBITE</span>
+  <ul class="flinks">
     <li><a href="https://github.com/heysanzu" target="_blank">GitHub</a></li>
-    <li><a href="#models">Models</a></li>
+    <li><a href="MB.html">Models</a></li>
     <li><a href="#principles">Research</a></li>
     <li><a href="#about">About</a></li>
   </ul>
-  <span style="font-size:13px;color:var(--ink-4);">© 2026 MUXBITE</span>
+  <span style="font-size:12px;color:var(--ink-4)">© 2026 MUXBITE</span>
 </footer>
 
 <script>
-  // Scroll reveal
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach((e, i) => {
-      if (e.isIntersecting) {
-        setTimeout(() => e.target.classList.add('visible'), i * 80);
-        observer.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.1 });
-  reveals.forEach(el => observer.observe(el));
+const burger=document.getElementById('burger'),drawer=document.getElementById('drawer');
+burger.addEventListener('click',()=>{burger.classList.toggle('open');drawer.classList.toggle('open')});
+function closeNav(){burger.classList.remove('open');drawer.classList.remove('open')}
 
-  // Subscribe
-  function handleSubscribe() {
-    const input = document.querySelector('.email-input');
-    const btn = document.querySelector('.email-btn');
-    if (!input.value || !input.value.includes('@')) {
-      input.style.borderColor = '#e24b4a';
-      setTimeout(() => input.style.borderColor = '', 1500);
-      return;
-    }
-    btn.textContent = 'You\'re on the list ✓';
-    btn.style.background = '#4caf50';
-    input.value = '';
-    input.disabled = true;
-    btn.disabled = true;
-  }
+const io=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*70);io.unobserve(e.target)}
+  });
+},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+function subscribe(){
+  const inp=document.querySelector('.einput'),btn=document.querySelector('.ebtn');
+  if(!inp.value||!inp.value.includes('@')){inp.style.borderColor='#e24b4a';setTimeout(()=>inp.style.borderColor='',1500);return}
+  btn.textContent="You're on the list ✓";btn.style.background='#4caf50';
+  inp.value='';inp.disabled=true;btn.disabled=true;
+}
 </script>
 </body>
 </html>
