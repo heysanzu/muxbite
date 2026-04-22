@@ -1,600 +1,722 @@
 <!DOCTYPE html>
-<html lang="en" style="background:#ffffff;">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MUXBITE X — AI Agent</title>
-  <link rel="icon" type="image/png" href="muxbite.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MUXBITE Models</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#faf9f7;--white:#fff;--ink:#1a1a18;--ink-2:#3d3d3a;
+  --ink-3:#7a7a74;--ink-4:#b0b0a8;
+  --border:rgba(26,26,24,.1);--border-heavy:rgba(26,26,24,.2);
+  --accent:#c8f135;--accent-dark:#a8d015;
+  --sans:'Google Sans','Product Sans',ui-rounded,system-ui,sans-serif;
+  --orb:'Orbitron',monospace;
+  --max:1100px;--nav:64px;--px:clamp(20px,5vw,40px)
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--cream);color:var(--ink);
+  line-height:1.6;font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 
-    :root {
-      --black: #000000;
-      --white: #ffffff;
-      --gray-50: #f7f7f7;
-      --gray-100: #f0f0f0;
-      --gray-150: #ebebeb;
-      --gray-200: #e2e2e2;
-      --gray-300: #cccccc;
-      --gray-400: #999999;
-      --gray-500: #666666;
-      --gray-600: #444444;
-      --gray-800: #1a1a1a;
-      --gray-900: #111111;
-      --border: #e8e8e8;
-      --border-dark: #d4d4d4;
-      --font-brand: 'Orbitron', sans-serif;
-      --font-body: 'Product Sans', 'Google Sans', 'Segoe UI', sans-serif;
-    }
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 var(--px);background:rgba(250,249,247,.93);
+  backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.logo{font-family:var(--orb);font-size:13px;font-weight:700;
+  letter-spacing:.08em;color:var(--ink);text-decoration:none}
+.nav-links{display:flex;align-items:center;gap:28px;list-style:none}
+.nav-links a{font-size:14px;color:var(--ink-3);text-decoration:none;transition:color .2s;white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{color:var(--ink)}
+.nav-links a.active{font-weight:500}
+.nav-cta{font-size:13px;font-weight:500;padding:8px 18px;
+  border:1px solid var(--border-heavy);border-radius:6px;
+  color:var(--ink);text-decoration:none;transition:background .2s,border-color .2s}
+.nav-cta:hover{background:var(--ink);color:var(--white);border-color:var(--ink)}
+.burger{display:none;flex-direction:column;justify-content:center;
+  align-items:center;width:40px;height:40px;gap:5px;
+  background:none;border:none;cursor:pointer;padding:0}
+.burger span{display:block;width:22px;height:1.5px;background:var(--ink);transition:transform .25s,opacity .25s}
+.burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.drawer{display:none;position:fixed;top:var(--nav);left:0;right:0;z-index:190;
+  background:rgba(250,249,247,.98);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);padding:16px var(--px) 24px;flex-direction:column}
+.drawer.open{display:flex}
+.drawer a{font-size:16px;color:var(--ink-2);text-decoration:none;
+  padding:13px 0;border-bottom:1px solid var(--border);transition:color .2s}
+.drawer a:last-child{border-bottom:none}
+.drawer a:hover{color:var(--ink)}
 
-    html, body { height: 100%; background: #ffffff; }
+/* PAGE HEADER */
+.page-header{padding:calc(var(--nav) + 56px) var(--px) 48px;
+  max-width:var(--max);margin:0 auto;border-bottom:1px solid var(--border)}
+.ph-label{font-family:var(--orb);font-size:9px;letter-spacing:.2em;
+  color:var(--ink-4);text-transform:uppercase;margin-bottom:20px;
+  opacity:0;animation:fup .5s ease forwards .1s}
+.ph-title{font-family:var(--orb);font-size:clamp(28px,5vw,60px);font-weight:700;
+  letter-spacing:-.01em;line-height:1.1;
+  opacity:0;animation:fup .6s ease forwards .2s}
+.ph-sub{margin-top:20px;font-size:clamp(14px,1.8vw,17px);font-weight:300;
+  color:var(--ink-2);max-width:560px;line-height:1.7;
+  opacity:0;animation:fup .6s ease forwards .3s}
 
-    body {
-      background: #ffffff;
-      color: var(--gray-900);
-      font-family: var(--font-body);
-      overflow: hidden;
-    }
+/* MODEL SELECTOR */
+.model-selector{max-width:var(--max);margin:0 auto;padding:0 var(--px)}
+.model-tabs{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;
+  border-bottom:1px solid var(--border)}
+.model-tabs::-webkit-scrollbar{display:none}
+.mtab{font-family:var(--orb);font-size:11px;font-weight:700;letter-spacing:.06em;
+  padding:20px 32px;color:var(--ink-3);cursor:pointer;white-space:nowrap;
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+  background:none;border-top:none;border-left:none;border-right:none;
+  transition:color .2s,border-color .2s}
+.mtab:hover{color:var(--ink)}
+.mtab.active{color:var(--ink);border-bottom-color:var(--ink)}
 
-    /* ── APP SHELL ── */
-    .app {
-      display: grid;
-      grid-template-columns: 260px 1fr;
-      grid-template-rows: 60px 1fr;
-      height: 100vh;
-    }
+/* MODEL PANELS */
+.model-panel{display:none;max-width:var(--max);margin:0 auto;padding:56px var(--px) 80px}
+.model-panel.active{display:block}
 
-    /* ── TOPBAR ── */
-    .topbar {
-      grid-column: 1 / -1;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 24px;
-      background: var(--white);
-      border-bottom: 1px solid var(--border);
-    }
-    .topbar-left { display: flex; align-items: center; gap: 16px; }
-    .topbar-logo { font-family: var(--font-brand); font-size: 13px; letter-spacing: 0.12em; color: var(--black); text-decoration: none; }
-    .topbar-divider { width: 1px; height: 16px; background: var(--border-dark); }
-    .topbar-agent { font-family: var(--font-brand); font-size: 10px; letter-spacing: 0.18em; color: var(--gray-400); }
-    .topbar-right { display: flex; align-items: center; gap: 12px; }
-    .status-badge { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--gray-400); letter-spacing: 0.06em; }
-    .status-badge::before { content: ''; width: 6px; height: 6px; background: var(--gray-400); border-radius: 50%; animation: blink 2.5s ease-in-out infinite; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
-    .topbar-btn { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-500); background: transparent; border: 1px solid var(--border-dark); padding: 6px 14px; cursor: pointer; text-decoration: none; transition: color 0.2s, border-color 0.2s; }
-    .topbar-btn:hover { color: var(--black); border-color: var(--gray-400); }
+.mp-top{display:grid;grid-template-columns:1fr 1fr;gap:48px;
+  padding-bottom:48px;border-bottom:1px solid var(--border);margin-bottom:48px}
+.mp-name{font-family:var(--orb);font-size:clamp(40px,7vw,80px);font-weight:900;
+  color:var(--ink);line-height:1;margin-bottom:8px}
+.mp-gen{font-family:var(--orb);font-size:10px;letter-spacing:.14em;
+  color:var(--ink-4);text-transform:uppercase;margin-bottom:20px}
+.mp-tagline{font-size:clamp(16px,2vw,20px);font-weight:300;
+  color:var(--ink-2);line-height:1.6;margin-bottom:28px}
+.mp-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn-p{font-family:var(--sans);font-size:13px;font-weight:500;padding:10px 22px;
+  background:var(--ink);color:var(--white);border-radius:6px;text-decoration:none;
+  border:none;cursor:pointer;transition:opacity .2s;white-space:nowrap}
+.btn-p:hover{opacity:.8}
+.btn-s{font-family:var(--sans);font-size:13px;font-weight:400;padding:10px 22px;
+  background:none;color:var(--ink);border:1px solid var(--border-heavy);
+  border-radius:6px;text-decoration:none;cursor:pointer;
+  transition:background .2s;white-space:nowrap}
+.btn-s:hover{background:rgba(26,26,24,.05)}
 
-    /* ── SIDEBAR ── */
-    .sidebar {
-      background: var(--gray-50);
-      border-right: 1px solid var(--border);
-      display: flex; flex-direction: column; overflow: hidden;
-    }
-    .sidebar-top { padding: 16px; border-bottom: 1px solid var(--border); }
-    .new-chat-btn {
-      width: 100%; display: flex; align-items: center; gap: 10px;
-      padding: 10px 14px; background: var(--white); border: 1px solid var(--border-dark);
-      color: var(--gray-800); font-family: var(--font-body); font-size: 13px;
-      cursor: pointer; transition: background 0.15s; text-align: left;
-    }
-    .new-chat-btn:hover { background: var(--gray-100); }
-    .new-chat-btn .icon { font-size: 16px; color: var(--gray-400); }
+/* SPEC CARD */
+.spec-card{background:var(--white);border:1px solid var(--border);
+  border-radius:10px;padding:28px;height:fit-content}
+.spec-row{display:flex;justify-content:space-between;align-items:baseline;
+  padding:11px 0;border-bottom:1px solid var(--border);gap:16px}
+.spec-row:last-child{border-bottom:none;padding-bottom:0}
+.spec-key{font-size:13px;color:var(--ink-3);flex-shrink:0}
+.spec-val{font-family:var(--orb);font-size:11px;font-weight:600;
+  color:var(--ink);text-align:right;letter-spacing:.03em}
+.spec-badge{display:inline-block;font-family:var(--orb);font-size:8px;
+  font-weight:700;letter-spacing:.1em;padding:3px 10px;border-radius:20px;
+  text-transform:uppercase}
+.badge-dev{background:rgba(168,208,21,.15);color:#5a7a00}
+.badge-plan{background:rgba(176,176,168,.15);color:var(--ink-3)}
+.badge-road{background:rgba(26,26,24,.06);color:var(--ink-3)}
 
-    .sidebar-section-label { font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gray-400); padding: 14px 16px 6px; }
-    .sidebar-history { flex: 1; overflow-y: auto; padding: 4px 8px 8px; }
-    .sidebar-history::-webkit-scrollbar { width: 3px; }
-    .sidebar-history::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 2px; }
+/* FEATURE TABS */
+.ftabs-wrap{margin-bottom:32px}
+.ftabs{display:flex;gap:0;border-bottom:1px solid var(--border);
+  overflow-x:auto;scrollbar-width:none}
+.ftabs::-webkit-scrollbar{display:none}
+.ftab{font-size:13px;font-weight:400;padding:12px 20px;color:var(--ink-3);
+  cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;
+  margin-bottom:-1px;background:none;border-top:none;border-left:none;border-right:none;
+  transition:color .2s,border-color .2s}
+.ftab:hover{color:var(--ink)}
+.ftab.active{color:var(--ink);border-bottom-color:var(--ink);font-weight:500}
+.fpanel{display:none}
+.fpanel.active{display:block}
 
-    .history-item {
-      padding: 9px 10px; cursor: pointer; border-left: 2px solid transparent;
-      transition: background 0.15s; margin-bottom: 2px; border-radius: 0;
-    }
-    .history-item:hover { background: var(--gray-150); }
-    .history-item.active { background: var(--gray-200); border-left-color: var(--black); }
-    .history-title { font-size: 12px; color: var(--gray-600); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
-    .history-time { font-size: 10px; color: var(--gray-400); }
+/* CAPABILITIES */
+.cap-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:4px}
+.cap-item{background:var(--white);border:1px solid var(--border);border-radius:8px;
+  padding:20px;transition:border-color .2s}
+.cap-item:hover{border-color:var(--border-heavy)}
+.cap-icon{width:32px;height:32px;border-radius:6px;
+  background:rgba(26,26,24,.06);display:flex;align-items:center;justify-content:center;
+  margin-bottom:12px;font-size:15px}
+.cap-name{font-family:var(--orb);font-size:10px;font-weight:700;letter-spacing:.06em;
+  color:var(--ink);margin-bottom:6px}
+.cap-desc{font-size:13px;color:var(--ink-3);line-height:1.6}
+.cap-na{opacity:.4}
 
-    .sidebar-footer { padding: 14px 16px; border-top: 1px solid var(--border); }
-    .sidebar-model-label { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 4px; }
-    .sidebar-model-name { font-family: var(--font-brand); font-size: 10px; letter-spacing: 0.1em; color: var(--gray-500); }
+/* BENCHMARK TABLE */
+.btable{width:100%;border-collapse:collapse;margin-top:4px}
+.btable th{font-family:var(--orb);font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-4);font-weight:600;
+  padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}
+.btable td{font-size:13px;padding:13px 12px;border-bottom:1px solid var(--border);color:var(--ink-2)}
+.btable tr:last-child td{border-bottom:none}
+.btable tr:hover td{background:rgba(26,26,24,.02)}
+.bval{font-family:var(--orb);font-size:11px;font-weight:600;color:var(--ink)}
+.bna{color:var(--ink-4);font-size:12px}
+.bbar-wrap{display:flex;align-items:center;gap:8px}
+.bbar{height:4px;background:rgba(26,26,24,.08);border-radius:2px;flex:1;overflow:hidden}
+.bbar-fill{height:100%;border-radius:2px;background:var(--ink);transition:width .6s ease}
 
-    /* ── MAIN ── */
-    .main { display: flex; flex-direction: column; overflow: hidden; background: var(--white); }
+/* CONTEXT BAR */
+.ctx-row{display:flex;align-items:center;gap:16px;padding:16px 0;
+  border-bottom:1px solid var(--border)}
+.ctx-row:last-child{border-bottom:none}
+.ctx-label{font-size:13px;color:var(--ink-3);min-width:120px;flex-shrink:0}
+.ctx-val{font-family:var(--orb);font-size:12px;font-weight:600;color:var(--ink);
+  min-width:80px;flex-shrink:0}
+.ctx-bar{flex:1;height:6px;background:rgba(26,26,24,.08);border-radius:3px;overflow:hidden}
+.ctx-fill{height:100%;border-radius:3px;background:var(--ink);transition:width .6s ease}
 
-    /* ── WELCOME ── */
-    .welcome {
-      flex: 1; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 40px; text-align: center; position: relative; overflow: hidden;
-    }
-    .welcome-bg {
-      position: absolute; font-family: var(--font-brand); font-size: 36vw;
-      color: transparent; -webkit-text-stroke: 1px rgba(0,0,0,0.025);
-      top: 50%; left: 50%; transform: translate(-50%,-50%);
-      pointer-events: none; user-select: none; line-height: 1;
-    }
-    .welcome-x { font-family: var(--font-brand); font-size: 48px; letter-spacing: -0.02em; color: var(--black); margin-bottom: 20px; opacity: 0; animation: fadeUp 0.6s ease 0.1s forwards; }
-    .welcome-title { font-family: var(--font-brand); font-size: clamp(20px, 2.8vw, 32px); letter-spacing: 0.06em; color: var(--black); margin-bottom: 10px; opacity: 0; animation: fadeUp 0.6s ease 0.22s forwards; }
-    .welcome-sub { font-size: 14px; color: var(--gray-400); max-width: 400px; line-height: 1.7; margin-bottom: 44px; opacity: 0; animation: fadeUp 0.6s ease 0.34s forwards; }
+/* USE CASES */
+.uc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:4px}
+.uc-chip{font-size:13px;color:var(--ink-2);background:var(--white);
+  border:1px solid var(--border);border-radius:8px;padding:14px 16px;
+  line-height:1.5;transition:border-color .2s}
+.uc-chip:hover{border-color:var(--border-heavy)}
+.uc-chip strong{display:block;font-family:var(--orb);font-size:9px;
+  font-weight:700;letter-spacing:.08em;color:var(--ink);margin-bottom:4px}
+.uc-na{background:rgba(26,26,24,.02);color:var(--ink-4)}
+.uc-na strong{color:var(--ink-4)}
 
-    .suggestions { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; max-width: 540px; width: 100%; opacity: 0; animation: fadeUp 0.6s ease 0.46s forwards; }
-    .suggestion-btn {
-      background: var(--white); border: 1px solid var(--border-dark);
-      padding: 14px 16px; text-align: left; cursor: pointer;
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .suggestion-btn:hover { background: var(--gray-50); border-color: var(--gray-400); }
-    .suggestion-label { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 6px; }
-    .suggestion-text { font-size: 12px; color: var(--gray-600); line-height: 1.45; }
+/* COMPARE SECTION */
+.compare-section{max-width:var(--max);margin:0 auto;
+  padding:0 var(--px) 80px;border-top:1px solid var(--border);padding-top:56px}
+.ctable{width:100%;border-collapse:collapse;margin-top:32px}
+.ctable th{font-family:var(--orb);font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-4);font-weight:600;
+  padding:14px 16px;text-align:left;border-bottom:1px solid var(--border);
+  background:var(--cream)}
+.ctable th:first-child{width:220px}
+.ctable td{font-size:13px;padding:14px 16px;border-bottom:1px solid var(--border);
+  color:var(--ink-2);vertical-align:middle}
+.ctable tbody tr:hover td{background:rgba(26,26,24,.02)}
+.ctable tbody tr:last-child td{border-bottom:none}
+.ctable td:not(:first-child){font-family:var(--orb);font-size:11px;color:var(--ink)}
+.check{color:#4caf50;font-size:16px}
+.cross{color:var(--ink-4);font-size:16px}
+.soon{font-family:var(--orb);font-size:8px;letter-spacing:.1em;
+  padding:2px 8px;background:rgba(168,208,21,.15);color:#5a7a00;
+  border-radius:10px;text-transform:uppercase}
 
-    /* ── CHAT AREA ── */
-    .chat-area {
-      flex: 1; overflow-y: auto; padding: 32px 0;
-      display: none; flex-direction: column; gap: 0;
-      background: var(--gray-50);
-    }
-    .chat-area::-webkit-scrollbar { width: 4px; }
-    .chat-area::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 2px; }
-    .chat-area.active { display: flex; }
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:28px var(--px);
+  max-width:var(--max);margin:0 auto;display:flex;align-items:center;
+  justify-content:space-between;flex-wrap:wrap;gap:16px}
+.flogo{font-family:var(--orb);font-size:11px;font-weight:700;color:var(--ink-3);letter-spacing:.08em}
+.flinks{display:flex;gap:20px;list-style:none;flex-wrap:wrap}
+.flinks a{font-size:13px;color:var(--ink-4);text-decoration:none;transition:color .2s}
+.flinks a:hover{color:var(--ink-2)}
 
-    /* ── MESSAGE ── */
-    .message-wrapper {
-      padding: 20px 48px;
-      position: relative;
-      animation: fadeUp 0.35s ease forwards;
-    }
-    .message-wrapper:hover .message-actions { opacity: 1; }
-    .message-wrapper.user { background: var(--white); }
-    .message-wrapper.assistant { background: var(--gray-50); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+/* ANIMATIONS */
+@keyframes fup{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
 
-    .message-inner { max-width: 720px; margin: 0 auto; display: flex; gap: 16px; }
-
-    .message-avatar {
-      width: 30px; height: 30px; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-brand); font-size: 9px; letter-spacing: 0.06em;
-      border: 1px solid var(--border-dark); color: var(--gray-500);
-      background: var(--white); margin-top: 2px;
-    }
-    .message-wrapper.user .message-avatar { background: var(--black); color: var(--white); border-color: var(--black); }
-
-    .message-body { flex: 1; min-width: 0; }
-    .message-sender { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 8px; }
-    .message-text { font-size: 14px; line-height: 1.8; color: var(--gray-800); word-wrap: break-word; }
-    .message-text p + p { margin-top: 10px; }
-    .message-text strong { color: var(--black); font-weight: 600; }
-    .message-text code { background: var(--gray-100); padding: 2px 6px; font-family: monospace; font-size: 12px; border: 1px solid var(--border-dark); }
-
-    /* ── MESSAGE ACTIONS ── */
-    .message-actions {
-      position: absolute; right: 48px; top: 18px;
-      display: flex; gap: 4px; opacity: 0;
-      transition: opacity 0.2s;
-    }
-    .action-btn {
-      display: flex; align-items: center; gap: 5px;
-      padding: 5px 10px; background: var(--white);
-      border: 1px solid var(--border-dark); cursor: pointer;
-      font-size: 11px; color: var(--gray-500);
-      transition: background 0.15s, color 0.15s, border-color 0.15s;
-      font-family: var(--font-body);
-    }
-    .action-btn:hover { background: var(--gray-100); color: var(--black); border-color: var(--gray-400); }
-    .action-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
-    .action-btn.success { color: var(--gray-500); border-color: var(--gray-300); background: var(--gray-50); }
-
-    /* ── EDIT OVERLAY ── */
-    .edit-area {
-      display: none; width: 100%; font-family: var(--font-body);
-      font-size: 14px; line-height: 1.8; color: var(--gray-800);
-      background: var(--white); border: 1px solid var(--border-dark);
-      padding: 10px 12px; resize: none; outline: none;
-      min-height: 80px;
-    }
-    .edit-area.active { display: block; }
-    .edit-controls { display: none; gap: 8px; margin-top: 10px; }
-    .edit-controls.active { display: flex; }
-    .edit-save { font-size: 12px; padding: 7px 18px; background: var(--black); color: var(--white); border: none; cursor: pointer; font-family: var(--font-body); }
-    .edit-save:hover { background: var(--gray-800); }
-    .edit-cancel { font-size: 12px; padding: 7px 18px; background: transparent; color: var(--gray-500); border: 1px solid var(--border-dark); cursor: pointer; font-family: var(--font-body); }
-    .edit-cancel:hover { color: var(--black); border-color: var(--gray-400); }
-
-    /* ── THINKING ── */
-    .thinking { display: flex; align-items: center; gap: 5px; padding: 4px 0; }
-    .thinking-dot { width: 6px; height: 6px; background: var(--gray-300); border-radius: 50%; animation: tp 1.2s ease-in-out infinite; }
-    .thinking-dot:nth-child(2) { animation-delay: 0.18s; }
-    .thinking-dot:nth-child(3) { animation-delay: 0.36s; }
-    @keyframes tp { 0%,60%,100%{transform:scale(1);opacity:0.4} 30%{transform:scale(1.4);opacity:1} }
-
-    /* ── INPUT AREA ── */
-    .input-area {
-      padding: 16px 48px 20px;
-      border-top: 1px solid var(--border);
-      background: var(--white);
-    }
-    .input-wrapper {
-      max-width: 720px; margin: 0 auto;
-      display: flex; align-items: flex-end; gap: 10px;
-      border: 1px solid var(--border-dark); background: var(--white); padding: 12px 14px;
-      transition: border-color 0.2s;
-    }
-    .input-wrapper:focus-within { border-color: var(--gray-400); }
-    .chat-input {
-      flex: 1; background: transparent; border: none; outline: none;
-      color: var(--gray-900); font-family: var(--font-body); font-size: 14px;
-      line-height: 1.6; resize: none; max-height: 160px; overflow-y: auto;
-    }
-    .chat-input::placeholder { color: var(--gray-400); }
-    .chat-input::-webkit-scrollbar { width: 2px; }
-    .chat-input::-webkit-scrollbar-thumb { background: var(--gray-300); }
-    .send-btn {
-      background: var(--gray-200); border: none;
-      width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
-      cursor: pointer; flex-shrink: 0; transition: background 0.15s; opacity: 0.4;
-    }
-    .send-btn.active { background: var(--black); opacity: 1; }
-    .send-btn.active svg { stroke: var(--white); }
-    .send-btn svg { width: 14px; height: 14px; stroke: var(--gray-500); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-    .input-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; max-width: 720px; margin-left: auto; margin-right: auto; padding: 0 2px; }
-    .input-hint { font-size: 10px; letter-spacing: 0.06em; color: var(--gray-400); }
-    .input-model { font-family: var(--font-brand); font-size: 9px; letter-spacing: 0.14em; color: var(--gray-400); }
-
-    /* ── ANIMATIONS ── */
-    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 720px) {
-      body { overflow: auto; }
-      .app { grid-template-columns: 1fr; grid-template-rows: 56px 1fr auto; height: 100svh; }
-      .sidebar { display: none; }
-      .chat-area { padding: 20px 0; }
-      .message-wrapper { padding: 16px 20px; }
-      .message-actions { right: 20px; }
-      .input-area { padding: 12px 16px 18px; }
-    }
-  </style>
+/* RESPONSIVE */
+@media(max-width:900px){
+  .mp-top{grid-template-columns:1fr}
+  .cap-grid{grid-template-columns:1fr}
+  .uc-grid{grid-template-columns:repeat(2,1fr)}
+  .ctable th:first-child{width:160px}
+}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .burger{display:flex}
+  .mtab{padding:16px 20px;font-size:10px}
+  .uc-grid{grid-template-columns:1fr}
+  .ctable{font-size:12px}
+  .ctable th,.ctable td{padding:10px 10px}
+  footer{flex-direction:column;align-items:flex-start}
+}
+@media(max-width:480px){
+  :root{--nav:56px}
+  .mp-actions{flex-direction:column}
+  .btn-p,.btn-s{width:100%;text-align:center}
+  .bbar-wrap{flex-direction:column;align-items:flex-start;gap:4px}
+  .bbar{width:100%}
+}
+</style>
 </head>
 <body>
-<div class="app">
 
-  <!-- TOPBAR -->
-  <header class="topbar">
-    <div class="topbar-left">
-      <a href="index.html" class="topbar-logo">MUXBITE</a>
-      <div class="topbar-divider"></div>
-      <span class="topbar-agent">X · Agent</span>
-    </div>
-    <div class="topbar-right">
-      <span class="status-badge">Online</span>
-      <a href="index.html" class="topbar-btn">← Home</a>
-    </div>
-  </header>
-
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sidebar-top">
-      <button class="new-chat-btn" onclick="newChat()">
-        <span class="icon">+</span> New Conversation
-      </button>
-    </div>
-    <p class="sidebar-section-label">Recent</p>
-    <div class="sidebar-history" id="sidebarHistory"></div>
-    <div class="sidebar-footer">
-      <p class="sidebar-model-label">Active Model</p>
-      <p class="sidebar-model-name">MUXBITE X · v0.1</p>
-    </div>
-  </aside>
-
-  <!-- MAIN -->
-  <main class="main">
-
-    <!-- WELCOME -->
-    <div class="welcome" id="welcomeScreen">
-      <div class="welcome-bg">X</div>
-      <div class="welcome-x">X</div>
-      <h1 class="welcome-title">MUXBITE X</h1>
-      <p class="welcome-sub">An AI agent built for depth. Ask anything — research, analysis, ideas, or just a conversation.</p>
-      <div class="suggestions">
-        <button class="suggestion-btn" onclick="fillSuggestion('What is MUXBITE building and why does it matter?')">
-          <p class="suggestion-label">Company</p>
-          <p class="suggestion-text">What is MUXBITE building and why does it matter?</p>
-        </button>
-        <button class="suggestion-btn" onclick="fillSuggestion('Explain transformer architecture in simple terms')">
-          <p class="suggestion-label">Research</p>
-          <p class="suggestion-text">Explain transformer architecture in simple terms</p>
-        </button>
-        <button class="suggestion-btn" onclick="fillSuggestion('What is the state of multilingual AI models in 2025?')">
-          <p class="suggestion-label">Explore</p>
-          <p class="suggestion-text">State of multilingual AI models in 2025</p>
-        </button>
-        <button class="suggestion-btn" onclick="fillSuggestion('Help me think through building a startup from scratch')">
-          <p class="suggestion-label">Strategy</p>
-          <p class="suggestion-text">Help me build a startup from scratch</p>
-        </button>
-      </div>
-    </div>
-
-    <!-- CHAT -->
-    <div class="chat-area" id="chatArea"></div>
-
-    <!-- INPUT -->
-    <div class="input-area">
-      <div class="input-wrapper">
-        <textarea class="chat-input" id="chatInput" placeholder="Ask MUXBITE X anything..." rows="1"></textarea>
-        <button class="send-btn" id="sendBtn" onclick="sendMessage()">
-          <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        </button>
-      </div>
-      <div class="input-meta">
-        <span class="input-hint">Enter to send · Shift+Enter for new line</span>
-        <span class="input-model">MUXBITE X</span>
-      </div>
-    </div>
-
-  </main>
+<!-- NAV -->
+<nav>
+  <a href="muxbite-landing.html" class="logo">MUXBITE</a>
+  <ul class="nav-links">
+    <li><a href="MB.html" class="active">Models</a></li>
+    <li><a href="muxbite-landing.html#principles">Research</a></li>
+    <li><a href="muxbite-landing.html#about">About</a></li>
+    <li><a href="muxbite-landing.html#contact" class="nav-cta">Stay updated</a></li>
+  </ul>
+  <button class="burger" id="burger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="drawer" id="drawer">
+  <a href="MB.html" onclick="closeNav()">Models</a>
+  <a href="muxbite-landing.html#principles" onclick="closeNav()">Research</a>
+  <a href="muxbite-landing.html#about" onclick="closeNav()">About</a>
+  <a href="muxbite-landing.html#contact" onclick="closeNav()">Stay updated</a>
 </div>
 
-<script>
-  const chatArea = document.getElementById('chatArea');
-  const welcomeScreen = document.getElementById('welcomeScreen');
-  const chatInput = document.getElementById('chatInput');
-  const sendBtn = document.getElementById('sendBtn');
-  const sidebarHistory = document.getElementById('sidebarHistory');
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <p class="ph-label">MB Model Series</p>
+  <h1 class="ph-title">Our models</h1>
+  <p class="ph-sub">The MB series is MUXBITE's family of generative language models — each built to be safer, more capable, and more accessible than the last.</p>
+</div>
 
-  let conversationHistory = [];
-  let isThinking = false;
-  let messageCounter = 0;
+<!-- MODEL TABS -->
+<div class="model-selector">
+  <div class="model-tabs">
+    <button class="mtab active" onclick="switchModel('mb1',this)">MB1</button>
+    <button class="mtab" onclick="switchModel('mb2',this)">MB2</button>
+    <button class="mtab" onclick="switchModel('mb3',this)">MB3</button>
+  </div>
+</div>
 
-  // Auto-resize textarea
-  chatInput.addEventListener('input', () => {
-    chatInput.style.height = 'auto';
-    chatInput.style.height = Math.min(chatInput.scrollHeight, 160) + 'px';
-    sendBtn.classList.toggle('active', chatInput.value.trim().length > 0);
-  });
+<!-- ═══════════════ MB1 ═══════════════ -->
+<div class="model-panel active" id="panel-mb1">
+  <div class="mp-top">
+    <div>
+      <p class="mp-gen">First generation · 2025–2026</p>
+      <h2 class="mp-name">MB1</h2>
+      <p class="mp-tagline">Our foundation model. A small, efficient transformer that proves the architecture works — and begins to answer the question of what MUXBITE AI feels like.</p>
+      <div class="mp-actions">
+        <button class="btn-p" onclick="alert('MB1 is currently in training. API access coming soon.')">Request early access</button>
+        <button class="btn-s" onclick="alert('Technical report will be published when MB1 training completes.')">Read tech report</button>
+      </div>
+    </div>
+    <div class="spec-card reveal">
+      <div class="spec-row">
+        <span class="spec-key">Status</span>
+        <span class="spec-badge badge-dev">In development</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Parameters</span>
+        <span class="spec-val">10M – 50M</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Context window</span>
+        <span class="spec-val">8K tokens</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Languages</span>
+        <span class="spec-val">English · Hindi</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Modality</span>
+        <span class="spec-val">Text</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Training compute</span>
+        <span class="spec-val">~10²² FLOPs</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Architecture</span>
+        <span class="spec-val">Transformer (GPT-style)</span>
+      </div>
+    </div>
+  </div>
 
-  chatInput.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      if (chatInput.value.trim() && !isThinking) sendMessage();
-    }
-  });
+  <!-- FEATURE TABS -->
+  <div class="ftabs-wrap">
+    <div class="ftabs">
+      <button class="ftab active" onclick="switchTab('mb1','caps',this)">Capabilities</button>
+      <button class="ftab" onclick="switchTab('mb1','bench',this)">Benchmarks</button>
+      <button class="ftab" onclick="switchTab('mb1','context',this)">Context &amp; speed</button>
+      <button class="ftab" onclick="switchTab('mb1','usecases',this)">Use cases</button>
+    </div>
 
-  function fillSuggestion(text) {
-    chatInput.value = text;
-    chatInput.dispatchEvent(new Event('input'));
-    chatInput.focus();
-  }
-
-  function showChat() {
-    welcomeScreen.style.display = 'none';
-    chatArea.classList.add('active');
-  }
-
-  function newChat() {
-    conversationHistory = [];
-    chatArea.innerHTML = '';
-    chatArea.classList.remove('active');
-    welcomeScreen.style.display = '';
-    chatInput.value = '';
-    chatInput.style.height = 'auto';
-    sendBtn.classList.remove('active');
-    messageCounter = 0;
-    sidebarHistory.querySelectorAll('.history-item').forEach(el => el.classList.remove('active'));
-  }
-
-  function formatText(text) {
-    return text
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/`(.*?)`/g, '<code>$1</code>')
-      .split('\n\n').map(p => p.trim() ? `<p>${p.replace(/\n/g,'<br/>')}</p>` : '').join('');
-  }
-
-  function copyToClipboard(text, btn) {
-    navigator.clipboard.writeText(text).then(() => {
-      const orig = btn.innerHTML;
-      btn.innerHTML = `<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Copied`;
-      btn.classList.add('success');
-      setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('success'); }, 2000);
-    });
-  }
-
-  function shareMessage(text) {
-    if (navigator.share) {
-      navigator.share({ text });
-    } else {
-      navigator.clipboard.writeText(text);
-      alert('Link copied to clipboard');
-    }
-  }
-
-  function startEdit(msgId, currentText, isUser) {
-    const wrapper = document.getElementById(msgId);
-    const textEl = wrapper.querySelector('.message-text');
-    const editArea = wrapper.querySelector('.edit-area');
-    const editControls = wrapper.querySelector('.edit-controls');
-    textEl.style.display = 'none';
-    editArea.value = currentText;
-    editArea.classList.add('active');
-    editControls.classList.add('active');
-    editArea.focus();
-  }
-
-  function cancelEdit(msgId) {
-    const wrapper = document.getElementById(msgId);
-    const textEl = wrapper.querySelector('.message-text');
-    const editArea = wrapper.querySelector('.edit-area');
-    const editControls = wrapper.querySelector('.edit-controls');
-    textEl.style.display = '';
-    editArea.classList.remove('active');
-    editControls.classList.remove('active');
-  }
-
-  function saveEdit(msgId, role) {
-    const wrapper = document.getElementById(msgId);
-    const textEl = wrapper.querySelector('.message-text');
-    const editArea = wrapper.querySelector('.edit-area');
-    const editControls = wrapper.querySelector('.edit-controls');
-    const newText = editArea.value.trim();
-    if (!newText) return;
-    textEl.innerHTML = formatText(newText);
-    textEl.style.display = '';
-    editArea.classList.remove('active');
-    editControls.classList.remove('active');
-    // Update conversation history
-    const idx = parseInt(wrapper.dataset.historyIndex);
-    if (!isNaN(idx) && conversationHistory[idx]) {
-      conversationHistory[idx].content = newText;
-    }
-  }
-
-  function addMessage(role, content) {
-    showChat();
-    messageCounter++;
-    const msgId = `msg-${messageCounter}`;
-    const histIdx = conversationHistory.length - 1;
-
-    const wrapper = document.createElement('div');
-    wrapper.className = `message-wrapper ${role}`;
-    wrapper.id = msgId;
-    wrapper.dataset.historyIndex = histIdx;
-    wrapper.dataset.rawContent = content;
-
-    const inner = document.createElement('div');
-    inner.className = 'message-inner';
-
-    const avatar = document.createElement('div');
-    avatar.className = 'message-avatar';
-    avatar.textContent = role === 'user' ? 'YOU' : 'X';
-
-    const body = document.createElement('div');
-    body.className = 'message-body';
-
-    const sender = document.createElement('div');
-    sender.className = 'message-sender';
-    sender.textContent = role === 'user' ? 'You' : 'MUXBITE X';
-
-    const text = document.createElement('div');
-    text.className = 'message-text';
-    text.innerHTML = formatText(content);
-
-    const editArea = document.createElement('textarea');
-    editArea.className = 'edit-area';
-    editArea.value = content;
-
-    const editControls = document.createElement('div');
-    editControls.className = 'edit-controls';
-    editControls.innerHTML = `
-      <button class="edit-save" onclick="saveEdit('${msgId}','${role}')">Save</button>
-      <button class="edit-cancel" onclick="cancelEdit('${msgId}')">Cancel</button>
-    `;
-
-    body.appendChild(sender);
-    body.appendChild(text);
-    body.appendChild(editArea);
-    body.appendChild(editControls);
-    inner.appendChild(avatar);
-    inner.appendChild(body);
-
-    // Actions
-    const actions = document.createElement('div');
-    actions.className = 'message-actions';
-    actions.innerHTML = `
-      <button class="action-btn" title="Copy" onclick="copyToClipboard(document.getElementById('${msgId}').dataset.rawContent, this)">
-        <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        Copy
-      </button>
-      <button class="action-btn" title="Edit" onclick="startEdit('${msgId}','${content}','${role === 'user'}')">
-        <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        Edit
-      </button>
-      <button class="action-btn" title="Share" onclick="shareMessage(document.getElementById('${msgId}').dataset.rawContent)">
-        <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-        Share
-      </button>
-    `;
-
-    wrapper.appendChild(inner);
-    wrapper.appendChild(actions);
-    chatArea.appendChild(wrapper);
-    chatArea.scrollTop = chatArea.scrollHeight;
-  }
-
-  function addThinking() {
-    showChat();
-    const wrapper = document.createElement('div');
-    wrapper.className = 'message-wrapper assistant';
-    wrapper.id = 'thinkingMsg';
-    wrapper.innerHTML = `
-      <div class="message-inner">
-        <div class="message-avatar">X</div>
-        <div class="message-body">
-          <div class="message-sender">MUXBITE X</div>
-          <div class="thinking">
-            <div class="thinking-dot"></div>
-            <div class="thinking-dot"></div>
-            <div class="thinking-dot"></div>
-          </div>
+    <div class="fpanel active" id="mb1-caps" style="padding-top:24px">
+      <div class="cap-grid">
+        <div class="cap-item">
+          <div class="cap-icon">⨀</div>
+          <p class="cap-name">Text generation</p>
+          <p class="cap-desc">Coherent sentence and paragraph generation in English and Hindi. Suitable for short-form writing tasks.</p>
         </div>
-      </div>`;
-    chatArea.appendChild(wrapper);
-    chatArea.scrollTop = chatArea.scrollHeight;
-  }
+        <div class="cap-item">
+          <div class="cap-icon">⨀</div>
+          <p class="cap-name">Basic conversation</p>
+          <p class="cap-desc">Turn-based dialogue with short context retention. Handles simple Q&amp;A and assistant interactions.</p>
+        </div>
+        <div class="cap-item">
+          <div class="cap-icon">⨀</div>
+          <p class="cap-name">Translation (EN ↔ HI)</p>
+          <p class="cap-desc">English-Hindi and Hindi-English translation at a basic level, trained on bilingual corpora.</p>
+        </div>
+        <div class="cap-item cap-na">
+          <div class="cap-icon">⨀</div>
+          <p class="cap-name">Reasoning</p>
+          <p class="cap-desc">Multi-step reasoning is limited at this scale. MB2 is designed to address this.</p>
+        </div>
+        <div class="cap-item cap-na">
+          <div class="cap-icon">⨀</div>
+          <p class="cap-name">Vision</p>
+          <p class="cap-desc">Not available in MB1. Multimodal capabilities are planned for MB3.</p>
+        </div>
+        <div class="cap-item cap-na">
+          <div class="cap-icon">⨀</div>
+          <p class="cap-name">Tool use</p>
+          <p class="cap-desc">Function calling and tool use are not available in MB1.</p>
+        </div>
+      </div>
+    </div>
 
-  function removeThinking() {
-    const el = document.getElementById('thinkingMsg');
-    if (el) el.remove();
-  }
+    <div class="fpanel" id="mb1-bench" style="padding-top:24px">
+      <table class="btable">
+        <thead>
+          <tr>
+            <th>Benchmark</th>
+            <th>Category</th>
+            <th>MB1 score</th>
+            <th style="min-width:140px">Progress</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>HellaSwag</td>
+            <td>Commonsense</td>
+            <td><span class="bna">Pending</span></td>
+            <td><div class="bbar-wrap"><div class="bbar"><div class="bbar-fill" style="width:0%"></div></div><span class="bna" style="font-size:11px">—</span></div></td>
+          </tr>
+          <tr>
+            <td>MMLU</td>
+            <td>Knowledge</td>
+            <td><span class="bna">Pending</span></td>
+            <td><div class="bbar-wrap"><div class="bbar"><div class="bbar-fill" style="width:0%"></div></div><span class="bna" style="font-size:11px">—</span></div></td>
+          </tr>
+          <tr>
+            <td>HumanEval</td>
+            <td>Code</td>
+            <td><span class="bna">Pending</span></td>
+            <td><div class="bbar-wrap"><div class="bbar"><div class="bbar-fill" style="width:0%"></div></div><span class="bna" style="font-size:11px">—</span></div></td>
+          </tr>
+          <tr>
+            <td>Indic NLU</td>
+            <td>Hindi NLU</td>
+            <td><span class="bna">Pending</span></td>
+            <td><div class="bbar-wrap"><div class="bbar"><div class="bbar-fill" style="width:0%"></div></div><span class="bna" style="font-size:11px">—</span></div></td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:12px;color:var(--ink-4);margin-top:16px;font-style:italic">Benchmarks will be published when MB1 training and evaluation complete.</p>
+    </div>
 
-  function addSidebarSession(firstMessage) {
-    const preview = firstMessage.length > 38 ? firstMessage.slice(0, 38) + '…' : firstMessage;
-    const item = document.createElement('div');
-    item.className = 'history-item active';
-    item.innerHTML = `<div class="history-title">${preview}</div><div class="history-time">Just now</div>`;
-    sidebarHistory.querySelectorAll('.history-item').forEach(el => el.classList.remove('active'));
-    sidebarHistory.prepend(item);
-  }
+    <div class="fpanel" id="mb1-context" style="padding-top:24px">
+      <div class="ctx-row">
+        <span class="ctx-label">Context window</span>
+        <span class="ctx-val">8K tokens</span>
+        <div class="ctx-bar"><div class="ctx-fill" style="width:15%"></div></div>
+      </div>
+      <div class="ctx-row">
+        <span class="ctx-label">Est. throughput</span>
+        <span class="ctx-val">~800 tok/s</span>
+        <div class="ctx-bar"><div class="ctx-fill" style="width:80%"></div></div>
+      </div>
+      <div class="ctx-row">
+        <span class="ctx-label">Memory footprint</span>
+        <span class="ctx-val">~200 MB</span>
+        <div class="ctx-bar"><div class="ctx-fill" style="width:10%"></div></div>
+      </div>
+      <div class="ctx-row">
+        <span class="ctx-label">Latency (TTFT)</span>
+        <span class="ctx-val">~50 ms</span>
+        <div class="ctx-bar"><div class="ctx-fill" style="width:90%"></div></div>
+      </div>
+    </div>
 
-  async function sendMessage() {
-    const text = chatInput.value.trim();
-    if (!text || isThinking) return;
+    <div class="fpanel" id="mb1-usecases" style="padding-top:24px">
+      <div class="uc-grid">
+        <div class="uc-chip"><strong>Research prototype</strong>Validate training pipelines and architecture decisions at low cost.</div>
+        <div class="uc-chip"><strong>Edge deployment</strong>Run on low-resource devices — phones, embedded systems, offline apps.</div>
+        <div class="uc-chip"><strong>Bilingual assistant</strong>Simple English-Hindi Q&amp;A for consumer applications.</div>
+        <div class="uc-chip"><strong>Text classification</strong>Sentiment analysis, intent detection, topic labelling.</div>
+        <div class="uc-chip cap-na"><strong>Long-form writing</strong>Not well-suited — limited context window and scale.</div>
+        <div class="uc-chip cap-na"><strong>Complex reasoning</strong>Not recommended — MB2 or MB3 are better suited.</div>
+      </div>
+    </div>
+  </div>
+</div>
 
-    isThinking = true;
-    sendBtn.classList.remove('active');
+<!-- ═══════════════ MB2 ═══════════════ -->
+<div class="model-panel" id="panel-mb2">
+  <div class="mp-top">
+    <div>
+      <p class="mp-gen">Second generation · Planned 2026</p>
+      <h2 class="mp-name">MB2</h2>
+      <p class="mp-tagline">A more capable model with a focus on multilingual understanding, longer context, and stronger reasoning — built to serve the underserved languages of the world.</p>
+      <div class="mp-actions">
+        <button class="btn-p" onclick="alert('MB2 is planned for 2026. Join the waitlist to get early access.')">Join waitlist</button>
+        <button class="btn-s" onclick="alert('MB2 research preview will be shared with early partners.')">Research preview</button>
+      </div>
+    </div>
+    <div class="spec-card reveal">
+      <div class="spec-row">
+        <span class="spec-key">Status</span>
+        <span class="spec-badge badge-plan">Planned · 2026</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Parameters</span>
+        <span class="spec-val">200M – 1B</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Context window</span>
+        <span class="spec-val">64K tokens</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Languages</span>
+        <span class="spec-val">20+ languages</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Modality</span>
+        <span class="spec-val">Text</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Training compute</span>
+        <span class="spec-val">~10²³ FLOPs</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-key">Architecture</span>
+        <span class="spec-val">Transformer + SFT + DPO</span>
+      </div>
+    </div>
+  </div>
 
-    if (conversationHistory.length === 0) addSidebarSession(text);
+  <div class="ftabs-wrap">
+    <div class="ftabs">
+      <button class="ftab active" onclick="switchTab('mb2','caps',this)">Capabilities</button>
+      <button class="ftab" onclick="switchTab('mb2','bench',this)">Benchmarks</button>
+      <button class="ftab" onclick="switchTab('mb2','context',this)">Context &amp; speed</button>
+      <button class="ftab" onclick="switchTab('mb2','usecases',this)">Use cases</button>
+    </div>
 
-    conversationHistory.push({ role: 'user', content: text });
-    addMessage('user', text);
+    <div class="fpanel active" id="mb2-caps" style="padding-top:24px">
+      <div class="cap-grid">
+        <div class="cap-item">
+          <div class="cap-icon">⨀</div>
+          <p class="cap-name">Multi-step reasoning</p>
+          <p class="cap-desc">Chain-of-thought reasoning for math, logic, and analysis tasks across 20+ languages.</p>
+        </div>
+        <div class="cap-item">
+          <div class="cap-icon">⨀</div>
+          <p class="cap-name">Multilingual NLU</p>
+          <p class="cap-desc">Native understanding across Hindi, Arabic, Swahili, Bengali, Tamil, and more underserved languages.</p>
+        </div>
+        <div class="cap-item">
+          <div class="cap-icon">⨀</div>
+          <p class="cap-name">Long-form writing</p>
+          <p class="cap-desc">Essays, reports, stories, and documentation with a 64K token context window.</p>
+        </div>
+        <div class="cap-item">
+          <div class="cap-icon">⨀</div>
+          <p class="cap-name">Code generation</p>
+          <p class="cap-desc">Python, JavaScript, and other common languages. Sufficient for real-world coding assistance.</p>
+        </div>
+        <div class="cap-item">
+          <div class="cap-icon">⨀</div>
+          <p class="cap-name">Summarisation</p>
+          <p class="cap-desc">Long document summarisation, cross-lingual summarisation, and meeting notes.</p>
+        </div>
+        <div class="cap-item cap-na">
+          <div class="cap-icon">⨀</div>
+          <p class="cap-name">Vision</p>
+          <p class="cap-desc">Not available in MB2. Image understanding is planned for MB3.</p>
+        </div>
+      </div>
+    </div>
 
-    chatInput.value = '';
-    chatInput.style.height = 'auto';
-    addThinking();
+    <div class="fpanel" id="mb2-bench" style="padding-top:24px">
+      <table class="btable">
+        <thead>
+          <tr><th>Benchmark</th><th>Category</th><th>Target</th><th style="min-width:140px">Projection</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>MMLU</td><td>Knowledge</td><td><span class="bval">~65%</span></td><td><div class="bbar-wrap"><div class="bbar"><div class="bbar-fill" style="width:65%"></div></div><span style="font-size:11px;color:var(--ink-3)">65%</span></div></td></tr>
+          <tr><td>HellaSwag</td><td>Commonsense</td><td><span class="bval">~80%</span></td><td><div class="bbar-wrap"><div class="bbar"><div class="bbar-fill" style="width:80%"></div></div><span style="font-size:11px;color:var(--ink-3)">80%</span></div></td></tr>
+          <tr><td>HumanEval</td><td>Code</td><td><span class="bval">~40%</span></td><td><div class="bbar-wrap"><div class="bbar"><div class="bbar-fill" style="width:40%"></div></div><span style="font-size:11px;color:var(--ink-3)">40%</span></div></td></tr>
+          <tr><td>Indic NLU</td><td>Hindi/Indic NLU</td><td><span class="bval">~72%</span></td><td><div class="bbar-wrap"><div class="bbar"><div class="bbar-fill" style="width:72%"></div></div><span style="font-size:11px;color:var(--ink-3)">72%</span></div></td></tr>
+          <tr><td>FLORES-200</td><td>Translation</td><td><span class="bval">~38 BLEU</span></td><td><div class="bbar-wrap"><div class="bbar"><div class="bbar-fill" style="width:55%"></div></div><span style="font-size:11px;color:var(--ink-3)">est.</span></div></td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:12px;color:var(--ink-4);margin-top:16px;font-style:italic">Targets based on scaling laws and similar models at this parameter range. Actuals will be published post-training.</p>
+    </div>
 
-    try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          system: `You are MUXBITE X, the flagship AI agent built by MUXBITE — an AI company building proprietary models and intelligent products. You are thoughtful, precise, and direct. Respond in clear prose. You represent MUXBITE's ambition to build AI from the ground up.`,
-          messages: conversationHistory
-        })
-      });
+    <div class="fpanel" id="mb2-context" style="padding-top:24px">
+      <div class="ctx-row"><span class="ctx-label">Context window</span><span class="ctx-val">64K tokens</span><div class="ctx-bar"><div class="ctx-fill" style="width:55%"></div></div></div>
+      <div class="ctx-row"><span class="ctx-label">Est. throughput</span><span class="ctx-val">~200 tok/s</span><div class="ctx-bar"><div class="ctx-fill" style="width:40%"></div></div></div>
+      <div class="ctx-row"><span class="ctx-label">Memory footprint</span><span class="ctx-val">~4 GB</span><div class="ctx-bar"><div class="ctx-fill" style="width:35%"></div></div></div>
+      <div class="ctx-row"><span class="ctx-label">Latency (TTFT)</span><span class="ctx-val">~200 ms</span><div class="ctx-bar"><div class="ctx-fill" style="width:60%"></div></div></div>
+    </div>
 
-      const data = await res.json();
-      const reply = data.content?.[0]?.text || 'Something went wrong. Please try again.';
-      removeThinking();
-      conversationHistory.push({ role: 'assistant', content: reply });
-      addMessage('assistant', reply);
-    } catch (err) {
-      removeThinking();
-      conversationHistory.push({ role: 'assistant', content: 'Connection error. Please check your network and try again.' });
-      addMessage('assistant', 'Connection error. Please check your network and try again.');
-    }
+    <div class="fpanel" id="mb2-usecases" style="padding-top:24px">
+      <div class="uc-grid">
+        <div class="uc-chip"><strong>Multilingual assistant</strong>Customer support, Q&amp;A, and conversation in 20+ world languages.</div>
+        <div class="uc-chip"><strong>Document analysis</strong>Summarise and extract from long PDFs, contracts, and research papers.</div>
+        <div class="uc-chip"><strong>Code assistant</strong>Autocomplete, debugging, and explanation for developers worldwide.</div>
+        <div class="uc-chip"><strong>Education</strong>Personalised tutoring and explanations in the student's native language.</div>
+        <div class="uc-chip"><strong>Content localisation</strong>Translate and adapt content across global markets natively.</div>
+        <div class="uc-chip cap-na"><strong>Image tasks</strong>Not available — use MB3 for vision capabilities.</div>
+      </div>
+    </div>
+  </div>
+</div>
 
-    isThinking = false;
-  }
+<!-- ═══════════════ MB3 ═══════════════ -->
+<div class="model-panel" id="panel-mb3">
+  <div class="mp-top">
+    <div>
+      <p class="mp-gen">Third generation · Roadmap 2027+</p>
+      <h2 class="mp-name">MB3</h2>
+      <p class="mp-tagline">Our frontier model. Multimodal, multilingual, and built to compete at the highest level — text, voice, and vision for the world's next four billion users.</p>
+      <div class="mp-actions">
+        <button class="btn-p" onclick="alert('MB3 is on our roadmap for 2027+. Follow our journey for updates.')">Follow our progress</button>
+        <button class="btn-s" onclick="alert('MB3 research direction will be shared as we get closer to training.')">Research direction</button>
+      </div>
+    </div>
+    <div class="spec-card reveal">
+      <div class="spec-row"><span class="spec-key">Status</span><span class="spec-badge badge-road">Roadmap 2027+</span></div>
+      <div class="spec-row"><span class="spec-key">Parameters</span><span class="spec-val">7B – 70B+</span></div>
+      <div class="spec-row"><span class="spec-key">Context window</span><span class="spec-val">200K tokens</span></div>
+      <div class="spec-row"><span class="spec-key">Languages</span><span class="spec-val">100+ languages</span></div>
+      <div class="spec-row"><span class="spec-key">Modality</span><span class="spec-val">Text · Vision · Voice</span></div>
+      <div class="spec-row"><span class="spec-key">Training compute</span><span class="spec-val">~10²⁵ FLOPs</span></div>
+      <div class="spec-row"><span class="spec-key">Architecture</span><span class="spec-val">Multimodal transformer</span></div>
+    </div>
+  </div>
+
+  <div class="ftabs-wrap">
+    <div class="ftabs">
+      <button class="ftab active" onclick="switchTab('mb3','caps',this)">Capabilities</button>
+      <button class="ftab" onclick="switchTab('mb3','bench',this)">Benchmarks</button>
+      <button class="ftab" onclick="switchTab('mb3','context',this)">Context &amp; speed</button>
+      <button class="ftab" onclick="switchTab('mb3','usecases',this)">Use cases</button>
+    </div>
+
+    <div class="fpanel active" id="mb3-caps" style="padding-top:24px">
+      <div class="cap-grid">
+        <div class="cap-item"><div class="cap-icon">⨀</div><p class="cap-name">Advanced reasoning</p><p class="cap-desc">Expert-level multi-step reasoning, mathematics, and scientific problem solving.</p></div>
+        <div class="cap-item"><div class="cap-icon">⨀</div><p class="cap-name">Vision understanding</p><p class="cap-desc">Image analysis, chart reading, document OCR, and visual Q&amp;A across languages.</p></div>
+        <div class="cap-item"><div class="cap-icon">⨀</div><p class="cap-name">Voice (speech)</p><p class="cap-desc">Spoken language understanding and generation in 100+ languages and dialects.</p></div>
+        <div class="cap-item"><div class="cap-icon">⨀</div><p class="cap-name">Tool use &amp; agents</p><p class="cap-desc">Function calling, browser use, and multi-step agentic task execution.</p></div>
+        <div class="cap-item"><div class="cap-icon">⨀</div><p class="cap-name">Expert-level code</p><p class="cap-desc">Full software engineering — architecture, debugging, code review, and security analysis.</p></div>
+        <div class="cap-item"><div class="cap-icon">⨀</div><p class="cap-name">100+ languages</p><p class="cap-desc">Native-quality text, translation, and understanding across the full breadth of global languages.</p></div>
+      </div>
+    </div>
+
+    <div class="fpanel" id="mb3-bench" style="padding-top:24px">
+      <table class="btable">
+        <thead><tr><th>Benchmark</th><th>Category</th><th>Target</th><th style="min-width:140px">Projection</th></tr></thead>
+        <tbody>
+          <tr><td>MMLU</td><td>Knowledge</td><td><span class="bval">~85%</span></td><td><div class="bbar-wrap"><div class="bbar"><div class="bbar-fill" style="width:85%"></div></div><span style="font-size:11px;color:var(--ink-3)">85%</span></div></td></tr>
+          <tr><td>HumanEval</td><td>Code</td><td><span class="bval">~80%</span></td><td><div class="bbar-wrap"><div class="bbar"><div class="bbar-fill" style="width:80%"></div></div><span style="font-size:11px;color:var(--ink-3)">80%</span></div></td></tr>
+          <tr><td>MATH</td><td>Mathematics</td><td><span class="bval">~70%</span></td><td><div class="bbar-wrap"><div class="bbar"><div class="bbar-fill" style="width:70%"></div></div><span style="font-size:11px;color:var(--ink-3)">70%</span></div></td></tr>
+          <tr><td>MMMU</td><td>Multimodal</td><td><span class="bval">~75%</span></td><td><div class="bbar-wrap"><div class="bbar"><div class="bbar-fill" style="width:75%"></div></div><span style="font-size:11px;color:var(--ink-3)">75%</span></div></td></tr>
+          <tr><td>FLORES-200</td><td>Translation</td><td><span class="bval">~50 BLEU</span></td><td><div class="bbar-wrap"><div class="bbar"><div class="bbar-fill" style="width:82%"></div></div><span style="font-size:11px;color:var(--ink-3)">est.</span></div></td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:12px;color:var(--ink-4);margin-top:16px;font-style:italic">Long-range projections based on current scaling trends. Targets may be revised as the field evolves.</p>
+    </div>
+
+    <div class="fpanel" id="mb3-context" style="padding-top:24px">
+      <div class="ctx-row"><span class="ctx-label">Context window</span><span class="ctx-val">200K tokens</span><div class="ctx-bar"><div class="ctx-fill" style="width:100%"></div></div></div>
+      <div class="ctx-row"><span class="ctx-label">Est. throughput</span><span class="ctx-val">~80 tok/s</span><div class="ctx-bar"><div class="ctx-fill" style="width:25%"></div></div></div>
+      <div class="ctx-row"><span class="ctx-label">Memory footprint</span><span class="ctx-val">~40 GB</span><div class="ctx-bar"><div class="ctx-fill" style="width:80%"></div></div></div>
+      <div class="ctx-row"><span class="ctx-label">Latency (TTFT)</span><span class="ctx-val">~500 ms</span><div class="ctx-bar"><div class="ctx-fill" style="width:30%"></div></div></div>
+    </div>
+
+    <div class="fpanel" id="mb3-usecases" style="padding-top:24px">
+      <div class="uc-grid">
+        <div class="uc-chip"><strong>AI assistant</strong>General-purpose assistant on par with the best models in the world.</div>
+        <div class="uc-chip"><strong>Software engineering</strong>End-to-end coding, architecture review, and automated testing.</div>
+        <div class="uc-chip"><strong>Medical &amp; legal</strong>Domain-specific reasoning in healthcare and legal contexts globally.</div>
+        <div class="uc-chip"><strong>Creative &amp; media</strong>Writing, image understanding, and multimedia content creation.</div>
+        <div class="uc-chip"><strong>Enterprise agents</strong>Autonomous multi-step agents for complex business workflows.</div>
+        <div class="uc-chip"><strong>Global education</strong>Personalised learning in any language, with voice and vision support.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODEL COMPARISON -->
+<div class="compare-section">
+  <h2 class="sec-title reveal">Compare models</h2>
+  <div style="overflow-x:auto">
+    <table class="ctable">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>MB1</th>
+          <th>MB2</th>
+          <th>MB3</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Parameters</td><td>10–50M</td><td>200M–1B</td><td>7B–70B+</td></tr>
+        <tr><td>Context window</td><td>8K</td><td>64K</td><td>200K</td></tr>
+        <tr><td>Languages</td><td>2</td><td>20+</td><td>100+</td></tr>
+        <tr><td>Text generation</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>Reasoning</td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>Code generation</td><td><span class="cross">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>Vision</td><td><span class="cross">—</span></td><td><span class="cross">—</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>Voice</td><td><span class="cross">—</span></td><td><span class="cross">—</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>Tool use</td><td><span class="cross">—</span></td><td><span class="soon">soon</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>API access</td><td><span class="soon">soon</span></td><td><span class="soon">2026</span></td><td><span class="soon">2027+</span></td></tr>
+        <tr><td>Open weights</td><td><span class="check">✓ Planned</span></td><td><span class="check">✓ Planned</span></td><td><span class="cross">TBD</span></td></tr>
+        <tr><td>Edge deployment</td><td><span class="check">✓</span></td><td><span class="soon">Limited</span></td><td><span class="cross">—</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<footer>
+  <span class="flogo">MUXBITE</span>
+  <ul class="flinks">
+    <li><a href="https://github.com/heysanzu" target="_blank">GitHub</a></li>
+    <li><a href="muxbite-landing.html">Home</a></li>
+    <li><a href="muxbite-landing.html#principles">Research</a></li>
+    <li><a href="muxbite-landing.html#about">About</a></li>
+  </ul>
+  <span style="font-size:12px;color:var(--ink-4)">© 2026 MUXBITE</span>
+</footer>
+
+<script>
+// Nav
+const burger=document.getElementById('burger'),drawer=document.getElementById('drawer');
+burger.addEventListener('click',()=>{burger.classList.toggle('open');drawer.classList.toggle('open')});
+function closeNav(){burger.classList.remove('open');drawer.classList.remove('open')}
+
+// Model switcher
+function switchModel(id, btn){
+  document.querySelectorAll('.model-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+  // re-observe reveals in the new panel
+  document.querySelectorAll('#panel-'+id+' .reveal').forEach(el=>{
+    el.classList.remove('visible');
+    setTimeout(()=>el.classList.add('visible'),100);
+  });
+}
+
+// Feature tab switcher
+function switchTab(model, tab, btn){
+  const panel=document.getElementById('panel-'+model);
+  panel.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
+  panel.querySelectorAll('.fpanel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(model+'-'+tab).classList.add('active');
+}
+
+// Scroll reveal
+const io=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*60);io.unobserve(e.target)}
+  });
+},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 </script>
 </body>
 </html>
