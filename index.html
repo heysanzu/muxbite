@@ -1,320 +1,602 @@
 <!DOCTYPE html>
-<html lang="en" style="background:#ffffff;">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MUXBITE — AI Company</title>
-  <link rel="icon" type="image/png" href="muxbite.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MUXBITE — AI Research Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --black: #000000;
-      --white: #ffffff;
-      --gray-50: #f7f7f7;
-      --gray-100: #f0f0f0;
-      --gray-200: #e4e4e4;
-      --gray-300: #cccccc;
-      --gray-400: #999999;
-      --gray-500: #666666;
-      --gray-800: #1a1a1a;
-      --gray-900: #111111;
-      --border: #e8e8e8;
-      --border-dark: #d4d4d4;
-      --font-brand: 'Orbitron', sans-serif;
-      --font-body: 'Product Sans', 'Google Sans', 'Segoe UI', sans-serif;
-    }
+  :root {
+    --cream: #faf9f7;
+    --white: #ffffff;
+    --ink: #1a1a18;
+    --ink-2: #3d3d3a;
+    --ink-3: #7a7a74;
+    --ink-4: #b0b0a8;
+    --border: rgba(26,26,24,0.1);
+    --border-heavy: rgba(26,26,24,0.2);
+    --accent: #c8f135;
+    --accent-dark: #a8d015;
+    --sans: 'Google Sans', 'Product Sans', system-ui, sans-serif;
+    --orbitron: 'Orbitron', monospace;
+    --max: 1100px;
+    --nav-h: 64px;
+  }
 
-    html { scroll-behavior: smooth; background: #ffffff; }
+  html { scroll-behavior: smooth; }
 
-    body {
-      background: #ffffff;
-      color: var(--gray-900);
-      font-family: var(--font-body);
-      overflow-x: hidden;
-    }
+  body {
+    font-family: var(--sans);
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.6;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+  }
 
-    /* NAV */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 60px; height: 64px;
-      background: rgba(255,255,255,0.95);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-logo { font-family: var(--font-brand); font-size: 15px; letter-spacing: 0.12em; color: var(--black); text-decoration: none; }
-    .nav-links { display: flex; gap: 36px; list-style: none; }
-    .nav-links a { font-size: 13px; letter-spacing: 0.06em; color: var(--gray-500); text-decoration: none; transition: color 0.2s; }
-    .nav-links a:hover { color: var(--black); }
-    .nav-cta { font-size: 13px; letter-spacing: 0.08em; color: var(--white); background: var(--black); border: none; padding: 10px 22px; cursor: pointer; text-decoration: none; display: inline-block; transition: background 0.2s; }
-    .nav-cta:hover { background: var(--gray-800); }
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: var(--nav-h);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px;
+    background: rgba(250,249,247,0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: var(--orbitron);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex; align-items: center; gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 14px;
+    color: var(--ink-3);
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 18px;
+    border: 1px solid var(--border-heavy);
+    border-radius: 6px;
+    color: var(--ink);
+    text-decoration: none;
+    transition: background .2s, border-color .2s;
+  }
+  .nav-cta:hover { background: var(--ink); color: var(--white); border-color: var(--ink); }
 
-    /* HERO */
-    .hero {
-      min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
-      padding: 120px 60px 80px; position: relative; border-bottom: 1px solid var(--border); overflow: hidden;
-    }
-    .hero-bg-text {
-      position: absolute; font-family: var(--font-brand); font-size: 26vw;
-      color: transparent; -webkit-text-stroke: 1px rgba(0,0,0,0.035);
-      right: -2vw; top: 50%; transform: translateY(-50%);
-      pointer-events: none; line-height: 1; user-select: none;
-    }
-    .hero-eyebrow { font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 28px; opacity: 0; animation: fadeUp 0.7s ease 0.1s forwards; }
-    .hero-title { font-family: var(--font-brand); font-size: clamp(56px, 9vw, 128px); line-height: 0.92; color: var(--black); opacity: 0; animation: fadeUp 0.8s ease 0.25s forwards; }
-    .hero-title-outline { display: block; color: transparent; -webkit-text-stroke: 2px var(--black); }
-    .hero-sub { max-width: 460px; font-size: 16px; line-height: 1.75; color: var(--gray-500); margin-top: 36px; opacity: 0; animation: fadeUp 0.8s ease 0.4s forwards; }
-    .hero-actions { display: flex; gap: 12px; margin-top: 48px; opacity: 0; animation: fadeUp 0.8s ease 0.55s forwards; }
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: calc(var(--nav-h) + 80px) 40px 80px;
+    max-width: var(--max);
+    margin: 0 auto;
+    position: relative;
+  }
+  .hero-eyebrow {
+    font-family: var(--orbitron);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp .6s ease forwards .1s;
+  }
+  .hero-title {
+    font-family: var(--orbitron);
+    font-size: clamp(36px, 5.5vw, 72px);
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    max-width: 820px;
+    opacity: 0;
+    animation: fadeUp .7s ease forwards .2s;
+  }
+  .hero-title em {
+    font-style: normal;
+    font-weight: 400;
+    color: var(--ink-2);
+  }
+  .hero-sub {
+    margin-top: 32px;
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--ink-2);
+    max-width: 560px;
+    line-height: 1.7;
+    opacity: 0;
+    animation: fadeUp .7s ease forwards .35s;
+  }
+  .hero-actions {
+    margin-top: 48px;
+    display: flex; align-items: center; gap: 20px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp .7s ease forwards .5s;
+  }
+  .btn-primary {
+    font-size: 14px;
+    font-weight: 500;
+    padding: 12px 26px;
+    background: var(--ink);
+    color: var(--white);
+    border-radius: 6px;
+    text-decoration: none;
+    transition: opacity .2s;
+  }
+  .btn-primary:hover { opacity: .8; }
+  .btn-ghost {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--ink-2);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border-heavy);
+    padding-bottom: 1px;
+    transition: color .2s;
+  }
+  .btn-ghost:hover { color: var(--ink); }
 
-    .btn-primary { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--white); background: var(--black); border: 1.5px solid var(--black); padding: 13px 30px; cursor: pointer; text-decoration: none; display: inline-block; transition: background 0.2s; }
-    .btn-primary:hover { background: var(--gray-800); border-color: var(--gray-800); }
-    .btn-secondary { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--black); background: transparent; border: 1.5px solid var(--gray-300); padding: 13px 30px; cursor: pointer; text-decoration: none; display: inline-block; transition: border-color 0.2s; }
-    .btn-secondary:hover { border-color: var(--black); }
+  .hero-line {
+    position: absolute;
+    bottom: 0; left: 40px; right: 40px;
+    height: 1px;
+    background: var(--border);
+  }
 
-    /* MARQUEE */
-    .marquee-section { border-bottom: 1px solid var(--border); padding: 14px 0; overflow: hidden; background: var(--gray-50); }
-    .marquee-track { display: flex; gap: 48px; white-space: nowrap; animation: marquee 22s linear infinite; }
-    .marquee-item { font-family: var(--font-brand); font-size: 9px; letter-spacing: 0.25em; color: var(--gray-400); text-transform: uppercase; flex-shrink: 0; }
-    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  /* ── MISSION STRIP ── */
+  .mission-strip {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 80px 40px;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 60px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-label {
+    font-family: var(--orbitron);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    color: var(--ink-4);
+    text-transform: uppercase;
+    padding-top: 6px;
+  }
+  .mission-text {
+    font-family: var(--sans);
+    font-size: clamp(20px, 2.5vw, 26px);
+    line-height: 1.6;
+    font-weight: 300;
+    color: var(--ink);
+  }
+  .mission-text em { font-style: italic; font-weight: 400; color: var(--ink-2); }
 
-    /* SECTION LABEL */
-    .section-label { font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 14px; }
+  /* ── MODELS ── */
+  .models-section {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 80px 40px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 48px;
+  }
+  .section-title {
+    font-family: var(--orbitron);
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .models-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .model-card {
+    background: var(--cream);
+    padding: 36px 32px;
+    transition: background .2s;
+    cursor: default;
+  }
+  .model-card:hover { background: var(--white); }
+  .model-tag {
+    font-family: var(--orbitron);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .model-name {
+    font-family: var(--orbitron);
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--ink);
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  .model-desc {
+    font-size: 14px;
+    color: var(--ink-3);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .model-params {
+    font-family: var(--orbitron);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: var(--ink-4);
+  }
+  .model-status {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 20px;
+    font-size: 12px;
+    color: var(--ink-3);
+  }
+  .status-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+  }
+  .dot-active { background: #4caf50; }
+  .dot-building { background: var(--accent-dark); }
+  .dot-planned { background: var(--ink-4); }
 
-    /* ABOUT */
-    .about { padding: 120px 60px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; border-bottom: 1px solid var(--border); }
-    .about-title { font-family: var(--font-brand); font-size: clamp(24px, 3vw, 42px); line-height: 1.1; color: var(--black); }
-    .about-right { padding-top: 48px; }
-    .about-text { font-size: 15px; line-height: 1.8; color: var(--gray-500); margin-bottom: 18px; }
-    .about-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border-dark); margin-top: 44px; border: 1px solid var(--border-dark); }
-    .about-stat { background: var(--white); padding: 22px 20px; }
-    .stat-number { font-family: var(--font-brand); font-size: 30px; color: var(--black); line-height: 1; margin-bottom: 6px; }
-    .stat-label { font-size: 10px; letter-spacing: 0.1em; color: var(--gray-400); text-transform: uppercase; }
+  /* ── PRINCIPLES ── */
+  .principles-section {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 80px 40px;
+    border-bottom: 1px solid var(--border);
+  }
+  .principles-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 48px 60px;
+    margin-top: 48px;
+  }
+  .principle {
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+  }
+  .principle-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-4);
+    margin-bottom: 12px;
+  }
+  .principle-title {
+    font-family: var(--orbitron);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    margin-bottom: 10px;
+  }
+  .principle-body {
+    font-size: 14px;
+    color: var(--ink-3);
+    line-height: 1.7;
+  }
 
-    /* PRODUCTS */
-    .products { padding: 120px 60px; border-bottom: 1px solid var(--border); background: var(--gray-50); }
-    .products-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 52px; }
-    .products-title { font-family: var(--font-brand); font-size: clamp(24px, 3vw, 42px); color: var(--black); }
-    .products-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border-dark); border: 1px solid var(--border-dark); }
-    .product-card { background: var(--white); padding: 40px 32px; position: relative; transition: background 0.2s; }
-    .product-card:hover { background: var(--gray-50); }
-    .product-card.featured { grid-column: span 2; background: var(--black); display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
-    .product-card.featured:hover { background: var(--gray-900); }
-    .product-tag { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 18px; }
-    .product-card.featured .product-tag { color: rgba(255,255,255,0.35); }
-    .product-name { font-family: var(--font-brand); font-size: 18px; color: var(--black); margin-bottom: 12px; letter-spacing: 0.04em; }
-    .product-card.featured .product-name { font-size: 26px; color: var(--white); }
-    .product-desc { font-size: 13px; line-height: 1.7; color: var(--gray-500); margin-bottom: 26px; }
-    .product-card.featured .product-desc { color: rgba(255,255,255,0.45); }
-    .product-link { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--black); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: gap 0.2s; }
-    .product-link:hover { gap: 14px; }
-    .product-link::after { content: '→'; }
-    .product-card.featured .product-link { color: var(--white); }
-    .product-visual { display: flex; align-items: center; justify-content: center; height: 160px; border: 1px solid rgba(255,255,255,0.08); }
-    .product-visual-x { font-family: var(--font-brand); font-size: 64px; color: transparent; -webkit-text-stroke: 1.5px rgba(255,255,255,0.18); animation: px 3s ease-in-out infinite; }
-    @keyframes px { 0%,100% { -webkit-text-stroke-color: rgba(255,255,255,0.12); } 50% { -webkit-text-stroke-color: rgba(255,255,255,0.45); } }
+  /* ── FOUNDERS NOTE ── */
+  .note-section {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 80px 40px;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 60px;
+  }
+  .note-body {
+    font-family: var(--sans);
+    font-size: 18px;
+    line-height: 1.75;
+    font-weight: 300;
+    color: var(--ink-2);
+  }
+  .note-body strong {
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .note-sig {
+    margin-top: 32px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-4);
+  }
 
-    /* VISION */
-    .vision { padding: 160px 60px; text-align: center; border-bottom: 1px solid var(--border); }
-    .vision-title { font-family: var(--font-brand); font-size: clamp(26px, 4.2vw, 60px); line-height: 1.08; color: var(--black); max-width: 820px; margin: 14px auto 28px; }
-    .vision-body { font-size: 16px; line-height: 1.8; color: var(--gray-500); max-width: 520px; margin: 0 auto; }
+  /* ── CTA ── */
+  .cta-section {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 100px 40px;
+    text-align: center;
+  }
+  .cta-title {
+    font-family: var(--orbitron);
+    font-size: clamp(28px, 4vw, 52px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 20px;
+  }
+  .cta-title em { font-style: normal; font-weight: 400; color: var(--ink-2); }
+  .cta-sub {
+    font-size: 16px;
+    color: var(--ink-3);
+    margin-bottom: 40px;
+    max-width: 440px;
+    margin-left: auto; margin-right: auto;
+  }
+  .email-form {
+    display: flex; gap: 8px; justify-content: center;
+    flex-wrap: wrap;
+  }
+  .email-input {
+    font-family: var(--sans);
+    font-size: 14px;
+    padding: 11px 18px;
+    border: 1px solid var(--border-heavy);
+    border-radius: 6px;
+    background: var(--white);
+    color: var(--ink);
+    outline: none;
+    width: 280px;
+    transition: border-color .2s;
+  }
+  .email-input:focus { border-color: var(--ink); }
+  .email-input::placeholder { color: var(--ink-4); }
+  .email-btn {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 11px 22px;
+    background: var(--ink);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: opacity .2s;
+  }
+  .email-btn:hover { opacity: .8; }
 
-    /* PILLARS */
-    .pillars { padding: 120px 60px; border-bottom: 1px solid var(--border); background: var(--gray-50); }
-    .pillars-header { margin-bottom: 52px; }
-    .pillars-title { font-family: var(--font-brand); font-size: clamp(24px, 3vw, 42px); color: var(--black); margin-top: 12px; }
-    .pillars-list { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border-dark); border: 1px solid var(--border-dark); }
-    .pillar { background: var(--white); padding: 32px 26px; }
-    .pillar-num { font-family: var(--font-brand); font-size: 10px; letter-spacing: 0.2em; color: var(--gray-300); margin-bottom: 24px; }
-    .pillar-title { font-family: var(--font-brand); font-size: 13px; color: var(--black); margin-bottom: 10px; letter-spacing: 0.04em; }
-    .pillar-desc { font-size: 13px; line-height: 1.7; color: var(--gray-500); }
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 40px;
+    max-width: var(--max);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .footer-logo {
+    font-family: var(--orbitron);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink-3);
+    letter-spacing: 0.08em;
+  }
+  .footer-links {
+    display: flex; gap: 24px; list-style: none;
+  }
+  .footer-links a {
+    font-size: 13px;
+    color: var(--ink-4);
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .footer-links a:hover { color: var(--ink-2); }
 
-    /* CTA */
-    .cta-section { padding: 160px 60px; text-align: center; background: var(--black); }
-    .cta-title { font-family: var(--font-brand); font-size: clamp(30px, 4.2vw, 60px); line-height: 1.05; color: var(--white); margin-bottom: 18px; }
-    .cta-sub { font-size: 15px; color: rgba(255,255,255,0.38); margin-bottom: 44px; }
-    .cta-actions { display: flex; gap: 12px; justify-content: center; }
-    .cta-section .btn-primary { background: var(--white); color: var(--black); border-color: var(--white); }
-    .cta-section .btn-primary:hover { background: var(--gray-100); border-color: var(--gray-100); }
-    .cta-section .btn-secondary { color: var(--white); border-color: rgba(255,255,255,0.2); }
-    .cta-section .btn-secondary:hover { border-color: var(--white); }
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
-    /* FOOTER */
-    footer { border-top: 1px solid var(--border); padding: 36px 60px; display: flex; justify-content: space-between; align-items: center; background: var(--white); }
-    .footer-logo { font-family: var(--font-brand); font-size: 12px; letter-spacing: 0.12em; color: var(--black); }
-    .footer-copy { font-size: 12px; color: var(--gray-400); }
-    .footer-links { display: flex; gap: 24px; list-style: none; }
-    .footer-links a { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray-400); text-decoration: none; transition: color 0.2s; }
-    .footer-links a:hover { color: var(--black); }
-
-    /* ANIMATIONS */
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
-    .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.6s ease, transform 0.6s ease; }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-
-    /* RESPONSIVE */
-    @media (max-width: 900px) {
-      nav { padding: 0 20px; }
-      .nav-links { display: none; }
-      .hero { padding: 100px 20px 60px; }
-      .about { grid-template-columns: 1fr; padding: 72px 20px; gap: 36px; }
-      .about-right { padding-top: 0; }
-      .products { padding: 72px 20px; }
-      .products-header { flex-direction: column; align-items: flex-start; gap: 16px; }
-      .products-grid { grid-template-columns: 1fr; }
-      .product-card.featured { grid-column: span 1; grid-template-columns: 1fr; }
-      .pillars { padding: 72px 20px; }
-      .pillars-list { grid-template-columns: 1fr 1fr; }
-      .vision { padding: 90px 20px; }
-      .cta-section { padding: 90px 20px; }
-      footer { flex-direction: column; gap: 18px; text-align: center; padding: 28px 20px; }
-    }
-  </style>
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .hero, .mission-strip, .models-section, .principles-section, .note-section, .cta-section { padding-left: 20px; padding-right: 20px; }
+    .mission-strip, .note-section { grid-template-columns: 1fr; gap: 24px; }
+    .models-grid { grid-template-columns: 1fr; }
+    .principles-grid { grid-template-columns: 1fr; gap: 32px; }
+    footer { padding: 24px 20px; }
+  }
+</style>
 </head>
 <body>
 
-  <nav>
-    <a href="index.html" class="nav-logo">MUXBITE</a>
-    <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#products">Products</a></li>
-      <li><a href="#research">Research</a></li>
-      <li><a href="muxbiteX.html">MUXBITE X</a></li>
-    </ul>
-    <a href="muxbiteX.html" class="nav-cta">Try MUXBITE X</a>
-  </nav>
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">MUXBITE</a>
+  <ul class="nav-links">
+    <li><a href="#models">Models</a></li>
+    <li><a href="#principles">Research</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact" class="nav-cta">Stay updated</a></li>
+  </ul>
+</nav>
 
-  <section class="hero">
-    <div class="hero-bg-text">MX</div>
-    <p class="hero-eyebrow">AI Company · Est. 2025</p>
-    <h1 class="hero-title">
-      MUX
-      <span class="hero-title-outline">BITE</span>
-    </h1>
-    <p class="hero-sub">Building intelligent systems from the ground up. Own models. Own data. Own future.</p>
-    <div class="hero-actions">
-      <a href="muxbiteX.html" class="btn-primary">Meet MUXBITE X</a>
-      <a href="#about" class="btn-secondary">Our Mission</a>
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">AI Research Lab — Global</p>
+  <h1 class="hero-title">Building AI that is<br/><em>safe, capable,</em><br/>and built for the world.</h1>
+  <p class="hero-sub">MUXBITE is an independent AI research company developing generative models that are genuinely helpful, honest, and accessible to every person on the planet — regardless of language, location, or background.</p>
+  <div class="hero-actions">
+    <a href="#models" class="btn-primary">Our models</a>
+    <a href="#about" class="btn-ghost">Read our mission</a>
+  </div>
+  <div class="hero-line"></div>
+</section>
+
+<!-- MISSION -->
+<section class="mission-strip" id="about">
+  <p class="section-label reveal">Mission</p>
+  <p class="mission-text reveal">"We believe AI will be one of the most transformative technologies in human history. Our goal is to ensure that transformation is <em>safe, equitable, and built for everyone</em> — every language, every culture, every corner of the world."</p>
+</section>
+
+<!-- MODELS -->
+<section class="models-section" id="models">
+  <div class="section-header reveal">
+    <h2 class="section-title">The MB series</h2>
+  </div>
+  <div class="models-grid reveal">
+    <div class="model-card">
+      <p class="model-tag">Prototype · In training</p>
+      <h3 class="model-name">MB1</h3>
+      <p class="model-desc">Our first language model. A small transformer trained from scratch to validate our architecture and training pipeline.</p>
+      <p class="model-params">~10–50M parameters · Multilingual</p>
+      <div class="model-status">
+        <span class="status-dot dot-building"></span>
+        In development
+      </div>
     </div>
-  </section>
-
-  <div class="marquee-section">
-    <div class="marquee-track">
-      <span class="marquee-item">AI Research</span><span class="marquee-item">·</span>
-      <span class="marquee-item">Proprietary Models</span><span class="marquee-item">·</span>
-      <span class="marquee-item">Own Data</span><span class="marquee-item">·</span>
-      <span class="marquee-item">MUXBITE X Agent</span><span class="marquee-item">·</span>
-      <span class="marquee-item">Next Generation AI</span><span class="marquee-item">·</span>
-      <span class="marquee-item">Model Architecture</span><span class="marquee-item">·</span>
-      <span class="marquee-item">AI Research</span><span class="marquee-item">·</span>
-      <span class="marquee-item">Proprietary Models</span><span class="marquee-item">·</span>
-      <span class="marquee-item">Own Data</span><span class="marquee-item">·</span>
-      <span class="marquee-item">MUXBITE X Agent</span><span class="marquee-item">·</span>
-      <span class="marquee-item">Next Generation AI</span><span class="marquee-item">·</span>
-      <span class="marquee-item">Model Architecture</span><span class="marquee-item">·</span>
+    <div class="model-card">
+      <p class="model-tag">Planned · 2026</p>
+      <h3 class="model-name">MB2</h3>
+      <p class="model-desc">A larger model focused on underserved global languages — Hindi, Swahili, Arabic, Bengali and beyond. Intelligence without borders.</p>
+      <p class="model-params">~200M–1B parameters · 20+ languages</p>
+      <div class="model-status">
+        <span class="status-dot dot-planned"></span>
+        Planned
+      </div>
+    </div>
+    <div class="model-card">
+      <p class="model-tag">Roadmap · 2027+</p>
+      <h3 class="model-name">MB3</h3>
+      <p class="model-desc">A frontier-class multimodal model. Text, voice, and vision — built to serve the next four billion people the internet left behind.</p>
+      <p class="model-params">~7B+ parameters · Global frontier</p>
+      <div class="model-status">
+        <span class="status-dot dot-planned"></span>
+        On roadmap
+      </div>
     </div>
   </div>
+</section>
 
-  <section class="about" id="about">
-    <div class="about-left reveal">
-      <p class="section-label">Who We Are</p>
-      <h2 class="about-title">Intelligence,<br/>Built From<br/>Scratch.</h2>
+<!-- PRINCIPLES -->
+<section class="principles-section" id="principles">
+  <div class="section-header reveal">
+    <h2 class="section-title">How we work</h2>
+  </div>
+  <div class="principles-grid">
+    <div class="principle reveal">
+      <p class="principle-num">01</p>
+      <h3 class="principle-title">Safety first</h3>
+      <p class="principle-body">We study alignment and responsible scaling before we need to. Safety is not a feature we add later — it is the foundation of every model we train.</p>
     </div>
-    <div class="about-right reveal">
-      <p class="about-text">MUXBITE is an AI company building proprietary models, curating original datasets, and shipping products that change how people interact with intelligence.</p>
-      <p class="about-text">We don't wrap existing models and call it innovation. We go deeper — into the architecture, the data, the training — because that's where the real differentiation lives.</p>
-      <div class="about-stat-grid">
-        <div class="about-stat"><div class="stat-number">01</div><div class="stat-label">Flagship Agent Live</div></div>
-        <div class="about-stat"><div class="stat-number">∞</div><div class="stat-label">Ambition</div></div>
-        <div class="about-stat"><div class="stat-number">AI</div><div class="stat-label">First Principles</div></div>
-        <div class="about-stat"><div class="stat-number">1B</div><div class="stat-label">Target Reach</div></div>
-      </div>
+    <div class="principle reveal">
+      <p class="principle-num">02</p>
+      <h3 class="principle-title">Build in public</h3>
+      <p class="principle-body">Our training code, experiments, and findings are published openly. We believe the AI research community grows faster when knowledge is shared, not hoarded.</p>
     </div>
-  </section>
+    <div class="principle reveal">
+      <p class="principle-num">03</p>
+      <h3 class="principle-title">Global by design</h3>
+      <p class="principle-body">The world speaks thousands of languages. Frontier AI speaks fewer than a hundred well. We are closing that gap — building models that work for every person, not just the most represented ones.</p>
+    </div>
+    <div class="principle reveal">
+      <p class="principle-num">04</p>
+      <h3 class="principle-title">Own the stack</h3>
+      <p class="principle-body">We are not an API wrapper. Our long-term goal is to train proprietary models from scratch — owning the architecture, the data, and the training pipeline.</p>
+    </div>
+  </div>
+</section>
 
-  <section class="products" id="products">
-    <div class="products-header reveal">
-      <div>
-        <p class="section-label">Products</p>
-        <h2 class="products-title">What We Ship</h2>
-      </div>
-      <a href="muxbiteX.html" class="btn-secondary">View All →</a>
-    </div>
-    <div class="products-grid">
-      <div class="product-card featured reveal">
-        <div>
-          <p class="product-tag">Flagship · Agent</p>
-          <h3 class="product-name">MUXBITE X</h3>
-          <p class="product-desc">Our flagship AI agent. Thinks deeply, responds with precision. Built for people who demand more from their AI.</p>
-          <a href="muxbiteX.html" class="product-link">Launch Agent</a>
-        </div>
-        <div class="product-visual"><div class="product-visual-x">X</div></div>
-      </div>
-      <div class="product-card reveal">
-        <p class="product-tag">Coming Soon · Data</p>
-        <h3 class="product-name">MUXBITE DATA</h3>
-        <p class="product-desc">Proprietary dataset curation engine. Building the data foundation for our own models.</p>
-        <span class="product-link" style="color:var(--gray-300);pointer-events:none;">In Development</span>
-      </div>
-      <div class="product-card reveal">
-        <p class="product-tag">Coming Soon · Research</p>
-        <h3 class="product-name">MUXBITE RESEARCH</h3>
-        <p class="product-desc">Open research on model architecture, alignment, and multilingual NLP.</p>
-        <span class="product-link" style="color:var(--gray-300);pointer-events:none;">In Development</span>
-      </div>
-    </div>
-  </section>
+<!-- FOUNDER'S NOTE -->
+<section class="note-section">
+  <p class="section-label reveal">From the founder</p>
+  <div class="reveal">
+    <p class="note-body">
+      <strong>I started MUXBITE as a final-year BCA student</strong> with no team, no funding, and no GPU cluster. What I do have is a clear conviction: that the most important AI models of the next decade will not be built in San Francisco.<br/><br/>
+      They will be built by people who believe intelligence should have no borders — no language barrier, no geography, no prerequisite of privilege. <em>That</em> is what MUXBITE is for.
+    </p>
+    <p class="note-sig">Shahnewaz · Founder, MUXBITE · @heysanzu</p>
+  </div>
+</section>
 
-  <section class="vision">
-    <p class="section-label reveal">Vision</p>
-    <h2 class="vision-title reveal">The Future of AI<br/>Should Be Built<br/>By Everyone.</h2>
-    <p class="vision-body reveal">Intelligence shouldn't belong to a handful of labs. MUXBITE is proving that the next frontier of AI can be built from anywhere, for everyone.</p>
-  </section>
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <h2 class="cta-title reveal">Follow the<br/><em>journey</em></h2>
+  <p class="cta-sub reveal">We are building in public. Get early access to our models, research notes, and updates.</p>
+  <div class="email-form reveal">
+    <input type="email" class="email-input" placeholder="your@email.com"/>
+    <button class="email-btn" onclick="handleSubscribe()">Stay updated</button>
+  </div>
+</section>
 
-  <section class="pillars" id="research">
-    <div class="pillars-header reveal">
-      <p class="section-label">Research Focus</p>
-      <h2 class="pillars-title">Four Pillars</h2>
-    </div>
-    <div class="pillars-list">
-      <div class="pillar reveal"><p class="pillar-num">01</p><h3 class="pillar-title">Model Architecture</h3><p class="pillar-desc">Designing transformer variants optimized for efficiency and multilingual understanding.</p></div>
-      <div class="pillar reveal"><p class="pillar-num">02</p><h3 class="pillar-title">Data Curation</h3><p class="pillar-desc">Building proprietary, high-quality datasets across diverse languages and domains.</p></div>
-      <div class="pillar reveal"><p class="pillar-num">03</p><h3 class="pillar-title">Alignment</h3><p class="pillar-desc">Developing safe, steerable AI systems that behave predictably across diverse contexts.</p></div>
-      <div class="pillar reveal"><p class="pillar-num">04</p><h3 class="pillar-title">Inference</h3><p class="pillar-desc">Pushing what's possible at low compute — making AI accessible, not just powerful.</p></div>
-    </div>
-  </section>
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">MUXBITE</span>
+  <ul class="footer-links">
+    <li><a href="https://github.com/heysanzu" target="_blank">GitHub</a></li>
+    <li><a href="#models">Models</a></li>
+    <li><a href="#principles">Research</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+  <span style="font-size:13px;color:var(--ink-4);">© 2026 MUXBITE</span>
+</footer>
 
-  <section class="cta-section">
-    <h2 class="cta-title reveal">Start With<br/>MUXBITE X.</h2>
-    <p class="cta-sub reveal">The agent is live. The future is being built.</p>
-    <div class="cta-actions reveal">
-      <a href="muxbiteX.html" class="btn-primary">Launch MUXBITE X</a>
-      <a href="mailto:hello@muxbite.ai" class="btn-secondary">Get In Touch</a>
-    </div>
-  </section>
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
 
-  <footer>
-    <div class="footer-logo">MUXBITE</div>
-    <p class="footer-copy">© 2025 MUXBITE. All rights reserved.</p>
-    <ul class="footer-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="muxbiteX.html">MUXBITE X</a></li>
-      <li><a href="mailto:hello@muxbite.ai">Contact</a></li>
-    </ul>
-  </footer>
-
-  <script>
-    const reveals = document.querySelectorAll('.reveal');
-    const io = new IntersectionObserver(entries => {
-      entries.forEach((e, i) => {
-        if (e.isIntersecting) {
-          setTimeout(() => e.target.classList.add('visible'), i * 70);
-          io.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.08 });
-    reveals.forEach(el => io.observe(el));
-  </script>
+  // Subscribe
+  function handleSubscribe() {
+    const input = document.querySelector('.email-input');
+    const btn = document.querySelector('.email-btn');
+    if (!input.value || !input.value.includes('@')) {
+      input.style.borderColor = '#e24b4a';
+      setTimeout(() => input.style.borderColor = '', 1500);
+      return;
+    }
+    btn.textContent = 'You\'re on the list ✓';
+    btn.style.background = '#4caf50';
+    input.value = '';
+    input.disabled = true;
+    btn.disabled = true;
+  }
+</script>
 </body>
 </html>
