@@ -3,414 +3,225 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>MUXBITE — AI Research Lab</title>
+<title>MUXBITE</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&display=swap" rel="stylesheet"/>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --cream:#faf9f7;--white:#fff;--ink:#1a1a18;--ink-2:#3d3d3a;
-  --ink-3:#7a7a74;--ink-4:#b0b0a8;--border:rgba(26,26,24,.1);
-  --border-heavy:rgba(26,26,24,.2);--accent:#c8f135;--accent-dark:#a8d015;
-  --sans:'Google Sans','Product Sans',ui-rounded,system-ui,sans-serif;
-  --orb:'Orbitron',monospace;--max:1100px;--nav:64px;--px:clamp(20px,5vw,40px)
-}
+:root{--white:#ffffff;--black:#000000;--grey-1:#f5f5f5;--grey-2:#e8e8e8;--grey-3:#d1d1d1;--grey-4:#909090;--grey-5:#444444;--grey-6:#1a1a1a;--accent:#c8f135;--accent-dark:#a8d015;--sans:'Google Sans','Product Sans',system-ui,sans-serif;--orb:'Orbitron',monospace;--max:1200px;--nav:70px;--px:clamp(24px,5vw,48px)}
 html{scroll-behavior:smooth}
-body{font-family:var(--sans);background:var(--cream);color:var(--ink);
-  line-height:1.6;font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 var(--px);background:rgba(250,249,247,.93);
-  backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
-.logo{font-family:var(--orb);font-size:13px;font-weight:700;
-  letter-spacing:.08em;color:var(--ink);text-decoration:none;cursor:pointer;
-  transition:opacity .2s}
+body{font-family:var(--sans);background:var(--white);color:var(--grey-6);line-height:1.6;font-weight:400;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);display:flex;align-items:center;justify-content:space-between;padding:0 var(--px);background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--grey-2)}
+.logo{font-family:var(--orb);font-size:14px;font-weight:700;letter-spacing:.12em;color:var(--black);text-decoration:none;cursor:pointer;transition:opacity .3s;text-transform:lowercase}
 .logo:hover{opacity:.7}
-.nav-links{display:flex;align-items:center;gap:28px;list-style:none}
-.nav-links a{font-size:14px;color:var(--ink-3);text-decoration:none;
-  transition:color .2s}
-.nav-links a:hover{color:var(--ink)}
-.nav-cta{font-size:13px;font-weight:500;padding:8px 16px;
-  border:1px solid var(--border-heavy);border-radius:6px;
-  color:var(--ink);background:transparent;text-decoration:none;transition:all .2s;
-  display:inline-block;cursor:pointer}
-.nav-cta:hover{background:var(--ink-4);color:var(--white);border-color:var(--ink-4);font-weight:600}
-.nav-cta:active{background:var(--ink-3);border-color:var(--ink-3);transform:scale(.98)}
-.nav-cta:focus{outline:none}
-.burger{display:none;flex-direction:column;justify-content:center;
-  align-items:center;width:40px;height:40px;gap:5px;background:none;
-  border:none;cursor:pointer;padding:0}
-.burger span{display:block;width:22px;height:1.5px;background:var(--ink);
-  transition:transform .25s,opacity .25s}
-.burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.nav-links{display:flex;align-items:center;gap:36px;list-style:none}
+.nav-links a{font-size:15px;color:var(--grey-5);text-decoration:none;font-weight:400;transition:color .3s;text-transform:lowercase}
+.nav-links a:hover{color:var(--black)}
+.nav-cta{font-size:14px;font-weight:500;padding:10px 20px;border:1.5px solid var(--grey-5);border-radius:6px;color:var(--black);background:transparent;text-decoration:none;transition:all .3s;display:inline-block;cursor:pointer;text-transform:lowercase}
+.nav-cta:hover{background:var(--black);color:var(--white);border-color:var(--black)}
+.burger{display:none;flex-direction:column;justify-content:center;align-items:center;width:40px;height:40px;gap:5px;background:none;border:none;cursor:pointer;padding:0}
+.burger span{display:block;width:22px;height:2px;background:var(--black);transition:transform .3s,opacity .3s}
+.burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
 .burger.open span:nth-child(2){opacity:0}
-.burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
-.drawer{display:none;position:fixed;top:var(--nav);left:0;right:0;z-index:190;
-  background:rgba(250,249,247,.98);backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--border);padding:16px var(--px) 24px;
-  flex-direction:column;gap:0}
+.burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.drawer{display:none;position:fixed;top:var(--nav);left:0;right:0;z-index:190;background:rgba(255,255,255,.98);backdrop-filter:blur(16px);border-bottom:1px solid var(--grey-2);padding:20px var(--px) 28px;flex-direction:column;gap:0}
 .drawer.open{display:flex}
-.drawer a{font-size:16px;color:var(--ink-2);text-decoration:none;
-  padding:13px 0;border-bottom:1px solid var(--border);transition:color .2s;cursor:pointer}
+.drawer a{font-size:16px;color:var(--grey-5);text-decoration:none;padding:14px 0;border-bottom:1px solid var(--grey-2);transition:color .3s;cursor:pointer;text-transform:lowercase;font-weight:400}
 .drawer a:last-child{border-bottom:none}
-.drawer a:hover{color:var(--ink)}
-
-/* HERO */
-.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;
-  padding:calc(var(--nav) + 60px) var(--px) 60px;max-width:var(--max);margin:0 auto;position:relative}
-.eyebrow{font-family:var(--orb);font-size:9px;letter-spacing:.2em;color:var(--ink-3);
-  text-transform:uppercase;margin-bottom:24px;opacity:0;animation:fup .6s ease forwards .1s}
-.hero h1{font-family:var(--orb);font-size:clamp(28px,5.5vw,72px);line-height:1.12;
-  font-weight:700;letter-spacing:-.01em;max-width:820px;opacity:0;animation:fup .7s ease forwards .2s}
-.hero h1 em{font-style:normal;font-weight:400;color:var(--ink-2)}
-.hero-sub{margin-top:28px;font-size:clamp(15px,2vw,18px);font-weight:300;
-  color:var(--ink-2);max-width:560px;line-height:1.75;opacity:0;animation:fup .7s ease forwards .35s}
-.hero-actions{margin-top:40px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
-  opacity:0;animation:fup .7s ease forwards .5s}
-.hero-rule{position:absolute;bottom:0;left:var(--px);right:var(--px);
-  height:1px;background:var(--border)}
-
-/* JELLY BUTTONS */
-.btn-primary,.btn-secondary{font-family:var(--sans);font-size:14px;font-weight:500;
-  padding:12px 24px;border:none;border-radius:8px;cursor:pointer;
-  text-decoration:none;display:inline-flex;align-items:center;gap:8px;
-  white-space:nowrap;transition:all .3s cubic-bezier(.34,.1,.64,.1);
-  position:relative;overflow:hidden}
-.btn-primary{background:var(--ink);color:var(--white)}
-.btn-primary:hover{transform:scale(1.02);box-shadow:0 8px 20px rgba(26,26,24,.15)}
-.btn-primary:active{transform:scale(.98)}
-.btn-secondary{background:transparent;color:var(--ink-2);border-bottom:1px solid var(--border-heavy);
-  padding:12px 0;border-radius:0;gap:4px}
-.btn-secondary:hover{color:var(--ink);border-bottom-color:var(--ink)}
-.btn-cta{background:var(--ink);color:var(--white);padding:11px 22px;font-size:14px;
-  border:none;border-radius:6px;cursor:pointer;transition:all .3s cubic-bezier(.34,.1,.64,.1)}
-.btn-cta:hover{transform:scale(1.02);box-shadow:0 8px 20px rgba(26,26,24,.15)}
-.btn-cta:active{transform:scale(.98)}
-
-/* SECTION SHARED */
-.wrap{max-width:var(--max);margin:0 auto;padding:72px var(--px);border-bottom:1px solid var(--border)}
-.sec-label{font-family:var(--orb);font-size:9px;letter-spacing:.2em;
-  color:var(--ink-4);text-transform:uppercase;padding-top:6px}
-.sec-title{font-family:var(--orb);font-size:clamp(20px,3vw,28px);font-weight:700;letter-spacing:-.01em}
-.sec-head{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:40px}
-
-/* MISSION */
-.mission-wrap{display:grid;grid-template-columns:160px 1fr;gap:48px}
-.mission-text{font-size:clamp(18px,2.2vw,26px);line-height:1.65;font-weight:300;color:var(--ink)}
-.mission-text em{font-style:italic;font-weight:400;color:var(--ink-2)}
-
-/* MODELS GRID */
-.models-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
-  background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden}
-.mcard{background:var(--cream);padding:32px 28px;transition:all .3s;cursor:pointer;position:relative}
-.mcard::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;
-  background:linear-gradient(135deg,rgba(200,241,53,.05) 0%,transparent 100%);opacity:0;
-  transition:opacity .3s}
-.mcard:hover{background:var(--white);transform:translateY(-2px);box-shadow:0 4px 12px rgba(26,26,24,.08)}
-.mcard:hover::before{opacity:1}
-.mtag{font-family:var(--orb);font-size:8px;font-weight:600;letter-spacing:.14em;
-  color:var(--ink-3);text-transform:uppercase;margin-bottom:18px}
-.mname{font-family:var(--orb);font-size:clamp(26px,4vw,40px);font-weight:900;
-  color:var(--ink);margin-bottom:10px}
-.mdesc{font-size:13px;color:var(--ink-3);line-height:1.65;margin-bottom:20px}
-.mparams{font-family:var(--orb);font-size:8px;letter-spacing:.1em;color:var(--ink-4)}
-.mstatus{display:inline-flex;align-items:center;gap:6px;margin-top:18px;font-size:12px;
-  color:var(--ink-3)}
-.dot{width:6px;height:6px;border-radius:50%}
-.dot-b{background:var(--accent-dark)}.dot-p{background:var(--ink-4)}
-
-/* PRINCIPLES */
-.pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:36px 56px;margin-top:40px}
-.prin{border-top:1px solid var(--border);padding-top:20px;transition:all .3s}
-.prin:hover{border-top-color:var(--ink-2)}
-.pnum{font-family:var(--orb);font-size:9px;color:var(--ink-4);margin-bottom:10px;letter-spacing:.1em}
-.ptitle{font-family:var(--orb);font-size:clamp(11px,1.4vw,14px);font-weight:700;
-  letter-spacing:.01em;margin-bottom:10px}
-.pbody{font-size:14px;color:var(--ink-3);line-height:1.7}
-
-/* FOUNDER NOTE */
-.note-wrap{display:grid;grid-template-columns:160px 1fr;gap:48px}
-.nbody{font-size:clamp(15px,1.8vw,19px);line-height:1.8;font-weight:300;color:var(--ink-2)}
-.nbody strong{font-weight:500;color:var(--ink)}
+.drawer a:hover{color:var(--black)}
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:calc(var(--nav) + 80px) var(--px) 80px;max-width:var(--max);margin:0 auto;position:relative;width:100%}
+.eyebrow{font-family:var(--orb);font-size:11px;letter-spacing:.15em;color:var(--grey-4);text-transform:uppercase;margin-bottom:28px;opacity:0;animation:fup .6s ease forwards .1s}
+.hero h1{font-family:var(--orb);font-size:clamp(36px,6vw,76px);line-height:1.08;font-weight:700;letter-spacing:-.02em;max-width:900px;opacity:0;animation:fup .7s ease forwards .2s;text-transform:lowercase}
+.hero h1 em{font-style:normal;font-weight:400;color:var(--grey-5)}
+.hero-sub{margin-top:32px;font-size:clamp(16px,2.2vw,20px);font-weight:400;color:var(--grey-5);max-width:620px;line-height:1.8;opacity:0;animation:fup .7s ease forwards .35s}
+.hero-actions{margin-top:48px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;opacity:0;animation:fup .7s ease forwards .5s}
+.hero-rule{position:absolute;bottom:0;left:var(--px);right:var(--px);height:1px;background:var(--grey-2)}
+.btn-primary,.btn-secondary{font-family:var(--sans);font-size:15px;font-weight:500;padding:13px 28px;border:none;border-radius:8px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:10px;white-space:nowrap;transition:all .3s ease;position:relative;overflow:hidden;text-transform:lowercase}
+.btn-primary{background:var(--black);color:var(--white)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.18)}
+.btn-secondary{background:transparent;color:var(--grey-5);border-bottom:1.5px solid var(--grey-5);padding:13px 0;border-radius:0;gap:6px}
+.btn-secondary:hover{color:var(--black);border-bottom-color:var(--black)}
+.wrap{max-width:var(--max);margin:0 auto;padding:96px var(--px);border-bottom:1px solid var(--grey-2)}
+.sec-label{font-family:var(--orb);font-size:11px;letter-spacing:.15em;color:var(--grey-4);text-transform:uppercase;padding-top:8px}
+.sec-title{font-family:var(--orb);font-size:clamp(28px,4vw,48px);font-weight:700;letter-spacing:-.02em;text-transform:lowercase}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:56px}
+.mission-wrap{display:grid;grid-template-columns:180px 1fr;gap:56px}
+.mission-text{font-size:clamp(20px,2.4vw,28px);line-height:1.7;font-weight:400;color:var(--grey-6)}
+.mission-text em{font-style:italic;font-weight:400;color:var(--grey-5)}
+.models-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--grey-2);border:1px solid var(--grey-2);border-radius:12px;overflow:hidden}
+.mcard{background:var(--white);padding:40px;transition:all .35s;cursor:pointer;position:relative;border-right:1px solid var(--grey-2);border-bottom:1px solid var(--grey-2)}
+.mcard:nth-child(3n){border-right:none}
+.mcard:nth-last-child(-n+3){border-bottom:none}
+.mcard:hover{background:var(--grey-1);transform:translateY(-3px)}
+.mtag{font-family:var(--orb);font-size:10px;font-weight:600;letter-spacing:.12em;color:var(--grey-4);text-transform:uppercase;margin-bottom:20px}
+.mname{font-family:var(--orb);font-size:clamp(32px,5vw,44px);font-weight:900;color:var(--black);margin-bottom:12px;text-transform:lowercase}
+.mdesc{font-size:15px;color:var(--grey-5);line-height:1.7;margin-bottom:24px}
+.mstatus{display:inline-flex;align-items:center;gap:8px;margin-top:20px;font-size:13px;color:var(--grey-4)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--grey-4)}
+.dot-b{background:var(--accent-dark)}
+.pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:48px 64px;margin-top:48px}
+.prin{border-top:1px solid var(--grey-2);padding-top:28px;transition:all .35s}
+.prin:hover{border-top-color:var(--black)}
+.pnum{font-family:var(--orb);font-size:10px;color:var(--grey-4);margin-bottom:12px;letter-spacing:.12em;text-transform:uppercase}
+.ptitle{font-family:var(--orb);font-size:clamp(14px,1.6vw,18px);font-weight:700;letter-spacing:.01em;margin-bottom:12px;text-transform:lowercase}
+.pbody{font-size:15px;color:var(--grey-5);line-height:1.8}
+.note-wrap{display:grid;grid-template-columns:180px 1fr;gap:56px}
+.nbody{font-size:clamp(16px,1.9vw,21px);line-height:1.8;font-weight:400;color:var(--grey-5)}
+.nbody strong{font-weight:600;color:var(--black)}
 .nbody em{font-style:italic}
-.nsig{margin-top:28px;font-family:var(--orb);font-size:9px;letter-spacing:.1em;color:var(--ink-4)}
-
-/* CTA */
-.cta-wrap{max-width:var(--max);margin:0 auto;padding:96px var(--px);text-align:center}
-.cta-title{font-family:var(--orb);font-size:clamp(24px,4.5vw,56px);font-weight:700;
-  letter-spacing:-.01em;margin-bottom:16px;line-height:1.1}
-.cta-title em{font-style:normal;font-weight:400;color:var(--ink-2)}
-.cta-sub{font-size:15px;color:var(--ink-3);margin-bottom:36px;
-  max-width:420px;margin-left:auto;margin-right:auto;line-height:1.7}
-.eform{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.einput{font-family:var(--sans);font-size:14px;padding:11px 18px;
-  border:1px solid var(--border-heavy);border-radius:6px;background:var(--white);
-  color:var(--ink);outline:none;width:min(280px,100%);transition:all .2s}
-.einput:focus{border-color:var(--ink);box-shadow:0 0 0 3px rgba(26,26,24,.08)}
-.einput::placeholder{color:var(--ink-4)}
-
-/* FOOTER */
-footer{border-top:1px solid var(--border);padding:28px var(--px);
-  max-width:var(--max);margin:0 auto;display:flex;align-items:center;
-  justify-content:space-between;flex-wrap:wrap;gap:16px}
-.flogo{font-family:var(--orb);font-size:11px;font-weight:700;color:var(--ink-3);letter-spacing:.08em}
-.flinks{display:flex;gap:20px;list-style:none;flex-wrap:wrap}
-.flinks a{font-size:13px;color:var(--ink-4);text-decoration:none;transition:color .2s;cursor:pointer}
-.flinks a:hover{color:var(--ink-2)}
-
-/* ANIMATIONS */
-@keyframes fup{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-.reveal{opacity:0;transform:translateY(14px);transition:opacity .65s ease,transform .65s ease}
+.nsig{margin-top:32px;font-family:var(--orb);font-size:10px;letter-spacing:.12em;color:var(--grey-4);text-transform:uppercase}
+.cta-wrap{max-width:var(--max);margin:0 auto;padding:120px var(--px);text-align:center}
+.cta-title{font-family:var(--orb);font-size:clamp(32px,5vw,60px);font-weight:700;letter-spacing:-.02em;margin-bottom:20px;line-height:1.1;text-transform:lowercase}
+.cta-title em{font-style:normal;font-weight:400;color:var(--grey-5)}
+.cta-sub{font-size:16px;color:var(--grey-5);margin-bottom:42px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.8}
+.eform{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.einput{font-family:var(--sans);font-size:15px;padding:13px 20px;border:1.5px solid var(--grey-3);border-radius:8px;background:var(--white);color:var(--black);outline:none;width:min(320px,100%);transition:all .3s;font-weight:400}
+.einput:focus{border-color:var(--black);box-shadow:0 0 0 4px rgba(0,0,0,.05)}
+.einput::placeholder{color:var(--grey-4)}
+.btn-cta{background:var(--black);color:var(--white);padding:12px 26px;font-size:15px;border:none;border-radius:8px;cursor:pointer;transition:all .3s;text-transform:lowercase;font-weight:500}
+.btn-cta:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.18)}
+footer{border-top:1px solid var(--grey-2);padding:36px var(--px);max-width:var(--max);margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.flogo{font-family:var(--orb);font-size:12px;font-weight:700;color:var(--grey-4);letter-spacing:.12em;text-transform:lowercase}
+.flinks{display:flex;gap:28px;list-style:none;flex-wrap:wrap}
+.flinks a{font-size:14px;color:var(--grey-4);text-decoration:none;transition:color .3s;cursor:pointer;text-transform:lowercase}
+.flinks a:hover{color:var(--black)}
+@keyframes fup{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .65s ease,transform .65s ease}
 .reveal.visible{opacity:1;transform:translateY(0)}
-
-/* SVG ICONS */
-svg.icon{width:20px;height:20px;display:inline-block;vertical-align:middle}
-
-/* MODAL */
-.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;
-  background:rgba(26,26,24,.5);backdrop-filter:blur(8px);align-items:center;
-  justify-content:center}
+svg.icon{width:20px;height:20px;display:inline-block;vertical-align:middle;stroke-linecap:round;stroke-linejoin:round}
+.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;background:rgba(0,0,0,.45);backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:20px}
 .modal.open{display:flex}
-.modal-box{background:var(--white);border-radius:12px;padding:40px;max-width:500px;
-  width:90%;box-shadow:0 20px 60px rgba(26,26,24,.15);animation:slideup .3s ease}
-.modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;
-  background:none;border:1px solid var(--border);border-radius:6px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;transition:all .2s}
-.modal-close:hover{background:var(--cream)}
-@keyframes slideup{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
-
-/* RESPONSIVE */
-@media(max-width:1024px){
-  .models-grid{grid-template-columns:repeat(2,1fr)}
-  .models-grid .mcard:last-child{grid-column:span 2}
-}
-@media(max-width:768px){
-  .nav-links{display:none}
-  .burger{display:flex}
-  .mission-wrap,.note-wrap{grid-template-columns:1fr;gap:12px}
-  .models-grid{grid-template-columns:1fr}
-  .models-grid .mcard:last-child{grid-column:span 1}
-  .pgrid{grid-template-columns:1fr;gap:24px}
-  footer{flex-direction:column;align-items:flex-start}
-}
-@media(max-width:480px){
-  :root{--nav:56px}
-  .hero-actions{flex-direction:column;align-items:flex-start}
-  .eform{flex-direction:column;align-items:stretch}
-  .einput,.btn-cta{width:100%}
-  .cta-wrap{text-align:left}
-  .cta-sub{margin-left:0;margin-right:0}
-}
+.modal-box{background:var(--white);border-radius:14px;padding:44px;max-width:560px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,.12);animation:slideup .3s ease}
+.modal-close{position:absolute;top:20px;right:20px;width:36px;height:36px;background:var(--grey-1);border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s}
+.modal-close:hover{background:var(--grey-2)}
+@keyframes slideup{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
+@media(max-width:1024px){.models-grid{grid-template-columns:repeat(2,1fr)}.models-grid .mcard:last-child{grid-column:span 2}.mission-wrap,.note-wrap{grid-template-columns:1fr;gap:16px}.pgrid{grid-template-columns:1fr;gap:32px}}
+@media(max-width:768px){.nav-links{display:none}.burger{display:flex}.models-grid{grid-template-columns:1fr}.models-grid .mcard:last-child{grid-column:span 1}.mission-wrap,.note-wrap{grid-template-columns:1fr;gap:12px}.pgrid{grid-template-columns:1fr;gap:28px}footer{flex-direction:column;align-items:flex-start}}
+@media(max-width:480px){:root{--nav:60px;--px:clamp(16px,4vw,24px)}.hero{padding:calc(var(--nav) + 60px) var(--px) 60px}.hero-actions{flex-direction:column;align-items:flex-start;width:100%}.eform{flex-direction:column;align-items:stretch;gap:12px}.einput,.btn-cta{width:100%}.cta-wrap{text-align:left;padding:80px var(--px)}.cta-sub{margin-left:0;margin-right:0}.modal-box{padding:32px}}
 </style>
 </head>
 <body>
-
 <nav>
-  <a href="#" class="logo" onclick="scrollToTop()">MUXBITE</a>
+  <a href="#" class="logo" onclick="scrollToTop()">muxbite</a>
   <ul class="nav-links">
-    <li><a href="#models">Models</a></li>
-    <li><a href="#principles">Research</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#contact" class="nav-cta">Stay updated</a></li>
+    <li><a href="#models">models</a></li>
+    <li><a href="#principles">research</a></li>
+    <li><a href="#about">about</a></li>
+    <li><a href="#contact" class="nav-cta">stay updated</a></li>
   </ul>
-  <button class="burger" id="burger" aria-label="Toggle menu">
-    <span></span><span></span><span></span>
-  </button>
+  <button class="burger" id="burger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
 </nav>
-
 <div class="drawer" id="drawer">
-  <a href="#models" onclick="closeNav()">Models</a>
-  <a href="#principles" onclick="closeNav()">Research</a>
-  <a href="#about" onclick="closeNav()">About</a>
-  <a href="#contact" onclick="closeNav()">Stay updated</a>
+  <a href="#models" onclick="closeNav()">models</a>
+  <a href="#principles" onclick="closeNav()">research</a>
+  <a href="#about" onclick="closeNav()">about</a>
+  <a href="#contact" onclick="closeNav()">stay updated</a>
 </div>
-
 <section class="hero">
-  <p class="eyebrow">AI Research Lab — Global</p>
-  <h1>Building AI that is<br/><em>safe, capable,</em><br/>and built for the world.</h1>
-  <p class="hero-sub">MUXBITE is an independent AI research company developing generative models that are genuinely helpful, honest, and accessible to every person on the planet — regardless of language, location, or background.</p>
+  <p class="eyebrow">ai research lab — global</p>
+  <h1>building ai that is<br/><em>safe, capable,</em><br/>and built for the world.</h1>
+  <p class="hero-sub">muxbite is an independent ai research company developing generative models that are genuinely helpful, honest, and accessible to every person on the planet.</p>
   <div class="hero-actions">
     <button class="btn-primary" onclick="document.getElementById('models').scrollIntoView({behavior:'smooth'})">
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/>
-      </svg>
-      Explore our models
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg> explore models
     </button>
     <button class="btn-secondary" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">
-      Read our mission
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-      </svg>
+      read our mission
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
     </button>
   </div>
   <div class="hero-rule"></div>
 </section>
-
 <div class="wrap" id="about">
   <div class="mission-wrap">
-    <p class="sec-label reveal">Mission</p>
-    <p class="mission-text reveal">"We believe AI will be one of the most transformative technologies in human history. Our goal is to ensure that transformation is <em>safe, equitable, and built for everyone</em> — every language, every culture, every corner of the world."</p>
+    <p class="sec-label reveal">mission</p>
+    <p class="mission-text reveal">"we believe ai will be one of the most transformative technologies in human history. our goal is to ensure that transformation is <em>safe, equitable, and built for everyone</em>."</p>
   </div>
 </div>
-
 <div class="wrap" id="models">
   <div class="sec-head reveal">
-    <h2 class="sec-title">The MB series</h2>
-    <a href="#" onclick="openModal('models')" class="btn-secondary">See all models</a>
+    <h2 class="sec-title">the mb series</h2>
+    <a href="mb.html" class="btn-secondary">try mb chat<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></a>
   </div>
   <div class="models-grid reveal">
     <div class="mcard" onclick="openModal('mb1')">
-      <p class="mtag">Prototype · In training</p>
-      <h3 class="mname">MB1</h3>
-      <p class="mdesc">Our first language model. A small transformer trained from scratch to validate our architecture and training pipeline.</p>
-      <p class="mparams">~10–50M parameters · Multilingual</p>
-      <div class="mstatus"><span class="dot dot-b"></span>In development</div>
+      <p class="mtag">prototype · in training</p>
+      <h3 class="mname">mb1</h3>
+      <p class="mdesc">our first language model. a small transformer trained from scratch to validate our architecture and training pipeline.</p>
+      <div class="mstatus"><span class="dot dot-b"></span>in development</div>
     </div>
     <div class="mcard" onclick="openModal('mb2')">
-      <p class="mtag">Planned · 2026</p>
-      <h3 class="mname">MB2</h3>
-      <p class="mdesc">A larger model focused on underserved global languages — Hindi, Swahili, Arabic, Bengali and beyond. Intelligence without borders.</p>
-      <p class="mparams">~200M–1B parameters · 20+ languages</p>
-      <div class="mstatus"><span class="dot dot-p"></span>Planned</div>
+      <p class="mtag">planned · 2026</p>
+      <h3 class="mname">mb2</h3>
+      <p class="mdesc">a larger model focused on underserved global languages — hindi, swahili, arabic, bengali and beyond.</p>
+      <div class="mstatus"><span class="dot"></span>planned</div>
     </div>
     <div class="mcard" onclick="openModal('mb3')">
-      <p class="mtag">Roadmap · 2027+</p>
-      <h3 class="mname">MB3</h3>
-      <p class="mdesc">A frontier-class multimodal model. Text, voice, and vision — built to serve the next four billion people the internet left behind.</p>
-      <p class="mparams">~7B+ parameters · Global frontier</p>
-      <div class="mstatus"><span class="dot dot-p"></span>On roadmap</div>
+      <p class="mtag">roadmap · 2027+</p>
+      <h3 class="mname">mb3</h3>
+      <p class="mdesc">a frontier-class multimodal model. text, voice, and vision — built to serve the next four billion people.</p>
+      <div class="mstatus"><span class="dot"></span>on roadmap</div>
     </div>
   </div>
 </div>
-
 <div class="wrap" id="principles">
-  <div class="sec-head reveal">
-    <h2 class="sec-title">How we work</h2>
-  </div>
+  <div class="sec-head reveal"><h2 class="sec-title">how we work</h2></div>
   <div class="pgrid">
-    <div class="prin reveal">
-      <p class="pnum">01</p>
-      <h3 class="ptitle">Safety first</h3>
-      <p class="pbody">We study alignment and responsible scaling before we need to. Safety is not a feature we add later — it is the foundation of every model we train.</p>
-    </div>
-    <div class="prin reveal">
-      <p class="pnum">02</p>
-      <p class="ptitle">Build in public</p>
-      <p class="pbody">Our training code, experiments, and findings are published openly. We believe the AI research community grows faster when knowledge is shared, not hoarded.</p>
-    </div>
-    <div class="prin reveal">
-      <p class="pnum">03</p>
-      <h3 class="ptitle">Global by design</h3>
-      <p class="pbody">The world speaks thousands of languages. Frontier AI speaks fewer than a hundred well. We are closing that gap — building models that work for every person, not just the most represented ones.</p>
-    </div>
-    <div class="prin reveal">
-      <p class="pnum">04</p>
-      <h3 class="ptitle">Own the stack</h3>
-      <p class="pbody">We are not an API wrapper. Our long-term goal is to train proprietary models from scratch — owning the architecture, the data, and the training pipeline.</p>
-    </div>
+    <div class="prin reveal"><p class="pnum">01</p><h3 class="ptitle">safety first</h3><p class="pbody">we study alignment and responsible scaling before we need to. safety is the foundation of every model we train.</p></div>
+    <div class="prin reveal"><p class="pnum">02</p><p class="ptitle">build in public</p><p class="pbody">our training code and findings are published openly. knowledge shared grows the community faster.</p></div>
+    <div class="prin reveal"><p class="pnum">03</p><h3 class="ptitle">global by design</h3><p class="pbody">the world speaks thousands of languages. we are closing the gap — building models for every person.</p></div>
+    <div class="prin reveal"><p class="pnum">04</p><h3 class="ptitle">own the stack</h3><p class="pbody">we are not an api wrapper. our goal is to train proprietary models from scratch — owning everything.</p></div>
   </div>
 </div>
-
-<div class="wrap" style="border-bottom:1px solid var(--border)">
+<div class="wrap" style="border-bottom:1px solid var(--grey-2)">
   <div class="note-wrap">
-    <p class="sec-label reveal">From the founder</p>
+    <p class="sec-label reveal">from the founder</p>
     <div class="reveal">
-      <p class="nbody">
-        <strong>I started MUXBITE as a final-year BCA student</strong> with no team, no funding, and no GPU cluster. What I do have is a clear conviction: that the most important AI models of the next decade will not be built in San Francisco.<br/><br/>
-        They will be built by people who believe intelligence should have no borders — no language barrier, no geography, no prerequisite of privilege. <em>That</em> is what MUXBITE is for.
-      </p>
-      <p class="nsig">Shahnewaz Alam</p>
+      <p class="nbody"><strong>i started muxbite as a final-year bca student</strong> with no team, no funding, and no gpu cluster. what i do have is a clear conviction: that the most important ai models of the next decade will not be built in san francisco.<br/><br/>they will be built by people who believe intelligence should have no borders — no language barrier, no geography, no prerequisite of privilege. <em>that</em> is what muxbite is for.</p>
+      <p class="nsig">shahnewaz alam</p>
     </div>
   </div>
 </div>
-
 <div class="cta-wrap" id="contact">
-  <h2 class="cta-title reveal">Follow the<br/><em>journey</em></h2>
-  <p class="cta-sub reveal">We are building in public. Get early access to our models, research notes, and updates.</p>
+  <h2 class="cta-title reveal">follow the<br/><em>journey</em></h2>
+  <p class="cta-sub reveal">we are building in public. get early access to our models, research notes, and updates.</p>
   <div class="eform reveal">
     <input type="email" id="email-input" class="einput" placeholder="your@email.com"/>
-    <button class="btn-cta" onclick="subscribe()">Stay updated</button>
+    <button class="btn-cta" onclick="subscribe()">stay updated</button>
   </div>
-  <p id="status-msg" style="margin-top:12px;font-size:12px;color:var(--ink-4);min-height:16px"></p>
+  <p id="status-msg" style="margin-top:12px;font-size:13px;color:var(--grey-4);min-height:16px"></p>
 </div>
-
 <footer>
-  <span class="flogo">MUXBITE</span>
+  <span class="flogo">muxbite</span>
   <ul class="flinks">
-    <li><a href="https://github.com/heysanzu" target="_blank">GitHub</a></li>
-    <li><a href="#models">Models</a></li>
-    <li><a href="#principles">Research</a></li>
-    <li><a href="#about">About</a></li>
+    <li><a href="https://github.com/heysanzu" target="_blank">github</a></li>
+    <li><a href="#models">models</a></li>
+    <li><a href="#principles">research</a></li>
+    <li><a href="#about">about</a></li>
   </ul>
-  <span style="font-size:12px;color:var(--ink-4)">© 2026 MUXBITE</span>
+  <span style="font-size:13px;color:var(--grey-4)">© 2026 muxbite</span>
 </footer>
-
-<!-- MODAL -->
 <div class="modal" id="modal">
   <div class="modal-box">
-    <button class="modal-close" onclick="closeModal()">
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-      </svg>
-    </button>
+    <button class="modal-close" onclick="closeModal()"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div id="modal-content"></div>
   </div>
 </div>
-
 <script>
 const burger=document.getElementById('burger'),drawer=document.getElementById('drawer');
 burger.addEventListener('click',()=>{burger.classList.toggle('open');drawer.classList.toggle('open')});
-
 function closeNav(){burger.classList.remove('open');drawer.classList.remove('open')}
 function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'})}
-
-const io=new IntersectionObserver(entries=>{
-  entries.forEach((e,i)=>{
-    if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*70);io.unobserve(e.target)}
-  });
-},{threshold:.08});
+const io=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*70);io.unobserve(e.target)}});},{threshold:.08});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-
-const modalContent={
-  mb1:'<h2 style="font-family:var(--orb);font-size:28px;margin-bottom:16px">MB1</h2><p style="font-size:14px;color:var(--ink-2);line-height:1.7;margin-bottom:16px">Our first language model, built from the ground up. MB1 validates our training pipeline and architectural choices before we scale to larger models.</p><p style="font-size:13px;color:var(--ink-3);margin-bottom:12px"><strong>Parameters:</strong> 10–50M (adjustable for research)</p><p style="font-size:13px;color:var(--ink-3);margin-bottom:12px"><strong>Training:</strong> In progress, multilingual corpus</p><p style="font-size:13px;color:var(--ink-3)"><strong>Status:</strong> Prototype phase — testing alignment and safety approaches at scale.</p>',
-  mb2:'<h2 style="font-family:var(--orb);font-size:28px;margin-bottom:16px">MB2</h2><p style="font-size:14px;color:var(--ink-2);line-height:1.7;margin-bottom:16px">A generation-skip in scale and capability. MB2 focuses on linguistic diversity — supporting languages that frontier models ignore.</p><p style="font-size:13px;color:var(--ink-3);margin-bottom:12px"><strong>Parameters:</strong> 200M–1B</p><p style="font-size:13px;color:var(--ink-3);margin-bottom:12px"><strong>Languages:</strong> 20+ underserved languages (Hindi, Swahili, Bengali, Arabic, and more)</p><p style="font-size:13px;color:var(--ink-3)"><strong>Timeline:</strong> Planned release 2026</p>',
-  mb3:'<h2 style="font-family:var(--orb);font-size:28px;margin-bottom:16px">MB3</h2><p style="font-size:14px;color:var(--ink-2);line-height:1.7;margin-bottom:16px">Our frontier-class model. Multimodal (text, voice, vision) and built from day one for global accessibility.</p><p style="font-size:13px;color:var(--ink-3);margin-bottom:12px"><strong>Parameters:</strong> 7B+</p><p style="font-size:13px;color:var(--ink-3);margin-bottom:12px"><strong>Modalities:</strong> Text, speech recognition, vision</p><p style="font-size:13px;color:var(--ink-3)"><strong>Vision:</strong> Serve the next four billion people connecting to the internet</p>',
-  models:'<h2 style="font-family:var(--orb);font-size:28px;margin-bottom:20px">The MB Series Roadmap</h2><p style="font-size:14px;color:var(--ink-2);line-height:1.7;margin-bottom:24px">Our roadmap spans three generations of models, each solving a distinct problem in AI accessibility and safety.</p><div style="display:grid;grid-template-columns:1fr;gap:16px"><div style="padding:16px;background:var(--cream);border-left:2px solid var(--accent);border-radius:4px"><strong style="font-family:var(--orb)">MB1 (In training)</strong><p style="font-size:13px;color:var(--ink-3);margin-top:4px">Validates our approach</p></div><div style="padding:16px;background:var(--cream);border-left:2px solid var(--ink-4);border-radius:4px"><strong style="font-family:var(--orb)">MB2 (2026)</strong><p style="font-size:13px;color:var(--ink-3);margin-top:4px">Scales to 20+ languages</p></div><div style="padding:16px;background:var(--cream);border-left:2px solid var(--ink-4);border-radius:4px"><strong style="font-family:var(--orb)">MB3 (2027+)</strong><p style="font-size:13px;color:var(--ink-3);margin-top:4px">Frontier multimodal model</p></div></div>'
-};
-
-function openModal(type){
-  const modal=document.getElementById('modal'),content=document.getElementById('modal-content');
-  content.innerHTML=modalContent[type]||'';
-  modal.classList.add('open');
-  document.body.style.overflow='hidden';
-}
-function closeModal(){
-  const modal=document.getElementById('modal');
-  modal.classList.remove('open');
-  document.body.style.overflow='auto';
-}
+const modalContent={mb1:'<h2 style="font-family:var(--orb);font-size:32px;margin-bottom:18px;text-transform:lowercase">mb1</h2><p style="font-size:15px;color:var(--grey-5);line-height:1.8;margin-bottom:20px">our first language model, built from the ground up. mb1 validates our training pipeline and architectural choices.</p><p style="font-size:14px;color:var(--grey-4);margin-bottom:14px"><strong style="color:var(--black)">parameters:</strong> 10–50m</p><p style="font-size:14px;color:var(--grey-4);margin-bottom:14px"><strong style="color:var(--black)">training:</strong> in progress, multilingual corpus</p><p style="font-size:14px;color:var(--grey-4)"><strong style="color:var(--black)">status:</strong> prototype phase</p>',mb2:'<h2 style="font-family:var(--orb);font-size:32px;margin-bottom:18px;text-transform:lowercase">mb2</h2><p style="font-size:15px;color:var(--grey-5);line-height:1.8;margin-bottom:20px">a generation-skip in scale and capability. mb2 focuses on linguistic diversity.</p><p style="font-size:14px;color:var(--grey-4);margin-bottom:14px"><strong style="color:var(--black)">parameters:</strong> 200m–1b</p><p style="font-size:14px;color:var(--grey-4);margin-bottom:14px"><strong style="color:var(--black)">languages:</strong> 20+ underserved languages</p><p style="font-size:14px;color:var(--grey-4)"><strong style="color:var(--black)">timeline:</strong> 2026</p>',mb3:'<h2 style="font-family:var(--orb);font-size:32px;margin-bottom:18px;text-transform:lowercase">mb3</h2><p style="font-size:15px;color:var(--grey-5);line-height:1.8;margin-bottom:20px">our frontier-class model. multimodal and built for global accessibility.</p><p style="font-size:14px;color:var(--grey-4);margin-bottom:14px"><strong style="color:var(--black)">parameters:</strong> 7b+</p><p style="font-size:14px;color:var(--grey-4);margin-bottom:14px"><strong style="color:var(--black)">modalities:</strong> text, speech, vision</p><p style="font-size:14px;color:var(--grey-4)"><strong style="color:var(--black)">vision:</strong> next four billion people</p>'};
+function openModal(type){const modal=document.getElementById('modal'),content=document.getElementById('modal-content');content.innerHTML=modalContent[type]||'';modal.classList.add('open');document.body.style.overflow='hidden';}
+function closeModal(){const modal=document.getElementById('modal');modal.classList.remove('open');document.body.style.overflow='auto';}
 document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
-
-function subscribe(){
-  const inp=document.getElementById('email-input'),msg=document.getElementById('status-msg'),btn=event.target;
-  const email=inp.value.trim();
-  if(!email||!email.includes('@')){
-    msg.textContent='Please enter a valid email';msg.style.color='#e24b4a';
-    inp.style.borderColor='#e24b4a';setTimeout(()=>{inp.style.borderColor='';msg.textContent=''},2000);return;
-  }
-  btn.disabled=true;btn.textContent='Saving...';
-  setTimeout(()=>{
-    msg.textContent='You\'re on the list';msg.style.color='#4caf50';
-    inp.value='';inp.disabled=true;btn.textContent='Saved';btn.disabled=false;
-  },800);
-}
+function subscribe(){const inp=document.getElementById('email-input'),msg=document.getElementById('status-msg'),btn=event.target;const email=inp.value.trim();if(!email||!email.includes('@')){msg.textContent='please enter a valid email';msg.style.color='#e24b4a';inp.style.borderColor='#e24b4a';setTimeout(()=>{inp.style.borderColor='';msg.textContent=''},2000);return;}btn.disabled=true;btn.textContent='saving...';setTimeout(()=>{msg.textContent="you're on the list";msg.style.color='#4caf50';inp.value='';inp.disabled=true;btn.textContent='saved';btn.disabled=false},800);}
 </script>
 </body>
 </html>
