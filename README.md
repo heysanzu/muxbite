@@ -160,5 +160,5 @@ Proprietary. All rights reserved. Model weights, training code, and product sour
 ## Contact
 
 Website: [muxbite.com](https://muxbite.com)  
-GitHub: [@MUXBITE](https://github.com/MUXBITE))  
+GitHub: [@MUXBITE](https://github.com/MUXBITE)  
 Research inquiries: research@muxbite.com
