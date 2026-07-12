@@ -1,228 +1,783 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>MUXBITE</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link rel="icon" type="image/png" href="muxbite.png">
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet"/>
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--white:#ffffff;--black:#000000;--grey-1:#f5f5f5;--grey-2:#e8e8e8;--grey-3:#d1d1d1;--grey-4:#909090;--grey-5:#444444;--grey-6:#1a1a1a;--accent:#c8f135;--accent-dark:#a8d015;--sans:'Google Sans','Product Sans',system-ui,sans-serif;--orb:'Orbitron',monospace;--max:1200px;--nav:70px;--px:clamp(24px,5vw,48px)}
-html{scroll-behavior:smooth}
-body{font-family:var(--sans);background:var(--white);color:var(--grey-6);line-height:1.6;font-weight:400;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);display:flex;align-items:center;justify-content:space-between;padding:0 var(--px);background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--grey-2)}
-.logo{font-family:var(--orb);font-size:14px;font-weight:700;letter-spacing:.12em;color:var(--black);text-decoration:none;cursor:pointer;transition:opacity .3s;text-transform:lowercase}
-.logo:hover{opacity:.7}
-.nav-links{display:flex;align-items:center;gap:36px;list-style:none}
-.nav-links a{font-size:15px;color:var(--grey-5);text-decoration:none;font-weight:400;transition:color .3s;text-transform:lowercase}
-.nav-links a:hover{color:var(--black)}
-.nav-cta{font-size:14px;font-weight:500;padding:10px 20px;border:1.5px solid var(--grey-5);border-radius:6px;color:var(--black);background:transparent;text-decoration:none;transition:all .3s;display:inline-block;cursor:pointer;text-transform:lowercase}
-.nav-cta:hover{background:var(--grey-2);color:var(--white);border-color:var(--black)}
-.burger{display:none;flex-direction:column;justify-content:center;align-items:center;width:40px;height:40px;gap:5px;background:none;border:none;cursor:pointer;padding:0}
-.burger span{display:block;width:22px;height:2px;background:var(--black);transition:transform .3s,opacity .3s}
-.burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
-.burger.open span:nth-child(2){opacity:0}
-.burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-.drawer{display:none;position:fixed;top:var(--nav);left:0;right:0;z-index:190;background:rgba(255,255,255,.98);backdrop-filter:blur(16px);border-bottom:1px solid var(--grey-2);padding:20px var(--px) 28px;flex-direction:column;gap:0}
-.drawer.open{display:flex}
-.drawer a{font-size:16px;color:var(--grey-5);text-decoration:none;padding:14px 0;border-bottom:1px solid var(--grey-2);transition:color .3s;cursor:pointer;text-transform:lowercase;font-weight:400}
-.drawer a:last-child{border-bottom:none}
-.drawer a:hover{color:var(--black)}
-.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:calc(var(--nav) + 80px) var(--px) 80px;max-width:var(--max);margin:0 auto;position:relative;width:100%}
-.eyebrow{font-family:var(--orb);font-size:11px;letter-spacing:.15em;color:var(--grey-4);text-transform:uppercase;margin-bottom:28px;opacity:0;animation:fup .6s ease forwards .1s}
-.hero h1{font-family:var(--orb);font-size:clamp(36px,6vw,76px);line-height:1.08;font-weight:700;letter-spacing:-.02em;max-width:900px;opacity:0;animation:fup .7s ease forwards .2s;text-transform:lowercase}
-.hero h1 em{font-style:normal;font-weight:400;color:var(--grey-5)}
-.hero-sub{margin-top:32px;font-size:clamp(16px,2.2vw,20px);font-weight:400;color:var(--grey-5);max-width:620px;line-height:1.8;opacity:0;animation:fup .7s ease forwards .35s}
-.hero-actions{margin-top:48px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;opacity:0;animation:fup .7s ease forwards .5s}
-.hero-rule{position:absolute;bottom:0;left:var(--px);right:var(--px);height:1px;background:var(--grey-2)}
-.btn-primary,.btn-secondary{font-family:var(--sans);font-size:15px;font-weight:500;padding:13px 28px;border:none;border-radius:8px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:10px;white-space:nowrap;transition:all .3s ease;position:relative;overflow:hidden;text-transform:lowercase}
-.btn-primary{background:var(--black);color:var(--white)}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.18)}
-.btn-secondary{background:transparent;color:var(--grey-5);border-bottom:1.5px solid var(--grey-5);padding:13px 0;border-radius:0;gap:6px}
-.btn-secondary:hover{color:var(--black);border-bottom-color:var(--black)}
-.wrap{max-width:var(--max);margin:0 auto;padding:96px var(--px);border-bottom:1px solid var(--grey-2)}
-.sec-label{font-family:var(--orb);font-size:11px;letter-spacing:.15em;color:var(--grey-4);text-transform:uppercase;padding-top:8px}
-.sec-title{font-family:var(--orb);font-size:clamp(28px,4vw,48px);font-weight:700;letter-spacing:-.02em;text-transform:lowercase}
-.sec-head{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:56px}
-.mission-wrap{display:grid;grid-template-columns:180px 1fr;gap:56px}
-.mission-text{font-size:clamp(20px,2.4vw,28px);line-height:1.7;font-weight:400;color:var(--grey-6)}
-.mission-text em{font-style:italic;font-weight:400;color:var(--grey-5)}
-.models-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--grey-2);border:1px solid var(--grey-2);border-radius:12px;overflow:hidden}
-.mcard{background:var(--white);padding:40px;transition:all .35s;cursor:pointer;position:relative;border-right:1px solid var(--grey-2);border-bottom:1px solid var(--grey-2)}
-.mcard:nth-child(3n){border-right:none}
-.mcard:nth-last-child(-n+3){border-bottom:none}
-.mcard:hover{background:var(--grey-1);transform:translateY(-3px)}
-.mtag{font-family:var(--orb);font-size:10px;font-weight:600;letter-spacing:.12em;color:var(--grey-4);text-transform:uppercase;margin-bottom:20px}
-.mname{font-family:var(--orb);font-size:clamp(32px,5vw,44px);font-weight:900;color:var(--black);margin-bottom:12px;text-transform:lowercase}
-.mdesc{font-size:15px;color:var(--grey-5);line-height:1.7;margin-bottom:24px}
-.mstatus{display:inline-flex;align-items:center;gap:8px;margin-top:20px;font-size:13px;color:var(--grey-4)}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--grey-4)}
-.dot-b{background:var(--accent-dark)}
-.pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:48px 64px;margin-top:48px}
-.prin{border-top:1px solid var(--grey-2);padding-top:28px;transition:all .35s}
-.prin:hover{border-top-color:var(--black)}
-.pnum{font-family:var(--orb);font-size:10px;color:var(--grey-4);margin-bottom:12px;letter-spacing:.12em;text-transform:uppercase}
-.ptitle{font-family:var(--orb);font-size:clamp(14px,1.6vw,18px);font-weight:700;letter-spacing:.01em;margin-bottom:12px;text-transform:lowercase}
-.pbody{font-size:15px;color:var(--grey-5);line-height:1.8}
-.note-wrap{display:grid;grid-template-columns:180px 1fr;gap:56px}
-.nbody{font-size:clamp(16px,1.9vw,21px);line-height:1.8;font-weight:400;color:var(--grey-5)}
-.nbody strong{font-weight:600;color:var(--black)}
-.nbody em{font-style:italic}
-.nsig{margin-top:32px;font-family:var(--orb);font-size:10px;letter-spacing:.12em;color:var(--grey-4);text-transform:uppercase}
-.cta-wrap{max-width:var(--max);margin:0 auto;padding:120px var(--px);text-align:center}
-.cta-title{font-family:var(--orb);font-size:clamp(32px,5vw,60px);font-weight:700;letter-spacing:-.02em;margin-bottom:20px;line-height:1.1;text-transform:lowercase}
-.cta-title em{font-style:normal;font-weight:400;color:var(--grey-5)}
-.cta-sub{font-size:16px;color:var(--grey-5);margin-bottom:42px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.8}
-.eform{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.einput{font-family:var(--sans);font-size:15px;padding:13px 20px;border:1.5px solid var(--grey-3);border-radius:8px;background:var(--white);color:var(--black);outline:none;width:min(320px,100%);transition:all .3s;font-weight:400}
-.einput:focus{border-color:var(--black);box-shadow:0 0 0 4px rgba(0,0,0,.05)}
-.einput::placeholder{color:var(--grey-4)}
-.btn-cta{background:var(--black);color:var(--white);padding:12px 26px;font-size:15px;border:none;border-radius:8px;cursor:pointer;transition:all .3s;text-transform:lowercase;font-weight:500}
-.btn-cta:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.18)}
-footer{border-top:1px solid var(--grey-2);padding:36px var(--px);max-width:var(--max);margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}
-.flogo{font-family:var(--orb);font-size:12px;font-weight:700;color:var(--grey-4);letter-spacing:.12em;text-transform:lowercase}
-.flinks{display:flex;gap:28px;list-style:none;flex-wrap:wrap}
-.flinks a{font-size:14px;color:var(--grey-4);text-decoration:none;transition:color .3s;cursor:pointer;text-transform:lowercase}
-.flinks a:hover{color:var(--black)}
-@keyframes fup{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.reveal{opacity:0;transform:translateY(16px);transition:opacity .65s ease,transform .65s ease}
-.reveal.visible{opacity:1;transform:translateY(0)}
-svg.icon{width:20px;height:20px;display:inline-block;vertical-align:middle;stroke-linecap:round;stroke-linejoin:round}
-.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;background:rgba(0,0,0,.45);backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:20px}
-.modal.open{display:flex}
-.modal-box{background:var(--white);border-radius:14px;padding:44px;max-width:560px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,.12);animation:slideup .3s ease}
-.modal-close{position:absolute;top:20px;right:20px;width:36px;height:36px;background:var(--grey-1);border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s}
-.modal-close:hover{background:var(--grey-2)}
-@keyframes slideup{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
-@media(max-width:1024px){.models-grid{grid-template-columns:repeat(2,1fr)}.models-grid .mcard:last-child{grid-column:span 2}.mission-wrap,.note-wrap{grid-template-columns:1fr;gap:16px}.pgrid{grid-template-columns:1fr;gap:32px}}
-@media(max-width:768px){.nav-links{display:none}.burger{display:flex}.models-grid{grid-template-columns:1fr}.models-grid .mcard:last-child{grid-column:span 1}.mission-wrap,.note-wrap{grid-template-columns:1fr;gap:12px}.pgrid{grid-template-columns:1fr;gap:28px}footer{flex-direction:column;align-items:flex-start}}
-@media(max-width:480px){:root{--nav:60px;--px:clamp(16px,4vw,24px)}.hero{padding:calc(var(--nav) + 60px) var(--px) 60px}.hero-actions{flex-direction:column;align-items:flex-start;width:100%}.eform{flex-direction:column;align-items:stretch;gap:12px}.einput,.btn-cta{width:100%}.cta-wrap{text-align:left;padding:80px var(--px)}.cta-sub{margin-left:0;margin-right:0}.modal-box{padding:32px}}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MUXBITE</title>
+  <link rel="icon" type="image/png" href="muxbite.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #ffffff;
+      --surface: #f5f5f5;
+      --surface2: #ebebeb;
+      --ink: #0a0a0a;
+      --ink-muted: #555;
+      --ink-faint: #999;
+      --border: #e0e0e0;
+      --border-dark: #c0c0c0;
+      --accent: #0a0a0a;
+      --accent-inv: #ffffff;
+      --radius: 2px;
+      --font-logo: 'Orbitron', sans-serif;
+      --font-ui: 'Syne', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-ui);
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 64px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--font-logo);
+      font-size: 18px; font-weight: 900;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex; gap: 36px; list-style: none;
+    }
+    .nav-links a {
+      font-size: 13px; font-weight: 500; letter-spacing: 0.04em;
+      color: var(--ink-muted); text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+
+    .nav-cta {
+      font-family: var(--font-ui);
+      font-size: 13px; font-weight: 600;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 10px 22px;
+      background: var(--ink); color: var(--accent-inv);
+      border: none; cursor: pointer;
+      border-radius: var(--radius);
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.8; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 120px 48px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* grid texture */
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity: 0.45;
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 28px;
+      position: relative;
+    }
+
+    .hero h1 {
+      font-family: var(--font-logo);
+      font-size: clamp(52px, 9vw, 120px);
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      line-height: 0.95;
+      color: var(--ink);
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .hero-tagline {
+      font-size: clamp(15px, 2vw, 20px);
+      font-weight: 400;
+      color: var(--ink-muted);
+      max-width: 520px;
+      margin: 28px auto 52px;
+      line-height: 1.7;
+      position: relative;
+    }
+
+    .hero-actions {
+      display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+      position: relative;
+    }
+
+    .btn-primary {
+      font-family: var(--font-ui);
+      font-size: 14px; font-weight: 700;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 15px 36px;
+      background: var(--ink); color: #fff;
+      border: 2px solid var(--ink);
+      border-radius: var(--radius);
+      cursor: pointer; text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-primary:hover { background: #222; }
+
+    .btn-secondary {
+      font-family: var(--font-ui);
+      font-size: 14px; font-weight: 600;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 15px 36px;
+      background: transparent; color: var(--ink);
+      border: 2px solid var(--border-dark);
+      border-radius: var(--radius);
+      cursor: pointer; text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--ink); }
+
+    /* ── TICKER ── */
+    .ticker-wrap {
+      width: 100%; overflow: hidden;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 0;
+      background: var(--surface);
+      margin-top: 100px;
+    }
+    .ticker-track {
+      display: flex; gap: 64px;
+      width: max-content;
+      animation: ticker 22s linear infinite;
+    }
+    .ticker-item {
+      font-family: var(--font-mono);
+      font-size: 11px; font-weight: 400;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--ink-faint);
+      white-space: nowrap;
+    }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* ── SECTIONS SHARED ── */
+    section { padding: 100px 48px; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 24px;
+      display: block;
+    }
+
+    .section-title {
+      font-family: var(--font-ui);
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+
+    .section-sub {
+      font-size: 16px; font-weight: 400;
+      color: var(--ink-muted);
+      max-width: 540px;
+      line-height: 1.7;
+    }
+
+    /* ── MODELS SECTION ── */
+    #models { background: var(--bg); border-top: 1px solid var(--border); }
+
+    .models-header {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 64px; flex-wrap: wrap; gap: 24px;
+    }
+
+    .models-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .model-card {
+      background: var(--bg);
+      padding: 44px 36px;
+      position: relative;
+      transition: background 0.2s;
+    }
+    .model-card:hover { background: var(--surface); }
+
+    .model-tier {
+      font-family: var(--font-mono);
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 20px;
+    }
+
+    .model-name {
+      font-family: var(--font-logo);
+      font-size: 28px; font-weight: 900;
+      letter-spacing: 0.06em;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .model-name span {
+      font-size: 15px;
+      opacity: 0.4;
+    }
+
+    .model-desc {
+      font-size: 14px; font-weight: 400;
+      color: var(--ink-muted);
+      line-height: 1.65;
+      margin-bottom: 32px;
+    }
+
+    .model-badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 5px 12px;
+      border: 1px solid var(--border-dark);
+      border-radius: 1px;
+      color: var(--ink-muted);
+      margin-bottom: 28px;
+    }
+
+    .model-card.featured .model-badge {
+      background: var(--ink); color: #fff;
+      border-color: var(--ink);
+    }
+
+    .model-specs {
+      list-style: none;
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+
+    .model-specs li {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 12px;
+    }
+    .model-specs .spec-key {
+      font-family: var(--font-mono);
+      color: var(--ink-faint);
+      letter-spacing: 0.06em;
+    }
+    .model-specs .spec-val {
+      font-weight: 600; color: var(--ink);
+      letter-spacing: 0.02em;
+    }
+
+    .model-card.featured {
+      background: var(--ink);
+    }
+    .model-card.featured .model-tier,
+    .model-card.featured .model-desc,
+    .model-card.featured .spec-key { color: rgba(255,255,255,0.45); }
+    .model-card.featured .model-name,
+    .model-card.featured .spec-val { color: #fff; }
+    .model-card.featured .model-specs { border-color: rgba(255,255,255,0.12); }
+    .model-card.featured .model-badge { background: #fff; color: #0a0a0a; border-color: #fff; }
+    .model-card.featured:hover { background: #111; }
+
+    /* ── CAPABILITIES ── */
+    #capabilities { background: var(--surface); border-top: 1px solid var(--border); }
+
+    .cap-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 64px;
+    }
+
+    .cap-card {
+      background: var(--surface);
+      padding: 44px 40px;
+      transition: background 0.2s;
+    }
+    .cap-card:hover { background: #ececec; }
+
+    .cap-icon {
+      width: 36px; height: 36px;
+      margin-bottom: 24px;
+    }
+
+    .cap-title {
+      font-size: 18px; font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .cap-text {
+      font-size: 14px; color: var(--ink-muted);
+      line-height: 1.7;
+    }
+
+    /* ── ABOUT ── */
+    #about { background: var(--bg); border-top: 1px solid var(--border); }
+
+    .about-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+      margin-top: 64px;
+    }
+
+    .about-body p {
+      font-size: 16px; color: var(--ink-muted); line-height: 1.8;
+      margin-bottom: 20px;
+    }
+    .about-body p strong { color: var(--ink); font-weight: 700; }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .stat-block {
+      background: var(--bg);
+      padding: 32px 28px;
+    }
+
+    .stat-num {
+      font-family: var(--font-logo);
+      font-size: 36px; font-weight: 900;
+      letter-spacing: 0.04em;
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 11px; font-weight: 400;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+
+    .about-mission {
+      background: var(--ink);
+      padding: 44px;
+      margin-top: 1px;
+      grid-column: span 2;
+    }
+    .about-mission p {
+      font-size: 20px; font-weight: 500;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.6;
+    }
+    .about-mission p strong { color: #fff; }
+
+    /* ── CTA BAND ── */
+    #cta {
+      background: var(--ink);
+      padding: 100px 48px;
+      text-align: center;
+    }
+
+    #cta .section-label { color: rgba(255,255,255,0.35); }
+
+    #cta h2 {
+      font-family: var(--font-logo);
+      font-size: clamp(32px, 5vw, 64px);
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      color: #fff;
+      margin-bottom: 24px;
+    }
+
+    #cta p {
+      font-size: 16px; color: rgba(255,255,255,0.55);
+      margin-bottom: 48px; line-height: 1.7;
+    }
+
+    .btn-white {
+      font-family: var(--font-ui);
+      font-size: 14px; font-weight: 700;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 15px 40px;
+      background: #fff; color: var(--ink);
+      border: 2px solid #fff;
+      border-radius: var(--radius);
+      cursor: pointer; text-decoration: none;
+      transition: opacity 0.2s;
+      display: inline-block;
+    }
+    .btn-white:hover { opacity: 0.88; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 60px 48px 40px;
+    }
+
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto;
+    }
+
+    .footer-top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 48px; flex-wrap: wrap; gap: 40px;
+    }
+
+    .footer-brand .nav-logo { font-size: 16px; }
+    .footer-brand p {
+      font-size: 13px; color: var(--ink-faint);
+      margin-top: 10px; max-width: 220px; line-height: 1.6;
+    }
+
+    .footer-cols {
+      display: flex; gap: 64px; flex-wrap: wrap;
+    }
+
+    .footer-col h4 {
+      font-family: var(--font-mono);
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 16px;
+    }
+
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col a {
+      font-size: 13px; color: var(--ink-muted);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .footer-col a:hover { color: var(--ink); }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-bottom p {
+      font-family: var(--font-mono);
+      font-size: 11px; color: var(--ink-faint);
+      letter-spacing: 0.06em;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 0 24px; }
+      .nav-links { display: none; }
+      section { padding: 72px 24px; }
+      .models-grid { grid-template-columns: 1fr; }
+      .cap-grid { grid-template-columns: 1fr; }
+      .about-layout { grid-template-columns: 1fr; gap: 40px; }
+      .about-mission { grid-column: span 1; }
+      .hero { padding: 100px 24px 60px; }
+      #cta { padding: 72px 24px; }
+      footer { padding: 48px 24px 32px; }
+      .footer-top { flex-direction: column; }
+      .models-header { flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ticker-track { animation: none; }
+    }
+  </style>
 </head>
 <body>
-<nav>
-  <a href="#" class="logo" onclick="scrollToTop()">MUXBITE</a>
-  <ul class="nav-links">
-    <li><a href="#models">Models</a></li>
-    <li><a href="#principles">Research</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#contact" class="nav-cta">Stay updated</a></li>
-  </ul>
-  <button class="burger" id="burger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
-</nav>
-<div class="drawer" id="drawer">
-  <a href="#models" onclick="closeNav()">Models</a>
-  <a href="#principles" onclick="closeNav()">Research</a>
-  <a href="#about" onclick="closeNav()">About</a>
-  <a href="#contact" onclick="closeNav()">Stay updated</a>
-</div>
-<section class="hero">
-  <p class="eyebrow">AI Research Lab — Global</p>
-  <h1>Building AI that is<br/><em>safe, capable,</em><br/>and built for the world.</h1>
-  <p class="hero-sub">MUXBITE is an independent ai research company developing generative models that are genuinely helpful, honest, and accessible to every person on the planet.</p>
-  <div class="hero-actions">
-    <button class="btn-primary" onclick="document.getElementById('models').scrollIntoView({behavior:'smooth'})">
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg> explore models
-    </button>
-    <button class="btn-secondary" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">
-      Read our mission
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-    </button>
-  </div>
-  <div class="hero-rule"></div>
-</section>
-<div class="wrap" id="about">
-  <div class="mission-wrap">
-    <p class="sec-label reveal">Mission</p>
-    <p class="mission-text reveal">"We believe ai will be one of the most transformative technologies in human history. our goal is to ensure that transformation is <em>safe, equitable, and built for everyone</em>."</p>
-  </div>
-</div>
-<div class="wrap" id="models">
-  <div class="sec-head reveal">
-    <h2 class="sec-title">The MB series</h2>
-    <a href="mb.html" class="btn-secondary">Try MB<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></a>
-  </div>
-  <div class="models-grid reveal">
-    <div class="mcard" onclick="openModal('mb1')">
-      <p class="mtag">Prototype · in training</p>
-      <h3 class="mname">MB1</h3>
-      <p class="mdesc">Our first language model. a small transformer trained from scratch to validate our architecture and training pipeline.</p>
-      <div class="mstatus"><span class="dot dot-b"></span>in development</div>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#">MUXBITE</a>
+    <ul class="nav-links">
+      <li><a href="#models">Models</a></li>
+      <li><a href="#capabilities">Capabilities</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+    <a href="#cta" class="nav-cta">Get Access</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <span class="hero-eyebrow">Frontier AI &nbsp;·&nbsp; Built in India</span>
+    <h1>MUXBITE</h1>
+    <p class="hero-tagline">
+      Proprietary language models engineered for reasoning, code, and multilingual understanding — from an independent AI lab.
+    </p>
+    <div class="hero-actions">
+      <a href="#models" class="btn-primary">Explore Models</a>
+      <a href="#about" class="btn-secondary">Our Mission</a>
     </div>
-    <div class="mcard" onclick="openModal('mb2')">
-      <p class="mtag">Planned · 2026</p>
-      <h3 class="mname">MB2</h3>
-      <p class="mdesc">A larger model focused on underserved global languages — hindi, swahili, arabic, bengali and beyond.</p>
-      <div class="mstatus"><span class="dot"></span>planned</div>
-    </div>
-    <div class="mcard" onclick="openModal('mb3')">
-      <p class="mtag">Roadmap · 2027+</p>
-      <h3 class="mname">MB3</h3>
-      <p class="mdesc">A frontier-class multimodal model. text, voice, and vision — built to serve the next four billion people.</p>
-      <div class="mstatus"><span class="dot"></span>on roadmap</div>
+  </section>
+
+  <!-- TICKER -->
+  <div class="ticker-wrap" aria-hidden="true">
+    <div class="ticker-track">
+      <span class="ticker-item">MB1 · Free Model</span>
+      <span class="ticker-item">MB2 · Pro Intelligence</span>
+      <span class="ticker-item">MB3 · Flagship Reasoning</span>
+      <span class="ticker-item">MUXBITE X · Autonomous Agent</span>
+      <span class="ticker-item">Fine-tuned on Mistral 7B</span>
+      <span class="ticker-item">Multilingual · Code · Reasoning</span>
+      <span class="ticker-item">MB1 · Free Model</span>
+      <span class="ticker-item">MB2 · Pro Intelligence</span>
+      <span class="ticker-item">MB3 · Flagship Reasoning</span>
+      <span class="ticker-item">MUXBITE X · Autonomous Agent</span>
+      <span class="ticker-item">Fine-tuned on Mistral 7B</span>
+      <span class="ticker-item">Multilingual · Code · Reasoning</span>
     </div>
   </div>
-</div>
-<div class="wrap" id="principles">
-  <div class="sec-head reveal"><h2 class="sec-title">How we work</h2></div>
-  <div class="pgrid">
-    <div class="prin reveal"><p class="pnum">01</p><h3 class="ptitle">safety first</h3><p class="pbody">we study alignment and responsible scaling before we need to. safety is the foundation of every model we train.</p></div>
-    <div class="prin reveal"><p class="pnum">02</p><p class="ptitle">build in public</p><p class="pbody">our training code and findings are published openly. knowledge shared grows the community faster.</p></div>
-    <div class="prin reveal"><p class="pnum">03</p><h3 class="ptitle">global by design</h3><p class="pbody">the world speaks thousands of languages. we are closing the gap — building models for every person.</p></div>
-    <div class="prin reveal"><p class="pnum">04</p><h3 class="ptitle">own the stack</h3><p class="pbody">we are not an api wrapper. our goal is to train proprietary models from scratch — owning everything.</p></div>
-  </div>
-</div>
-<div class="wrap" style="border-bottom:1px solid var(--grey-2)">
-  <div class="note-wrap">
-    <p class="sec-label reveal">from the founder</p>
-    <div class="reveal">
-      <p class="nbody"><strong>i started muxbite as a final-year bca student</strong> with no team, no funding, and no gpu cluster. what i do have is a clear conviction: that the most important ai models of the next decade will not be built in san francisco.<br/><br/>they will be built by people who believe intelligence should have no borders — no language barrier, no geography, no prerequisite of privilege. <em>that</em> is what muxbite is for.</p>
-      <p class="nsig">shahnewaz alam</p>
+
+  <!-- MODELS -->
+  <section id="models">
+    <div class="section-inner">
+      <div class="models-header">
+        <div>
+          <span class="section-label">Model Lineup</span>
+          <h2 class="section-title">Three tiers.<br>One purpose.</h2>
+        </div>
+        <p class="section-sub">From lightweight everyday assistance to flagship reasoning — the MUXBITE model family scales with your needs.</p>
+      </div>
+
+      <div class="models-grid">
+
+        <!-- MB1 -->
+        <div class="model-card">
+          <div class="model-tier">Tier 01</div>
+          <div class="model-name">MB1 <span>by MUXBITE</span></div>
+          <span class="model-badge">Free · Open Access</span>
+          <p class="model-desc">The entry model — fast, efficient, and free. Designed for everyday questions, coding help, and multilingual chat. Built on QLoRA fine-tuning over Mistral 7B.</p>
+          <ul class="model-specs">
+            <li><span class="spec-key">Base</span><span class="spec-val">Mistral 7B</span></li>
+            <li><span class="spec-key">Method</span><span class="spec-val">QLoRA Fine-tune</span></li>
+            <li><span class="spec-key">Access</span><span class="spec-val">Free</span></li>
+            <li><span class="spec-key">Context</span><span class="spec-val">8K tokens</span></li>
+          </ul>
+        </div>
+
+        <!-- MB2 -->
+        <div class="model-card featured">
+          <div class="model-tier">Tier 02</div>
+          <div class="model-name">MB2 <span>by MUXBITE</span></div>
+          <span class="model-badge">Pro · Best Value</span>
+          <p class="model-desc">The pro model with deeper reasoning, extended context, and stronger code generation. Built for developers and professionals who need reliability at scale.</p>
+          <ul class="model-specs">
+            <li><span class="spec-key">Base</span><span class="spec-val">MUXBITE Core</span></li>
+            <li><span class="spec-key">Method</span><span class="spec-val">Instruction Tuned</span></li>
+            <li><span class="spec-key">Access</span><span class="spec-val">Pro Plan</span></li>
+            <li><span class="spec-key">Context</span><span class="spec-val">32K tokens</span></li>
+          </ul>
+        </div>
+
+        <!-- MB3 -->
+        <div class="model-card">
+          <div class="model-tier">Tier 03</div>
+          <div class="model-name">MB3 <span>by MUXBITE</span></div>
+          <span class="model-badge">Flagship · Research Preview</span>
+          <p class="model-desc">The frontier model. Multi-step reasoning, agentic planning, and deep analysis. MB3 is MUXBITE's most powerful intelligence — for the hardest problems.</p>
+          <ul class="model-specs">
+            <li><span class="spec-key">Base</span><span class="spec-val">Proprietary</span></li>
+            <li><span class="spec-key">Method</span><span class="spec-val">RLHF + CoT</span></li>
+            <li><span class="spec-key">Access</span><span class="spec-val">Waitlist</span></li>
+            <li><span class="spec-key">Context</span><span class="spec-val">128K tokens</span></li>
+          </ul>
+        </div>
+
+      </div>
     </div>
-  </div>
-</div>
-<div class="cta-wrap" id="contact">
-  <h2 class="cta-title reveal">follow the<br/><em>journey</em></h2>
-  <p class="cta-sub reveal">we are building in public. get early access to our models, research notes, and updates.</p>
-  <div class="eform reveal">
-    <input type="email" id="email-input" class="einput" placeholder="your@email.com"/>
-    <button class="btn-cta" onclick="subscribe()">stay updated</button>
-  </div>
-  <p id="status-msg" style="margin-top:12px;font-size:13px;color:var(--grey-4);min-height:16px"></p>
-</div>
-<footer>
-  <span class="flogo">muxbite</span>
-  <ul class="flinks">
-    <li><a href="https://github.com/heysanzu" target="_blank">github</a></li>
-    <li><a href="#models">models</a></li>
-    <li><a href="#principles">research</a></li>
-    <li><a href="#about">about</a></li>
-  </ul>
-  <span style="font-size:13px;color:var(--grey-4)">© 2026 muxbite</span>
-</footer>
-<div class="modal" id="modal">
-  <div class="modal-box">
-    <button class="modal-close" onclick="closeModal()"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <div id="modal-content"></div>
-  </div>
-</div>
-<script>
-const burger=document.getElementById('burger'),drawer=document.getElementById('drawer');
-burger.addEventListener('click',()=>{burger.classList.toggle('open');drawer.classList.toggle('open')});
-function closeNav(){burger.classList.remove('open');drawer.classList.remove('open')}
-function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'})}
-const io=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*70);io.unobserve(e.target)}});},{threshold:.08});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-const modalContent={mb1:'<h2 style="font-family:var(--orb);font-size:32px;margin-bottom:18px;text-transform:lowercase">mb1</h2><p style="font-size:15px;color:var(--grey-5);line-height:1.8;margin-bottom:20px">our first language model, built from the ground up. mb1 validates our training pipeline and architectural choices.</p><p style="font-size:14px;color:var(--grey-4);margin-bottom:14px"><strong style="color:var(--black)">parameters:</strong> 10–50m</p><p style="font-size:14px;color:var(--grey-4);margin-bottom:14px"><strong style="color:var(--black)">training:</strong> in progress, multilingual corpus</p><p style="font-size:14px;color:var(--grey-4)"><strong style="color:var(--black)">status:</strong> prototype phase</p>',mb2:'<h2 style="font-family:var(--orb);font-size:32px;margin-bottom:18px;text-transform:lowercase">mb2</h2><p style="font-size:15px;color:var(--grey-5);line-height:1.8;margin-bottom:20px">a generation-skip in scale and capability. mb2 focuses on linguistic diversity.</p><p style="font-size:14px;color:var(--grey-4);margin-bottom:14px"><strong style="color:var(--black)">parameters:</strong> 200m–1b</p><p style="font-size:14px;color:var(--grey-4);margin-bottom:14px"><strong style="color:var(--black)">languages:</strong> 20+ underserved languages</p><p style="font-size:14px;color:var(--grey-4)"><strong style="color:var(--black)">timeline:</strong> 2026</p>',mb3:'<h2 style="font-family:var(--orb);font-size:32px;margin-bottom:18px;text-transform:lowercase">mb3</h2><p style="font-size:15px;color:var(--grey-5);line-height:1.8;margin-bottom:20px">our frontier-class model. multimodal and built for global accessibility.</p><p style="font-size:14px;color:var(--grey-4);margin-bottom:14px"><strong style="color:var(--black)">parameters:</strong> 7b+</p><p style="font-size:14px;color:var(--grey-4);margin-bottom:14px"><strong style="color:var(--black)">modalities:</strong> text, speech, vision</p><p style="font-size:14px;color:var(--grey-4)"><strong style="color:var(--black)">vision:</strong> next four billion people</p>'};
-function openModal(type){const modal=document.getElementById('modal'),content=document.getElementById('modal-content');content.innerHTML=modalContent[type]||'';modal.classList.add('open');document.body.style.overflow='hidden';}
-function closeModal(){const modal=document.getElementById('modal');modal.classList.remove('open');document.body.style.overflow='auto';}
-document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
-function subscribe(){const inp=document.getElementById('email-input'),msg=document.getElementById('status-msg'),btn=event.target;const email=inp.value.trim();if(!email||!email.includes('@')){msg.textContent='please enter a valid email';msg.style.color='#e24b4a';inp.style.borderColor='#e24b4a';setTimeout(()=>{inp.style.borderColor='';msg.textContent=''},2000);return;}btn.disabled=true;btn.textContent='saving...';setTimeout(()=>{msg.textContent="you're on the list";msg.style.color='#4caf50';inp.value='';inp.disabled=true;btn.textContent='saved';btn.disabled=false},800);}
-</script>
+  </section>
+
+  <!-- CAPABILITIES -->
+  <section id="capabilities">
+    <div class="section-inner">
+      <span class="section-label">What MUXBITE can do</span>
+      <h2 class="section-title">Built for the work that matters.</h2>
+
+      <div class="cap-grid">
+
+        <div class="cap-card">
+          <svg class="cap-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="8" width="28" height="20" rx="1" stroke="#0a0a0a" stroke-width="1.5"/>
+            <polyline points="10,18 14,14 18,20 22,16 26,18" stroke="#0a0a0a" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+          </svg>
+          <div class="cap-title">Advanced Reasoning</div>
+          <p class="cap-text">Chain-of-thought problem solving across math, logic, and science. MUXBITE models decompose complex questions step by step before answering.</p>
+        </div>
+
+        <div class="cap-card">
+          <svg class="cap-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="5" width="26" height="26" rx="1" stroke="#0a0a0a" stroke-width="1.5"/>
+            <line x1="11" y1="13" x2="16" y2="13" stroke="#0a0a0a" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="11" y1="18" x2="22" y2="18" stroke="#0a0a0a" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="11" y1="23" x2="20" y2="23" stroke="#0a0a0a" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <div class="cap-title">Code Generation</div>
+          <p class="cap-text">Write, review, and debug code across Python, JavaScript, C, and more. Trained on curated programming datasets for accurate, runnable output.</p>
+        </div>
+
+        <div class="cap-card">
+          <svg class="cap-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="18" cy="18" r="12" stroke="#0a0a0a" stroke-width="1.5"/>
+            <path d="M18 6 C12 12 12 24 18 30" stroke="#0a0a0a" stroke-width="1.5" fill="none"/>
+            <path d="M18 6 C24 12 24 24 18 30" stroke="#0a0a0a" stroke-width="1.5" fill="none"/>
+            <line x1="6" y1="18" x2="30" y2="18" stroke="#0a0a0a" stroke-width="1.5"/>
+          </svg>
+          <div class="cap-title">Multilingual Understanding</div>
+          <p class="cap-text">Native support for Hindi, Bengali, Urdu, and major global languages. Built to serve underrepresented linguistic communities from day one.</p>
+        </div>
+
+        <div class="cap-card">
+          <svg class="cap-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 28 L18 8 L28 28" stroke="#0a0a0a" stroke-width="1.5" stroke-linejoin="round" fill="none"/>
+            <line x1="12" y1="22" x2="24" y2="22" stroke="#0a0a0a" stroke-width="1.5"/>
+          </svg>
+          <div class="cap-title">Agentic Workflows</div>
+          <p class="cap-text">MUXBITE X goes beyond chat — it plans, executes, and adapts. Autonomous multi-step task handling powered by the MB3 engine under the hood.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-inner">
+      <span class="section-label">Who we are</span>
+      <h2 class="section-title">An independent AI lab<br>with a long view.</h2>
+
+      <div class="about-layout">
+        <div class="about-body">
+          <p>MUXBITE is an <strong>independent AI research company</strong> building proprietary language models from the ground up. We believe the future of intelligence should not be owned by a handful of large incumbents — and that language models built for a global, multilingual world require a different kind of founding intent.</p>
+          <p>Our work spans model research, developer tooling, and consumer products. We are building the full stack — from the weights to the interface — under one roof, with one mission: <strong>safe, capable, and accessible AI</strong> for everyone who needs it.</p>
+          <p>MUXBITE operates across three divisions: <strong>MUXBITE X</strong> (flagship agent platform), <strong>MUXBITE Data</strong> (B2B infrastructure), and <strong>MUXBITE Research</strong> (IP and licensing). We are at the early stage, and we intend to stay independent for as long as it takes to do this right.</p>
+        </div>
+
+        <div>
+          <div class="about-stats">
+            <div class="stat-block">
+              <div class="stat-num">3</div>
+              <div class="stat-label">Model Tiers</div>
+            </div>
+            <div class="stat-block">
+              <div class="stat-num">16K+</div>
+              <div class="stat-label">Training Examples</div>
+            </div>
+            <div class="stat-block">
+              <div class="stat-num">A–Z</div>
+              <div class="stat-label">Product Roadmap</div>
+            </div>
+            <div class="stat-block">
+              <div class="stat-num">∞</div>
+              <div class="stat-label">Independence</div>
+            </div>
+            <div class="about-mission" style="grid-column: span 2;">
+              <p>"We are not building the next <strong>feature</strong>. We are building the next <strong>foundation</strong>."</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CTA BAND -->
+  <section id="cta">
+    <div class="section-inner" style="text-align:center;">
+      <span class="section-label">Early Access</span>
+      <h2>Start building<br>with MUXBITE.</h2>
+      <p>Join the waitlist for API access to MB2 and MB3. MB1 is free to use today.</p>
+      <a href="#" class="btn-white">Request Access</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a class="nav-logo" href="#">MUXBITE</a>
+          <p>Independent AI research. Proprietary models. Built for a multilingual world.</p>
+        </div>
+        <div class="footer-cols">
+          <div class="footer-col">
+            <h4>Products</h4>
+            <ul>
+              <li><a href="#">MB1 (Free)</a></li>
+              <li><a href="#">MB2 (Pro)</a></li>
+              <li><a href="#">MB3 (Flagship)</a></li>
+              <li><a href="#">MUXBITE X</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Company</h4>
+            <ul>
+              <li><a href="#about">About</a></li>
+              <li><a href="#">Research</a></li>
+              <li><a href="#">Careers</a></li>
+              <li><a href="#">Blog</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Developers</h4>
+            <ul>
+              <li><a href="#">API Docs</a></li>
+              <li><a href="#">GitHub</a></li>
+              <li><a href="#">Status</a></li>
+              <li><a href="#">Changelog</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 MUXBITE. All rights reserved.</p>
+        <p>Privacy &nbsp;·&nbsp; Terms &nbsp;·&nbsp; Security</p>
+      </div>
+    </div>
+  </footer>
+
 </body>
 </html>
