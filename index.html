@@ -3,781 +3,982 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MUXBITE</title>
+  <title>MUXBITE — AI Research and Products</title>
   <link rel="icon" type="image/png" href="muxbite.png">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #ffffff;
-      --surface: #f5f5f5;
-      --surface2: #ebebeb;
-      --ink: #0a0a0a;
-      --ink-muted: #555;
-      --ink-faint: #999;
-      --border: #e0e0e0;
-      --border-dark: #c0c0c0;
-      --accent: #0a0a0a;
-      --accent-inv: #ffffff;
-      --radius: 2px;
+      --white: #ffffff;
+      --off-white: #f7f7f5;
+      --light: #efefed;
+      --mid: #d0cfc9;
+      --muted: #888880;
+      --ink-light: #444440;
+      --ink: #1a1a18;
+      --black: #0c0c0a;
+      --border: rgba(0,0,0,0.09);
+      --border-mid: rgba(0,0,0,0.14);
       --font-logo: 'Orbitron', sans-serif;
-      --font-ui: 'Syne', sans-serif;
+      --font: 'Syne', sans-serif;
       --font-mono: 'DM Mono', monospace;
+      --max: 1200px;
+      --nav-h: 62px;
     }
 
     html { scroll-behavior: smooth; }
-
     body {
-      font-family: var(--font-ui);
-      background: var(--bg);
+      font-family: var(--font);
+      background: var(--white);
       color: var(--ink);
-      line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
 
-    /* ── NAV ── */
+    a { color: inherit; text-decoration: none; }
+
+    /* ─── NAV ─── */
     nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 48px; height: 64px;
-      background: rgba(255,255,255,0.92);
-      backdrop-filter: blur(12px);
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      height: var(--nav-h);
+      display: flex; align-items: center;
+      padding: 0 36px;
+      background: rgba(255,255,255,0.94);
+      backdrop-filter: blur(16px) saturate(1.4);
+      -webkit-backdrop-filter: blur(16px) saturate(1.4);
       border-bottom: 1px solid var(--border);
     }
 
-    .nav-logo {
+    .nav-inner {
+      width: 100%; max-width: var(--max);
+      margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 24px;
+    }
+
+    .logo {
       font-family: var(--font-logo);
-      font-size: 18px; font-weight: 900;
-      letter-spacing: 0.08em;
-      color: var(--ink);
-      text-decoration: none;
+      font-size: 15px; font-weight: 900;
+      letter-spacing: 0.12em;
+      color: var(--black);
+      flex-shrink: 0;
     }
 
     .nav-links {
-      display: flex; gap: 36px; list-style: none;
+      display: flex; align-items: center; gap: 28px;
+      list-style: none;
+      flex: 1;
+      justify-content: center;
     }
-    .nav-links a {
-      font-size: 13px; font-weight: 500; letter-spacing: 0.04em;
-      color: var(--ink-muted); text-decoration: none;
-      text-transform: uppercase;
-      transition: color 0.2s;
+    .nav-links > li > a, .nav-links > li > button {
+      font-size: 13.5px; font-weight: 500;
+      color: var(--ink-light);
+      background: none; border: none; cursor: pointer;
+      letter-spacing: 0.01em;
+      padding: 0;
+      white-space: nowrap;
+      transition: color 0.15s;
     }
-    .nav-links a:hover { color: var(--ink); }
+    .nav-links > li > a:hover,
+    .nav-links > li > button:hover { color: var(--black); }
 
-    .nav-cta {
-      font-family: var(--font-ui);
+    .nav-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+    .nav-btn {
+      font-family: var(--font);
       font-size: 13px; font-weight: 600;
-      letter-spacing: 0.05em; text-transform: uppercase;
-      padding: 10px 22px;
-      background: var(--ink); color: var(--accent-inv);
-      border: none; cursor: pointer;
-      border-radius: var(--radius);
-      text-decoration: none;
-      transition: opacity 0.2s;
+      padding: 9px 20px;
+      border-radius: 100px;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      transition: all 0.15s;
+      display: inline-block;
     }
-    .nav-cta:hover { opacity: 0.8; }
-
-    /* ── HERO ── */
-    .hero {
-      min-height: 100vh;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 120px 48px 80px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* grid texture */
-    .hero::before {
-      content: '';
-      position: absolute; inset: 0;
-      background-image:
-        linear-gradient(var(--border) 1px, transparent 1px),
-        linear-gradient(90deg, var(--border) 1px, transparent 1px);
-      background-size: 48px 48px;
-      opacity: 0.45;
-      pointer-events: none;
-    }
-
-    .hero-eyebrow {
-      font-family: var(--font-mono);
-      font-size: 11px; font-weight: 500;
-      letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--ink-faint);
-      margin-bottom: 28px;
-      position: relative;
-    }
-
-    .hero h1 {
-      font-family: var(--font-logo);
-      font-size: clamp(52px, 9vw, 120px);
-      font-weight: 900;
-      letter-spacing: 0.04em;
-      line-height: 0.95;
+    .nav-btn-ghost {
+      background: transparent;
       color: var(--ink);
-      position: relative;
-      margin-bottom: 12px;
+      border: 1.5px solid var(--border-mid);
     }
-
-    .hero-tagline {
-      font-size: clamp(15px, 2vw, 20px);
-      font-weight: 400;
-      color: var(--ink-muted);
-      max-width: 520px;
-      margin: 28px auto 52px;
-      line-height: 1.7;
-      position: relative;
+    .nav-btn-ghost:hover { border-color: var(--ink); }
+    .nav-btn-solid {
+      background: var(--black);
+      color: #fff;
+      border: 1.5px solid var(--black);
     }
+    .nav-btn-solid:hover { background: #2a2a28; }
 
-    .hero-actions {
-      display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
-      position: relative;
+    /* ─── HAMBURGER ─── */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 36px; height: 36px;
+      background: none; border: none;
+      cursor: pointer; padding: 4px;
+      flex-shrink: 0;
     }
-
-    .btn-primary {
-      font-family: var(--font-ui);
-      font-size: 14px; font-weight: 700;
-      letter-spacing: 0.05em; text-transform: uppercase;
-      padding: 15px 36px;
-      background: var(--ink); color: #fff;
-      border: 2px solid var(--ink);
-      border-radius: var(--radius);
-      cursor: pointer; text-decoration: none;
-      transition: all 0.2s;
+    .nav-hamburger span {
+      display: block;
+      width: 22px; height: 1.5px;
+      background: var(--black);
+      border-radius: 2px;
+      transition: transform 0.22s ease, opacity 0.22s ease;
+      transform-origin: center;
     }
-    .btn-primary:hover { background: #222; }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
-    .btn-secondary {
-      font-family: var(--font-ui);
-      font-size: 14px; font-weight: 600;
-      letter-spacing: 0.05em; text-transform: uppercase;
-      padding: 15px 36px;
-      background: transparent; color: var(--ink);
-      border: 2px solid var(--border-dark);
-      border-radius: var(--radius);
-      cursor: pointer; text-decoration: none;
-      transition: all 0.2s;
-    }
-    .btn-secondary:hover { border-color: var(--ink); }
-
-    /* ── TICKER ── */
-    .ticker-wrap {
-      width: 100%; overflow: hidden;
-      border-top: 1px solid var(--border);
+    /* ─── MOBILE DRAWER ─── */
+    .nav-drawer {
+      display: none;
+      position: fixed;
+      top: var(--nav-h); left: 0; right: 0;
+      background: rgba(255,255,255,0.98);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
+      z-index: 199;
+      padding: 8px 0 20px;
+      transform: translateY(-8px);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.22s ease, opacity 0.22s ease;
+    }
+    .nav-drawer.open {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .nav-drawer ul {
+      list-style: none;
+      padding: 0 24px;
+    }
+    .nav-drawer ul li a {
+      display: block;
+      font-size: 15px; font-weight: 500;
+      color: var(--ink);
       padding: 14px 0;
-      background: var(--surface);
-      margin-top: 100px;
+      border-bottom: 1px solid var(--border);
+      letter-spacing: 0.01em;
+      transition: color 0.15s;
     }
-    .ticker-track {
-      display: flex; gap: 64px;
-      width: max-content;
-      animation: ticker 22s linear infinite;
+    .nav-drawer ul li:last-child a { border-bottom: none; }
+    .nav-drawer ul li a:hover { color: var(--muted); }
+    .nav-drawer-actions {
+      display: flex; flex-direction: column; gap: 10px;
+      padding: 16px 24px 0;
     }
-    .ticker-item {
+    .nav-drawer-actions .nav-btn {
+      text-align: center;
+      width: 100%;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      padding-top: calc(var(--nav-h) + 80px);
+      padding-bottom: 100px;
+      padding-left: 36px; padding-right: 36px;
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+
+    .hero-label {
       font-family: var(--font-mono);
       font-size: 11px; font-weight: 400;
-      letter-spacing: 0.16em; text-transform: uppercase;
-      color: var(--ink-faint);
-      white-space: nowrap;
-    }
-    @keyframes ticker {
-      from { transform: translateX(0); }
-      to { transform: translateX(-50%); }
-    }
-
-    /* ── SECTIONS SHARED ── */
-    section { padding: 100px 48px; }
-    .section-inner { max-width: 1100px; margin: 0 auto; }
-
-    .section-label {
-      font-family: var(--font-mono);
-      font-size: 10px; font-weight: 500;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--ink-faint);
-      margin-bottom: 24px;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 32px;
       display: block;
     }
 
-    .section-title {
-      font-family: var(--font-ui);
-      font-size: clamp(28px, 4vw, 48px);
+    .hero h1 {
+      font-size: clamp(38px, 6.5vw, 86px);
       font-weight: 800;
-      line-height: 1.1;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      color: var(--black);
+      max-width: 900px;
+    }
+
+    .hero h1 a {
+      color: var(--black);
+      text-decoration: underline;
+      text-decoration-color: var(--mid);
+      text-underline-offset: 6px;
+      transition: text-decoration-color 0.2s;
+    }
+    .hero h1 a:hover { text-decoration-color: var(--black); }
+
+    .hero-sub {
+      margin-top: 28px;
+      font-size: 17px; font-weight: 400;
+      color: var(--ink-light);
+      line-height: 1.65;
+      max-width: 560px;
+    }
+
+    .hero-actions {
+      margin-top: 44px;
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+
+    .btn-pill-dark {
+      font-family: var(--font);
+      font-size: 14px; font-weight: 600;
+      letter-spacing: 0.02em;
+      padding: 13px 28px;
+      background: var(--black); color: #fff;
+      border: none; border-radius: 100px;
+      cursor: pointer;
+      transition: background 0.15s;
+      display: inline-block;
+    }
+    .btn-pill-dark:hover { background: #2a2a28; }
+
+    .btn-pill-ghost {
+      font-family: var(--font);
+      font-size: 14px; font-weight: 600;
+      letter-spacing: 0.02em;
+      padding: 13px 28px;
+      background: transparent; color: var(--ink);
+      border: 1.5px solid var(--border-mid);
+      border-radius: 100px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+      display: inline-block;
+    }
+    .btn-pill-ghost:hover { border-color: var(--ink); }
+
+    /* ─── DIVIDER ─── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    /* ─── SECTION SHARED ─── */
+    .section {
+      padding: 80px 36px;
+    }
+    .section-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+
+    .section-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 10.5px; font-weight: 400;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .section-heading {
+      font-size: clamp(22px, 3vw, 36px);
+      font-weight: 800;
       letter-spacing: -0.02em;
-      color: var(--ink);
+      line-height: 1.15;
+      color: var(--black);
+      margin-bottom: 40px;
+    }
+
+    /* ─── MISSION BAND ─── */
+    .mission-band {
+      background: var(--off-white);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 80px 36px;
+    }
+    .mission-inner {
+      max-width: var(--max); margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+      align-items: start;
+    }
+    .mission-left h2 {
+      font-size: clamp(26px, 3.5vw, 46px);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+      color: var(--black);
+    }
+    .mission-right p {
+      font-size: 16px; color: var(--ink-light); line-height: 1.75;
       margin-bottom: 20px;
     }
+    .mission-link {
+      font-size: 14px; font-weight: 600;
+      color: var(--black);
+      display: inline-flex; align-items: center; gap: 6px;
+      border-bottom: 1.5px solid var(--black);
+      padding-bottom: 2px;
+      transition: opacity 0.15s;
+    }
+    .mission-link:hover { opacity: 0.6; }
 
-    .section-sub {
-      font-size: 16px; font-weight: 400;
-      color: var(--ink-muted);
-      max-width: 540px;
-      line-height: 1.7;
+    /* ─── RELEASES ─── */
+    #releases { background: var(--white); }
+
+    .releases-list {
+      border-top: 1px solid var(--border);
     }
 
-    /* ── MODELS SECTION ── */
-    #models { background: var(--bg); border-top: 1px solid var(--border); }
-
-    .models-header {
-      display: flex; justify-content: space-between; align-items: flex-end;
-      margin-bottom: 64px; flex-wrap: wrap; gap: 24px;
+    .release-item {
+      display: grid;
+      grid-template-columns: 180px 1fr auto;
+      gap: 32px;
+      align-items: start;
+      padding: 40px 0;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
     }
+
+    .release-meta {
+      padding-top: 4px;
+    }
+    .release-date {
+      font-family: var(--font-mono);
+      font-size: 11px; color: var(--muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+    .release-tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 10px; font-weight: 400;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 3px 10px;
+      border: 1px solid var(--border-mid);
+      border-radius: 100px;
+      color: var(--muted);
+    }
+
+    .release-body h3 {
+      font-size: 20px; font-weight: 700;
+      letter-spacing: -0.015em;
+      color: var(--black);
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+    .release-body p {
+      font-size: 14.5px; color: var(--ink-light); line-height: 1.65;
+      max-width: 600px;
+    }
+    .release-body .release-links {
+      margin-top: 20px;
+      display: flex; gap: 20px; flex-wrap: wrap;
+    }
+    .release-link {
+      font-size: 13px; font-weight: 600;
+      color: var(--black);
+      border-bottom: 1.5px solid currentColor;
+      padding-bottom: 1px;
+      transition: opacity 0.15s;
+    }
+    .release-link:hover { opacity: 0.55; }
+    .release-link.muted {
+      color: var(--muted);
+      border-color: var(--muted);
+    }
+
+    .release-arrow {
+      width: 36px; height: 36px;
+      border: 1.5px solid var(--border-mid);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.15s;
+      margin-top: 4px;
+    }
+    .release-item:hover .release-arrow {
+      background: var(--black); border-color: var(--black);
+    }
+    .release-item:hover .release-arrow svg { stroke: #fff; }
+
+    /* ─── MODELS GRID ─── */
+    #models { background: var(--off-white); }
 
     .models-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border-mid);
+      border: 1px solid var(--border-mid);
+      margin-top: 48px;
+    }
+
+    .model-tile {
+      background: var(--off-white);
+      padding: 36px 28px 32px;
+      display: flex; flex-direction: column;
+      gap: 16px;
+      transition: background 0.15s;
+      cursor: default;
+    }
+    .model-tile:hover { background: var(--light); }
+
+    .model-tier-label {
+      font-family: var(--font-mono);
+      font-size: 10px; font-weight: 400;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .model-tile-name {
+      font-family: var(--font-logo);
+      font-size: 22px; font-weight: 900;
+      letter-spacing: 0.06em;
+      color: var(--black);
+      line-height: 1;
+    }
+
+    .model-tile.flagship {
+      background: var(--black);
+    }
+    .model-tile.flagship:hover { background: #1e1e1c; }
+    .model-tile.flagship .model-tier-label { color: rgba(255,255,255,0.4); }
+    .model-tile.flagship .model-tile-name { color: #fff; }
+    .model-tile.flagship .model-tile-desc { color: rgba(255,255,255,0.6); }
+    .model-tile.flagship .model-tile-link { color: rgba(255,255,255,0.9); border-color: rgba(255,255,255,0.3); }
+
+    .model-tile-desc {
+      font-size: 13px; color: var(--ink-light); line-height: 1.6;
+      flex: 1;
+    }
+
+    .model-tile-link {
+      font-size: 12px; font-weight: 600;
+      color: var(--black);
+      border-bottom: 1.5px solid var(--border-mid);
+      padding-bottom: 1px;
+      align-self: flex-start;
+      transition: opacity 0.15s;
+    }
+    .model-tile-link:hover { opacity: 0.55; }
+
+    /* ─── RESEARCH CARDS ─── */
+    #research { background: var(--white); }
+
+    .research-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 1px;
       background: var(--border);
       border: 1px solid var(--border);
+      margin-top: 48px;
     }
 
-    .model-card {
-      background: var(--bg);
-      padding: 44px 36px;
-      position: relative;
-      transition: background 0.2s;
+    .research-card {
+      background: var(--white);
+      padding: 36px 32px;
+      display: flex; flex-direction: column;
+      min-height: 240px;
+      transition: background 0.15s;
     }
-    .model-card:hover { background: var(--surface); }
+    .research-card:hover { background: var(--off-white); }
 
-    .model-tier {
+    .research-card-cat {
       font-family: var(--font-mono);
-      font-size: 10px; font-weight: 500;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--ink-faint);
-      margin-bottom: 20px;
-    }
-
-    .model-name {
-      font-family: var(--font-logo);
-      font-size: 28px; font-weight: 900;
-      letter-spacing: 0.06em;
-      color: var(--ink);
-      margin-bottom: 10px;
-    }
-    .model-name span {
-      font-size: 15px;
-      opacity: 0.4;
-    }
-
-    .model-desc {
-      font-size: 14px; font-weight: 400;
-      color: var(--ink-muted);
-      line-height: 1.65;
-      margin-bottom: 32px;
-    }
-
-    .model-badge {
-      display: inline-block;
-      font-family: var(--font-mono);
-      font-size: 10px; font-weight: 500;
-      letter-spacing: 0.12em; text-transform: uppercase;
-      padding: 5px 12px;
-      border: 1px solid var(--border-dark);
-      border-radius: 1px;
-      color: var(--ink-muted);
-      margin-bottom: 28px;
-    }
-
-    .model-card.featured .model-badge {
-      background: var(--ink); color: #fff;
-      border-color: var(--ink);
-    }
-
-    .model-specs {
-      list-style: none;
-      border-top: 1px solid var(--border);
-      padding-top: 24px;
-      display: flex; flex-direction: column; gap: 10px;
-    }
-
-    .model-specs li {
-      display: flex; justify-content: space-between; align-items: center;
-      font-size: 12px;
-    }
-    .model-specs .spec-key {
-      font-family: var(--font-mono);
-      color: var(--ink-faint);
-      letter-spacing: 0.06em;
-    }
-    .model-specs .spec-val {
-      font-weight: 600; color: var(--ink);
-      letter-spacing: 0.02em;
-    }
-
-    .model-card.featured {
-      background: var(--ink);
-    }
-    .model-card.featured .model-tier,
-    .model-card.featured .model-desc,
-    .model-card.featured .spec-key { color: rgba(255,255,255,0.45); }
-    .model-card.featured .model-name,
-    .model-card.featured .spec-val { color: #fff; }
-    .model-card.featured .model-specs { border-color: rgba(255,255,255,0.12); }
-    .model-card.featured .model-badge { background: #fff; color: #0a0a0a; border-color: #fff; }
-    .model-card.featured:hover { background: #111; }
-
-    /* ── CAPABILITIES ── */
-    #capabilities { background: var(--surface); border-top: 1px solid var(--border); }
-
-    .cap-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      margin-top: 64px;
-    }
-
-    .cap-card {
-      background: var(--surface);
-      padding: 44px 40px;
-      transition: background 0.2s;
-    }
-    .cap-card:hover { background: #ececec; }
-
-    .cap-icon {
-      width: 36px; height: 36px;
-      margin-bottom: 24px;
-    }
-
-    .cap-title {
-      font-size: 18px; font-weight: 700;
-      color: var(--ink);
-      margin-bottom: 12px;
-      letter-spacing: -0.01em;
-    }
-
-    .cap-text {
-      font-size: 14px; color: var(--ink-muted);
-      line-height: 1.7;
-    }
-
-    /* ── ABOUT ── */
-    #about { background: var(--bg); border-top: 1px solid var(--border); }
-
-    .about-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: start;
-      margin-top: 64px;
-    }
-
-    .about-body p {
-      font-size: 16px; color: var(--ink-muted); line-height: 1.8;
-      margin-bottom: 20px;
-    }
-    .about-body p strong { color: var(--ink); font-weight: 700; }
-
-    .about-stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-    }
-
-    .stat-block {
-      background: var(--bg);
-      padding: 32px 28px;
-    }
-
-    .stat-num {
-      font-family: var(--font-logo);
-      font-size: 36px; font-weight: 900;
-      letter-spacing: 0.04em;
-      color: var(--ink);
-      line-height: 1;
-      margin-bottom: 8px;
-    }
-
-    .stat-label {
-      font-family: var(--font-mono);
-      font-size: 11px; font-weight: 400;
+      font-size: 10px; font-weight: 400;
       letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--ink-faint);
+      color: var(--muted);
+      margin-bottom: 20px;
     }
 
-    .about-mission {
-      background: var(--ink);
-      padding: 44px;
-      margin-top: 1px;
-      grid-column: span 2;
+    .research-card h3 {
+      font-size: 17px; font-weight: 700;
+      color: var(--black);
+      letter-spacing: -0.01em;
+      line-height: 1.4;
+      flex: 1;
     }
-    .about-mission p {
-      font-size: 20px; font-weight: 500;
-      color: rgba(255,255,255,0.85);
-      line-height: 1.6;
-    }
-    .about-mission p strong { color: #fff; }
 
-    /* ── CTA BAND ── */
-    #cta {
-      background: var(--ink);
-      padding: 100px 48px;
+    .research-card-arrow {
+      margin-top: 28px;
+      width: 32px; height: 32px;
+      border: 1.5px solid var(--border-mid);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      align-self: flex-start;
+      transition: all 0.15s;
+    }
+    .research-card:hover .research-card-arrow {
+      background: var(--black); border-color: var(--black);
+    }
+    .research-card:hover .research-card-arrow svg { stroke: #fff; }
+
+    /* ─── SAFETY BAND ─── */
+    .safety-band {
+      background: var(--black);
+      padding: 100px 36px;
       text-align: center;
     }
-
-    #cta .section-label { color: rgba(255,255,255,0.35); }
-
-    #cta h2 {
-      font-family: var(--font-logo);
-      font-size: clamp(32px, 5vw, 64px);
-      font-weight: 900;
-      letter-spacing: 0.04em;
+    .safety-band-inner { max-width: 720px; margin: 0 auto; }
+    .safety-band h2 {
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.15;
       color: #fff;
       margin-bottom: 24px;
     }
-
-    #cta p {
+    .safety-band p {
       font-size: 16px; color: rgba(255,255,255,0.55);
-      margin-bottom: 48px; line-height: 1.7;
+      line-height: 1.7;
+      margin-bottom: 44px;
     }
-
-    .btn-white {
-      font-family: var(--font-ui);
-      font-size: 14px; font-weight: 700;
-      letter-spacing: 0.05em; text-transform: uppercase;
-      padding: 15px 40px;
-      background: #fff; color: var(--ink);
-      border: 2px solid #fff;
-      border-radius: var(--radius);
-      cursor: pointer; text-decoration: none;
-      transition: opacity 0.2s;
+    .btn-pill-white {
+      font-family: var(--font);
+      font-size: 14px; font-weight: 600;
+      letter-spacing: 0.02em;
+      padding: 13px 28px;
+      background: #fff; color: var(--black);
+      border: none; border-radius: 100px;
+      cursor: pointer;
+      transition: opacity 0.15s;
       display: inline-block;
     }
-    .btn-white:hover { opacity: 0.88; }
+    .btn-pill-white:hover { opacity: 0.85; }
 
-    /* ── FOOTER ── */
+    /* ─── FOOTER ─── */
     footer {
-      background: var(--surface);
+      background: var(--off-white);
       border-top: 1px solid var(--border);
-      padding: 60px 48px 40px;
+      padding: 72px 36px 48px;
     }
-
-    .footer-inner {
-      max-width: 1100px; margin: 0 auto;
-    }
+    .footer-inner { max-width: var(--max); margin: 0 auto; }
 
     .footer-top {
-      display: flex; justify-content: space-between; align-items: flex-start;
-      margin-bottom: 48px; flex-wrap: wrap; gap: 40px;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 80px;
+      padding-bottom: 56px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 40px;
     }
 
-    .footer-brand .nav-logo { font-size: 16px; }
-    .footer-brand p {
-      font-size: 13px; color: var(--ink-faint);
-      margin-top: 10px; max-width: 220px; line-height: 1.6;
+    .footer-logo { font-family: var(--font-logo); font-size: 13px; font-weight: 900; letter-spacing: 0.12em; color: var(--black); }
+    .footer-brand-sub {
+      font-size: 12px; color: var(--muted); margin-top: 10px; line-height: 1.6; max-width: 160px;
+      font-family: var(--font-mono); font-weight: 300;
     }
 
     .footer-cols {
-      display: flex; gap: 64px; flex-wrap: wrap;
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 32px;
     }
 
     .footer-col h4 {
       font-family: var(--font-mono);
-      font-size: 10px; font-weight: 500;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--ink-faint);
-      margin-bottom: 16px;
+      font-size: 10px; font-weight: 400;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 18px;
     }
-
-    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 11px; }
     .footer-col a {
-      font-size: 13px; color: var(--ink-muted);
-      text-decoration: none; transition: color 0.2s;
+      font-size: 13px; color: var(--ink-light);
+      transition: color 0.15s;
     }
-    .footer-col a:hover { color: var(--ink); }
+    .footer-col a:hover { color: var(--black); }
 
     .footer-bottom {
-      border-top: 1px solid var(--border);
-      padding-top: 24px;
-      display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 12px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
     }
-    .footer-bottom p {
+    .footer-copy {
       font-family: var(--font-mono);
-      font-size: 11px; color: var(--ink-faint);
-      letter-spacing: 0.06em;
+      font-size: 11px; color: var(--muted); letter-spacing: 0.06em;
+    }
+    .footer-legal { display: flex; gap: 24px; }
+    .footer-legal a {
+      font-family: var(--font-mono);
+      font-size: 11px; color: var(--muted);
+      transition: color 0.15s;
+    }
+    .footer-legal a:hover { color: var(--black); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1024px) {
+      .models-grid { grid-template-columns: repeat(2, 1fr); }
+      .research-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-cols { grid-template-columns: repeat(3, 1fr); }
+      .footer-top { grid-template-columns: 1fr; gap: 40px; }
+      .mission-inner { grid-template-columns: 1fr; gap: 40px; }
     }
 
-    /* ── RESPONSIVE ── */
-    @media (max-width: 900px) {
-      nav { padding: 0 24px; }
+    @media (max-width: 760px) {
+      nav { padding: 0 20px; }
       .nav-links { display: none; }
-      section { padding: 72px 24px; }
+      .nav-right { display: none; }
+      .nav-hamburger { display: flex; }
+      .nav-drawer { display: block; }
+      .section { padding: 60px 20px; }
+      .hero { padding: 100px 20px 72px; }
+      .mission-band { padding: 60px 20px; }
+      .safety-band { padding: 72px 20px; }
+      footer { padding: 56px 20px 36px; }
+      .release-item { grid-template-columns: 1fr; gap: 16px; }
+      .release-arrow { display: none; }
       .models-grid { grid-template-columns: 1fr; }
-      .cap-grid { grid-template-columns: 1fr; }
-      .about-layout { grid-template-columns: 1fr; gap: 40px; }
-      .about-mission { grid-column: span 1; }
-      .hero { padding: 100px 24px 60px; }
-      #cta { padding: 72px 24px; }
-      footer { padding: 48px 24px 32px; }
-      .footer-top { flex-direction: column; }
-      .models-header { flex-direction: column; }
+      .research-grid { grid-template-columns: 1fr; }
+      .footer-cols { grid-template-columns: repeat(2, 1fr); }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .ticker-track { animation: none; }
+      * { transition: none !important; }
     }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav>
-    <a class="nav-logo" href="#">MUXBITE</a>
+<!-- ─── NAV ─── -->
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="#">MUXBITE</a>
     <ul class="nav-links">
+      <li><a href="#releases">Releases</a></li>
       <li><a href="#models">Models</a></li>
-      <li><a href="#capabilities">Capabilities</a></li>
+      <li><a href="#research">Research</a></li>
       <li><a href="#about">About</a></li>
+      <li><a href="#">Careers</a></li>
     </ul>
-    <a href="#cta" class="nav-cta">Get Access</a>
-  </nav>
-
-  <!-- HERO -->
-  <section class="hero" id="home">
-    <span class="hero-eyebrow">Frontier AI &nbsp;·&nbsp; Built in India</span>
-    <h1>MUXBITE</h1>
-    <p class="hero-tagline">
-      Proprietary language models engineered for reasoning, code, and multilingual understanding — from an independent AI lab.
-    </p>
-    <div class="hero-actions">
-      <a href="#models" class="btn-primary">Explore Models</a>
-      <a href="#about" class="btn-secondary">Our Mission</a>
+    <div class="nav-right">
+      <a class="nav-btn nav-btn-ghost" href="#">Log in</a>
+      <a class="nav-btn nav-btn-solid" href="#">Try MUXBITE X</a>
     </div>
-  </section>
+    <button class="nav-hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</nav>
 
-  <!-- TICKER -->
-  <div class="ticker-wrap" aria-hidden="true">
-    <div class="ticker-track">
-      <span class="ticker-item">MB1 · Free Model</span>
-      <span class="ticker-item">MB2 · Pro Intelligence</span>
-      <span class="ticker-item">MB3 · Flagship Reasoning</span>
-      <span class="ticker-item">MUXBITE X · Autonomous Agent</span>
-      <span class="ticker-item">Fine-tuned on Mistral 7B</span>
-      <span class="ticker-item">Multilingual · Code · Reasoning</span>
-      <span class="ticker-item">MB1 · Free Model</span>
-      <span class="ticker-item">MB2 · Pro Intelligence</span>
-      <span class="ticker-item">MB3 · Flagship Reasoning</span>
-      <span class="ticker-item">MUXBITE X · Autonomous Agent</span>
-      <span class="ticker-item">Fine-tuned on Mistral 7B</span>
-      <span class="ticker-item">Multilingual · Code · Reasoning</span>
+<!-- ─── MOBILE DRAWER ─── -->
+<div class="nav-drawer" id="nav-drawer" aria-hidden="true">
+  <ul>
+    <li><a href="#releases" class="drawer-link">Releases</a></li>
+    <li><a href="#models" class="drawer-link">Models</a></li>
+    <li><a href="#research" class="drawer-link">Research</a></li>
+    <li><a href="#about" class="drawer-link">About</a></li>
+    <li><a href="#" class="drawer-link">Careers</a></li>
+  </ul>
+  <div class="nav-drawer-actions">
+    <a class="nav-btn nav-btn-ghost" href="#">Log in</a>
+    <a class="nav-btn nav-btn-solid" href="#">Try MUXBITE X</a>
+  </div>
+</div>
+
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const drawer = document.getElementById('nav-drawer');
+
+  hamburger.addEventListener('click', () => {
+    const isOpen = hamburger.classList.toggle('open');
+    drawer.classList.toggle('open', isOpen);
+    hamburger.setAttribute('aria-expanded', isOpen);
+    drawer.setAttribute('aria-hidden', !isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  document.querySelectorAll('.drawer-link').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      drawer.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', false);
+      drawer.setAttribute('aria-hidden', true);
+      document.body.style.overflow = '';
+    });
+  });
+</script>
+
+<!-- ─── HERO ─── -->
+<div class="hero">
+  <span class="hero-label">AI Research &amp; Products</span>
+  <h1>AI <a href="#research">research</a> and <a href="#models">products</a> built for a multilingual world</h1>
+  <p class="hero-sub">
+    MUXBITE is an independent AI lab dedicated to training capable, safe, and accessible language models — without depending on anyone else's infrastructure.
+  </p>
+  <div class="hero-actions">
+    <a class="btn-pill-dark" href="#models">Explore our models</a>
+    <a class="btn-pill-ghost" href="#research">Read our research</a>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<!-- ─── MISSION BAND ─── -->
+<div class="mission-band">
+  <div class="mission-inner">
+    <div class="mission-left">
+      <h2>MUXBITE is built on hard questions.</h2>
+    </div>
+    <div class="mission-right">
+      <p>We believe the next generation of AI should not be built by a handful of incumbents alone. Language models that serve billions of people should reflect the full diversity of human language — not just English.</p>
+      <p>We are asking what it takes to train frontier models as an independent lab, starting from the ground up, with limited resources and unlimited intent.</p>
+      <a class="mission-link" href="#about">
+        See how we work
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
     </div>
   </div>
+</div>
 
-  <!-- MODELS -->
-  <section id="models">
-    <div class="section-inner">
-      <div class="models-header">
-        <div>
-          <span class="section-label">Model Lineup</span>
-          <h2 class="section-title">Three tiers.<br>One purpose.</h2>
+<!-- ─── RELEASES ─── -->
+<section class="section" id="releases">
+  <div class="section-inner">
+    <span class="section-eyebrow">Latest</span>
+    <h2 class="section-heading">Latest releases</h2>
+
+    <div class="releases-list">
+
+      <div class="release-item">
+        <div class="release-meta">
+          <div class="release-date">July 2026</div>
+          <span class="release-tag">Announcement</span>
         </div>
-        <p class="section-sub">From lightweight everyday assistance to flagship reasoning — the MUXBITE model family scales with your needs.</p>
+        <div class="release-body">
+          <h3>MB1 training begins — QLoRA on Mistral 7B</h3>
+          <p>The first MUXBITE model enters active training. MB1 is fine-tuned using QLoRA over Mistral 7B on a curated blend of 16,500 instruction-following, code, and reading comprehension examples.</p>
+          <div class="release-links">
+            <a class="release-link" href="#">Read announcement</a>
+            <a class="release-link muted" href="#">Model details</a>
+          </div>
+        </div>
+        <div class="release-arrow">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="#1a1a18" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
       </div>
 
-      <div class="models-grid">
+      <div class="release-item">
+        <div class="release-meta">
+          <div class="release-date">July 2026</div>
+          <span class="release-tag">Product</span>
+        </div>
+        <div class="release-body">
+          <h3>Introducing MUXBITE X — the flagship agent</h3>
+          <p>MUXBITE X is our autonomous agent platform: multi-step planning, tool use, and adaptive execution. Built on top of MB3, it goes beyond single-turn chat to handle complex, real-world tasks.</p>
+          <div class="release-links">
+            <a class="release-link" href="#">Read announcement</a>
+            <a class="release-link muted" href="#">Try MUXBITE X</a>
+          </div>
+        </div>
+        <div class="release-arrow">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="#1a1a18" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
 
-        <!-- MB1 -->
-        <div class="model-card">
-          <div class="model-tier">Tier 01</div>
-          <div class="model-name">MB1 <span>by MUXBITE</span></div>
-          <span class="model-badge">Free · Open Access</span>
-          <p class="model-desc">The entry model — fast, efficient, and free. Designed for everyday questions, coding help, and multilingual chat. Built on QLoRA fine-tuning over Mistral 7B.</p>
-          <ul class="model-specs">
-            <li><span class="spec-key">Base</span><span class="spec-val">Mistral 7B</span></li>
-            <li><span class="spec-key">Method</span><span class="spec-val">QLoRA Fine-tune</span></li>
-            <li><span class="spec-key">Access</span><span class="spec-val">Free</span></li>
-            <li><span class="spec-key">Context</span><span class="spec-val">8K tokens</span></li>
+      <div class="release-item">
+        <div class="release-meta">
+          <div class="release-date">June 2026</div>
+          <span class="release-tag">Research</span>
+        </div>
+        <div class="release-body">
+          <h3>MUXBITE model architecture — a first look</h3>
+          <p>An overview of the three-tier model family: MB1 (free), MB2 (pro), and MB3 (flagship). We outline our training philosophy, dataset strategy, and long-term roadmap toward proprietary model weights.</p>
+          <div class="release-links">
+            <a class="release-link" href="#">Read post</a>
+          </div>
+        </div>
+        <div class="release-arrow">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="#1a1a18" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ─── MODELS ─── -->
+<section class="section" id="models">
+  <div class="section-inner">
+    <span class="section-eyebrow">Model family</span>
+    <h2 class="section-heading">Three models. One mission.</h2>
+
+    <div class="models-grid">
+
+      <div class="model-tile flagship">
+        <span class="model-tier-label">Flagship Agent</span>
+        <div class="model-tile-name">MUXBITE X</div>
+        <p class="model-tile-desc">Our autonomous agent platform. Multi-step task planning, tool use, and adaptive execution powered by MB3.</p>
+        <a class="model-tile-link" href="#">Try MUXBITE X</a>
+      </div>
+
+      <div class="model-tile">
+        <span class="model-tier-label">Tier 03 — Frontier</span>
+        <div class="model-tile-name">MB3</div>
+        <p class="model-tile-desc">Chain-of-thought reasoning, RLHF alignment, 128K context. The hardest problems, handled.</p>
+        <a class="model-tile-link" href="#">Waitlist</a>
+      </div>
+
+      <div class="model-tile">
+        <span class="model-tier-label">Tier 02 — Pro</span>
+        <div class="model-tile-name">MB2</div>
+        <p class="model-tile-desc">Extended context, stronger code generation, deeper reasoning. Built for developers at scale.</p>
+        <a class="model-tile-link" href="#">Details</a>
+      </div>
+
+      <div class="model-tile">
+        <span class="model-tier-label">Tier 01 — Free</span>
+        <div class="model-tile-name">MB1</div>
+        <p class="model-tile-desc">Fast, multilingual, and free. Fine-tuned on Mistral 7B via QLoRA. Available to everyone.</p>
+        <a class="model-tile-link" href="#">Try MB1</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ─── RESEARCH CARDS ─── -->
+<section class="section" id="research">
+  <div class="section-inner">
+    <span class="section-eyebrow">Work</span>
+    <h2 class="section-heading">At MUXBITE, we build AI to serve humanity's long-term well-being.</h2>
+
+    <div class="research-grid">
+
+      <a class="research-card" href="#">
+        <span class="research-card-cat">Safety</span>
+        <h3>Our approach to responsible model development</h3>
+        <div class="research-card-arrow">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="#1a1a18" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </a>
+
+      <a class="research-card" href="#">
+        <span class="research-card-cat">Alignment Research</span>
+        <h3>MUXBITE's responsible scaling policy</h3>
+        <div class="research-card-arrow">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="#1a1a18" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </a>
+
+      <a class="research-card" href="#">
+        <span class="research-card-cat">Education</span>
+        <h3>Building and learning with MUXBITE models</h3>
+        <div class="research-card-arrow">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="#1a1a18" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </a>
+
+      <a class="research-card" href="#">
+        <span class="research-card-cat">Multilingual Research</span>
+        <h3>Language models for underrepresented languages</h3>
+        <div class="research-card-arrow">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="#1a1a18" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </a>
+
+      <a class="research-card" href="#">
+        <span class="research-card-cat">Model Design</span>
+        <h3>The MUXBITE model card and evaluation framework</h3>
+        <div class="research-card-arrow">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="#1a1a18" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </a>
+
+      <a class="research-card" href="#">
+        <span class="research-card-cat">Transparency</span>
+        <h3>Training data, methods, and our open commitments</h3>
+        <div class="research-card-arrow">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="#1a1a18" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── SAFETY BAND ─── -->
+<div class="safety-band" id="about">
+  <div class="safety-band-inner">
+    <h2>We are not building the next feature. We are building the next foundation.</h2>
+    <p>MUXBITE is an independent AI research company. We own the full stack — from model weights to the interface — and intend to remain independent for as long as it takes to do this right.</p>
+    <a class="btn-pill-white" href="#">About MUXBITE</a>
+  </div>
+</div>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">MUXBITE</div>
+        <p class="footer-brand-sub">Independent AI research. Built in India.</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>Products</h4>
+          <ul>
+            <li><a href="#">MB1 (Free)</a></li>
+            <li><a href="#">MB2 (Pro)</a></li>
+            <li><a href="#">MB3 (Flagship)</a></li>
+            <li><a href="#">MUXBITE X</a></li>
+            <li><a href="#">Pricing</a></li>
           </ul>
         </div>
-
-        <!-- MB2 -->
-        <div class="model-card featured">
-          <div class="model-tier">Tier 02</div>
-          <div class="model-name">MB2 <span>by MUXBITE</span></div>
-          <span class="model-badge">Pro · Best Value</span>
-          <p class="model-desc">The pro model with deeper reasoning, extended context, and stronger code generation. Built for developers and professionals who need reliability at scale.</p>
-          <ul class="model-specs">
-            <li><span class="spec-key">Base</span><span class="spec-val">MUXBITE Core</span></li>
-            <li><span class="spec-key">Method</span><span class="spec-val">Instruction Tuned</span></li>
-            <li><span class="spec-key">Access</span><span class="spec-val">Pro Plan</span></li>
-            <li><span class="spec-key">Context</span><span class="spec-val">32K tokens</span></li>
+        <div class="footer-col">
+          <h4>Models</h4>
+          <ul>
+            <li><a href="#">MB1</a></li>
+            <li><a href="#">MB2</a></li>
+            <li><a href="#">MB3</a></li>
+            <li><a href="#">Model cards</a></li>
+            <li><a href="#">API access</a></li>
           </ul>
         </div>
-
-        <!-- MB3 -->
-        <div class="model-card">
-          <div class="model-tier">Tier 03</div>
-          <div class="model-name">MB3 <span>by MUXBITE</span></div>
-          <span class="model-badge">Flagship · Research Preview</span>
-          <p class="model-desc">The frontier model. Multi-step reasoning, agentic planning, and deep analysis. MB3 is MUXBITE's most powerful intelligence — for the hardest problems.</p>
-          <ul class="model-specs">
-            <li><span class="spec-key">Base</span><span class="spec-val">Proprietary</span></li>
-            <li><span class="spec-key">Method</span><span class="spec-val">RLHF + CoT</span></li>
-            <li><span class="spec-key">Access</span><span class="spec-val">Waitlist</span></li>
-            <li><span class="spec-key">Context</span><span class="spec-val">128K tokens</span></li>
+        <div class="footer-col">
+          <h4>Research</h4>
+          <ul>
+            <li><a href="#">Publications</a></li>
+            <li><a href="#">Safety</a></li>
+            <li><a href="#">Alignment</a></li>
+            <li><a href="#">Multilingual</a></li>
+            <li><a href="#">Transparency</a></li>
           </ul>
         </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- CAPABILITIES -->
-  <section id="capabilities">
-    <div class="section-inner">
-      <span class="section-label">What MUXBITE can do</span>
-      <h2 class="section-title">Built for the work that matters.</h2>
-
-      <div class="cap-grid">
-
-        <div class="cap-card">
-          <svg class="cap-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="4" y="8" width="28" height="20" rx="1" stroke="#0a0a0a" stroke-width="1.5"/>
-            <polyline points="10,18 14,14 18,20 22,16 26,18" stroke="#0a0a0a" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
-          </svg>
-          <div class="cap-title">Advanced Reasoning</div>
-          <p class="cap-text">Chain-of-thought problem solving across math, logic, and science. MUXBITE models decompose complex questions step by step before answering.</p>
+        <div class="footer-col">
+          <h4>Developers</h4>
+          <ul>
+            <li><a href="#">API docs</a></li>
+            <li><a href="#">GitHub</a></li>
+            <li><a href="#">Changelog</a></li>
+            <li><a href="#">Status</a></li>
+            <li><a href="#">Console</a></li>
+          </ul>
         </div>
-
-        <div class="cap-card">
-          <svg class="cap-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="5" y="5" width="26" height="26" rx="1" stroke="#0a0a0a" stroke-width="1.5"/>
-            <line x1="11" y1="13" x2="16" y2="13" stroke="#0a0a0a" stroke-width="1.5" stroke-linecap="round"/>
-            <line x1="11" y1="18" x2="22" y2="18" stroke="#0a0a0a" stroke-width="1.5" stroke-linecap="round"/>
-            <line x1="11" y1="23" x2="20" y2="23" stroke="#0a0a0a" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-          <div class="cap-title">Code Generation</div>
-          <p class="cap-text">Write, review, and debug code across Python, JavaScript, C, and more. Trained on curated programming datasets for accurate, runnable output.</p>
-        </div>
-
-        <div class="cap-card">
-          <svg class="cap-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="18" cy="18" r="12" stroke="#0a0a0a" stroke-width="1.5"/>
-            <path d="M18 6 C12 12 12 24 18 30" stroke="#0a0a0a" stroke-width="1.5" fill="none"/>
-            <path d="M18 6 C24 12 24 24 18 30" stroke="#0a0a0a" stroke-width="1.5" fill="none"/>
-            <line x1="6" y1="18" x2="30" y2="18" stroke="#0a0a0a" stroke-width="1.5"/>
-          </svg>
-          <div class="cap-title">Multilingual Understanding</div>
-          <p class="cap-text">Native support for Hindi, Bengali, Urdu, and major global languages. Built to serve underrepresented linguistic communities from day one.</p>
-        </div>
-
-        <div class="cap-card">
-          <svg class="cap-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 28 L18 8 L28 28" stroke="#0a0a0a" stroke-width="1.5" stroke-linejoin="round" fill="none"/>
-            <line x1="12" y1="22" x2="24" y2="22" stroke="#0a0a0a" stroke-width="1.5"/>
-          </svg>
-          <div class="cap-title">Agentic Workflows</div>
-          <p class="cap-text">MUXBITE X goes beyond chat — it plans, executes, and adapts. Autonomous multi-step task handling powered by the MB3 engine under the hood.</p>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ABOUT -->
-  <section id="about">
-    <div class="section-inner">
-      <span class="section-label">Who we are</span>
-      <h2 class="section-title">An independent AI lab<br>with a long view.</h2>
-
-      <div class="about-layout">
-        <div class="about-body">
-          <p>MUXBITE is an <strong>independent AI research company</strong> building proprietary language models from the ground up. We believe the future of intelligence should not be owned by a handful of large incumbents — and that language models built for a global, multilingual world require a different kind of founding intent.</p>
-          <p>Our work spans model research, developer tooling, and consumer products. We are building the full stack — from the weights to the interface — under one roof, with one mission: <strong>safe, capable, and accessible AI</strong> for everyone who needs it.</p>
-          <p>MUXBITE operates across three divisions: <strong>MUXBITE X</strong> (flagship agent platform), <strong>MUXBITE Data</strong> (B2B infrastructure), and <strong>MUXBITE Research</strong> (IP and licensing). We are at the early stage, and we intend to stay independent for as long as it takes to do this right.</p>
-        </div>
-
-        <div>
-          <div class="about-stats">
-            <div class="stat-block">
-              <div class="stat-num">3</div>
-              <div class="stat-label">Model Tiers</div>
-            </div>
-            <div class="stat-block">
-              <div class="stat-num">16K+</div>
-              <div class="stat-label">Training Examples</div>
-            </div>
-            <div class="stat-block">
-              <div class="stat-num">A–Z</div>
-              <div class="stat-label">Product Roadmap</div>
-            </div>
-            <div class="stat-block">
-              <div class="stat-num">∞</div>
-              <div class="stat-label">Independence</div>
-            </div>
-            <div class="about-mission" style="grid-column: span 2;">
-              <p>"We are not building the next <strong>feature</strong>. We are building the next <strong>foundation</strong>."</p>
-            </div>
-          </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">News</a></li>
+            <li><a href="#">Policy</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
         </div>
       </div>
-
     </div>
-  </section>
-
-  <!-- CTA BAND -->
-  <section id="cta">
-    <div class="section-inner" style="text-align:center;">
-      <span class="section-label">Early Access</span>
-      <h2>Start building<br>with MUXBITE.</h2>
-      <p>Join the waitlist for API access to MB2 and MB3. MB1 is free to use today.</p>
-      <a href="#" class="btn-white">Request Access</a>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-inner">
-      <div class="footer-top">
-        <div class="footer-brand">
-          <a class="nav-logo" href="#">MUXBITE</a>
-          <p>Independent AI research. Proprietary models. Built for a multilingual world.</p>
-        </div>
-        <div class="footer-cols">
-          <div class="footer-col">
-            <h4>Products</h4>
-            <ul>
-              <li><a href="#">MB1 (Free)</a></li>
-              <li><a href="#">MB2 (Pro)</a></li>
-              <li><a href="#">MB3 (Flagship)</a></li>
-              <li><a href="#">MUXBITE X</a></li>
-            </ul>
-          </div>
-          <div class="footer-col">
-            <h4>Company</h4>
-            <ul>
-              <li><a href="#about">About</a></li>
-              <li><a href="#">Research</a></li>
-              <li><a href="#">Careers</a></li>
-              <li><a href="#">Blog</a></li>
-            </ul>
-          </div>
-          <div class="footer-col">
-            <h4>Developers</h4>
-            <ul>
-              <li><a href="#">API Docs</a></li>
-              <li><a href="#">GitHub</a></li>
-              <li><a href="#">Status</a></li>
-              <li><a href="#">Changelog</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>© 2026 MUXBITE. All rights reserved.</p>
-        <p>Privacy &nbsp;·&nbsp; Terms &nbsp;·&nbsp; Security</p>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 MUXBITE. All rights reserved.</span>
+      <div class="footer-legal">
+        <a href="#">Privacy policy</a>
+        <a href="#">Terms of service</a>
+        <a href="#">Usage policy</a>
       </div>
     </div>
-  </footer>
+  </div>
+</footer>
 
 </body>
 </html>
